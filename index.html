@@ -302,7 +302,7 @@
 
 <script>
 const PHASES=[
-  {id:'base',name:'Phase 1 — Base building',dates:'June 2 – June 22',weeks:'Wks 1–3',load:'50–60% 1RM · Low intensity',goal:'Rebuild work capacity after school year. High volume, moderate loads, technique focus. No max efforts.',chips:[{t:'3×10–12 main',c:'chip-green'},{t:'3×15 unilateral',c:'chip-amber'},{t:'2×20 core',c:'chip-amber'}],scheme:{main:'3×10',uni:'3×15',acc:'3×12',core:'2×20'}},
+  {id:'base',name:'Phase 1 — Base building',dates:'June 2 – June 22',weeks:'Wks 1–3',load:'50–60% 1RM · Low intensity',goal:'XC and wrestling practices already running 3–4 days each. Unilateral lower volume kept to 1 exercise per lifting day — running provides sufficient single-leg loading. Technique focus on all lifts. No max efforts.',chips:[{t:'3×10–12 main',c:'chip-green'},{t:'1 lower unilateral / day',c:'chip-amber'},{t:'2×20 core',c:'chip-amber'}],scheme:{main:'3×10',uni:'3×15',acc:'3×12',core:'2×20'}},
   {id:'hyp',name:'Phase 2 — Hypertrophy',dates:'June 23 – Aug 3',weeks:'Wks 4–9',load:'65–72% 1RM · Moderate',goal:'Drive muscle mass for weight class durability. Push close to failure on last sets of accessories.',chips:[{t:'4×8 main',c:'chip-green'},{t:'4×10–12 unilateral',c:'chip-amber'},{t:'3×15 acc',c:'chip-amber'}],scheme:{main:'4×8',uni:'4×10',acc:'3×12',core:'3×15'}},
   {id:'str',name:'Phase 3 — Strength',dates:'Aug 4 – Sept 20',weeks:'Wks 10–16',load:'78–85% 1RM · High',goal:'Peak force production. Heavy compounds, full rest, progressive overload weekly. This feeds the explosive days.',chips:[{t:'5×5 main',c:'chip-green'},{t:'3×8 unilateral',c:'chip-amber'},{t:'3×6–8 acc',c:'chip-amber'}],scheme:{main:'5×5',uni:'3×8',acc:'3×6',core:'3×10'}},
   {id:'peak',name:'Phase 4 — Peaking',dates:'Sept 21 – Oct 4',weeks:'Wks 17–18',load:'85–90% 1RM · Very high',goal:'Reduce volume, hold intensity. Body consolidates strength gains. Explosive days dominate.',chips:[{t:'3×3 main',c:'chip-green'},{t:'2×6 unilateral',c:'chip-amber'},{t:'Daily core circuit',c:'chip-amber'}],scheme:{main:'3×3',uni:'2×6',acc:'2×5',core:'daily'}},
@@ -322,12 +322,12 @@ const WEEK_DAYS=[
 ];
 
 const DAY_DESCRIPTIONS={
-  0:{type:'lift',title:'Monday — Full body A',note:'XC in AM, lift afternoon. Main lifts 90–120s rest, accessories 60s.'},
+  0:{type:'lift',title:'Monday — Full body A',note:'XC and wrestling practices already provide significant single-leg loading. P1: 1 lower unilateral only. P2: both. P3+: pick 1. Upper unilateral unchanged throughout.'},
   1:{type:'explo',title:'Tuesday — Explosive / Plyo',note:'Rest fully between explosive sets (2–3 min). Speed over fatigue.'},
-  2:{type:'lift',title:'Wednesday — Full body B',note:'Heaviest pull day. Trap bar deadlift is the anchor.'},
-  3:{type:'cardio',title:'Thursday — Cardio',note:'Choose 1–2 modalities based on recovery. Sprints first priority.'},
-  4:{type:'lift',title:'Friday — Full body C',note:'End of lifting week. Higher-rep endurance block builds lactate tolerance.'},
-  5:{type:'explo',title:'Saturday — Power complex',note:'Treat each block as a 2-min wrestling period.'},
+  2:{type:'lift',title:'Wednesday — Full body B',note:'Heaviest pull day. Trap bar deadlift is the anchor. TGU finisher at the end — light KB, full control each rep.'},
+  3:{type:'cardio',title:'Thursday — Cardio',note:'Choose 1–2 modalities based on recovery. TRX circuit is a full-body option on lighter recovery days. Sprints first priority for wrestling conditioning.'},
+  4:{type:'lift',title:'Friday — Full body C',note:'End of lifting week. P1: 1 lower unilateral only. P2: both. P3+: pick 1. Lateral plane work (cossack, lateral lunge) stays in even in later phases — frontal plane is always worth maintaining.'},
+  5:{type:'explo',title:'Saturday — Power complex',note:'Treat each block as a 2-min wrestling period. TGU closes the session — treat each rep as a skill drill, not a conditioning set.'},
   6:{type:'rest',title:'Sunday — Recovery',note:'No training stress. This is where the week\'s work becomes fitness.'},
 };
 
@@ -338,11 +338,13 @@ const LIFT_A={
       {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
       {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
-    {label:'Unilateral block',rows:[
+    {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
       {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-leg hip thrust',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Step-up with knee drive',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Unilateral — upper',rows:[
+      {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Half-kneeling single-arm DB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Landmine block',rows:[
       {n:'Landmine squat (two-hand)',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
@@ -369,11 +371,13 @@ const LIFT_B={
       {n:'Weighted pull-up',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
       {n:'Push press (overhead)',badge:'Push',bc:'b-blue',rep:'main',uni:false},
     ]},
-    {label:'Unilateral block',rows:[
+    {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
       {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Landmine press (single-arm, standing)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Single-leg leg press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Step-up with knee drive',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Unilateral — upper',rows:[
+      {n:'Single-arm overhead KB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Landmine block',rows:[
       {n:'Landmine deadlift (sumo stance)',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
@@ -382,7 +386,7 @@ const LIFT_B={
       {n:'Landmine high pull (single-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
     ]},
     {label:'Accessories',rows:[
-      {n:'Chest-supported DB row',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+      {n:'Rear delt fly (chest-supported DB)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
       {n:'Romanian deadlift',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
       {n:'Neutral-grip chin-up (slow eccentric)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
     ]},
@@ -390,6 +394,9 @@ const LIFT_B={
       {n:'Pallof press',badge:'Core',bc:'b-gray',rep:'core',uni:true},
       {n:'Suitcase carry',badge:'Core',bc:'b-gray',rep:'core',uni:true},
       {n:'GHD sit-up',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+    ]},
+    {label:'Turkish get-up finisher — Wednesday',rows:[
+      {n:'Turkish get-up (light KB)',badge:'TGU',bc:'b-purple',rep:'core',uni:true},
     ]},
   ]
 };
@@ -401,9 +408,11 @@ const LIFT_C={
       {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
       {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
-    {label:'Unilateral block',rows:[
+    {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
       {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Unilateral — upper',rows:[
       {n:'Dumbbell split press (kneeling)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-arm cable row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
@@ -534,6 +543,7 @@ const EXPLO_SAT=[
   {ico:'🪨',n:'Yoke or barbell carry',d:'4×30m — heavy as possible with good posture. Builds clinch strength.',dur:'Loaded carries'},
   {ico:'🪨',n:'Sandbag shouldering and walk',d:'3×20m — shoulder the bag, walk with it. Simulates wrestling body control.',dur:'Loaded carries'},
   {ico:'🤼',n:'Match simulation drilling',d:'5 rounds × 2 min partner drilling + 30s rest — mirrors real match rest periods.',dur:'Match sim'},
+  {ico:'🕯️',n:'Turkish get-up (KB)',d:'2×2 / side — stop the set the moment any stage loses control. Technique is the entire stimulus here. Light to moderate KB only.',dur:'Turkish get-up'},
 ];
 
 // Battle ropes — phase-specific rotations
@@ -632,6 +642,7 @@ const CARDIO_DATA=[
   {ico:'🏃',n:'Sprint intervals',d:'8×100m all-out / 90s rest — or 6×200m / 2 min rest. Track, turf, or grass.',dur:'~25 min'},
   {ico:'🚴',n:'Assault bike intervals',d:'10 rounds: 30s max effort / 90s easy. Monitor watts — hold output.',dur:'~20 min'},
   {ico:'🏊',n:'Pool sprint sets',d:'10×50m freestyle fast / 30s rest. Or 400m continuous technique swim.',dur:'~30 min'},
+  {ico:'🔵',n:'TRX circuit — Thursday',d:'5 rounds: TRX row 12 · TRX fallout 10 · TRX single-leg squat 8/side · TRX pike 10 · TRX chest press 12 · TRX biceps curl 12 · 45s rest between rounds.',dur:'~25 min'},
   {ico:'💪',n:'Grip and neck prehab',d:'Towel pull-ups 3×max · Neck bridging 3×60s · Wrist roller 3×down-and-up',dur:'15 min'},
 ];
 
@@ -1275,6 +1286,8 @@ const EX_CUES = {
   'Romanian deadlift':                 'Soft knees, hinge back until hamstrings load. Bar stays close to legs throughout.',
   'Bulgarian split squat':             'Rear foot elevated, front foot out. Lower the knee toward the floor, drive through the front heel.',
   'Single-arm dumbbell row':           'Brace on bench, row DB to hip. Elbow close, full stretch at bottom, squeeze at top.',
+  'Half-kneeling single-arm DB press': 'One knee down, opposite foot forward. Press DB straight overhead on the kneeling side. The half-kneeling position removes leg drive and demands core stability to resist lateral lean. Completely different demand to a standing or landmine press.',
+  'Single-arm overhead KB press':      'Stand or half-kneel, KB in one hand at shoulder. Press straight overhead to full lockout. Keep the rib cage down — do not flare and arch. Demands rotator cuff and scapular stability throughout the press. The KB offset grip increases the stability demand over a dumbbell.',
   'Single-leg hip thrust':             'Upper back on bench, one foot planted. Drive hips up hard, squeeze glute at top.',
   'Step-up with knee drive':           'Step up onto box, drive opposite knee up at the top. Controlled step back down.',
   'Single-leg RDL (barbell or DB)':   'Balance on working leg, hinge forward and reach weight toward the floor. Hamstring controls descent.',
@@ -1294,6 +1307,7 @@ const EX_CUES = {
   'Face pull (cable — thumbs-up grip)':'Thumbs up on rope. Pull to forehead, elbows high and wide. Rear delt and rotator cuff.',
   'Triceps pushdown':                  'Elbows pinned to sides, press down to full extension. Slow eccentric.',
   'Chest-supported DB row':            'Lie prone on incline bench. Row DBs to ribcage. No momentum, pure back work.',
+  'Rear delt fly (chest-supported DB)':'Lie prone on incline bench, DBs hanging straight down. Raise both arms out to the sides in a wide arc — elbows slightly soft, lead with the elbows not the hands. Squeeze the rear delts and external rotators at the top. Light weight — this is not a strength movement, it is a targeted rear delt and rotator cuff exercise. Complements the shoulder prehab work.',
   'Neutral-grip chin-up (slow eccentric)': 'Palms facing each other. Pull up, then lower in 3-4 seconds. Biceps and lat emphasis.',
   'Push-up (weighted or archer)':      'Weighted: plate on back. Archer: extend one arm wide each rep. Chest to floor.',
   'TRX or ring row':                   'Body at an angle, pull chest to handles. Adjust angle to increase difficulty.',
@@ -1476,6 +1490,17 @@ const EX_CUES = {
   'Battle rope jump slam':                   'Jump and slam both ropes simultaneously on landing. The landing force transfers into the slam. Triple extension — ankles, knees, hips — before the slam.',
   'Battle rope single-arm wave':             'One rope, one arm. The unilateral demand challenges the core to resist rotation while producing the wave. Builds shoulder stability and unilateral endurance.',
   'Battle rope rotational slam':             'Stand sideways to the anchor. Slam both ropes to the far side using full hip rotation. Pivot the back foot. Most wrestling-specific movement pattern in the battle rope toolkit.',
+  // ── TURKISH GET-UP ──
+  'Turkish get-up (light KB)':               'Wednesday finisher — 2×2/side with a light KB. Each rep is a separate skill drill, not a conditioning set. Sequence: roll to elbow → press to hand → hip bridge → sweep to half-kneeling → stand → reverse exactly. Stop the set immediately if any stage loses control or the KB drifts from vertical. The movement quality is the entire point — volume is deliberately low.',
+  'Turkish get-up (KB)':                     'Saturday finisher — 2×2/side at moderate KB. Full sequence: roll to elbow → hand → hip bridge → sweep to half-kneeling → lunge to stand → reverse. 60–90s per rep. If any stage is shaky, the weight is too heavy. Two clean reps per side is the goal — never chase more reps at the expense of the movement.',
+  // ── TRX ──
+  'TRX circuit — Thursday':                  'Set TRX to appropriate length for each movement. Circuit: row (body horizontal for max difficulty), fallout (like an ab wheel), single-leg squat (one foot in strap), pike (hips up), chest press (feet in straps), biceps curl. 45s rest between rounds keeps it aerobic.',
+  'TRX row':                                  'Lean back with straight body, pull chest to handles. The more horizontal your body the harder it is. Squeeze scapulae at the top. Best pulling movement in the TRX system.',
+  'TRX fallout':                              'Start standing, hands in straps. Lean forward and let arms extend overhead — like an ab wheel but from standing. Pull back using the lats and core. Extremely demanding on the anterior core.',
+  'TRX single-leg squat':                     'One foot in the strap behind you, squat on the standing leg. The strap provides just enough assistance to maintain depth. Trains single-leg strength with the safety net of the TRX.',
+  'TRX pike':                                 'Push-up position, both feet in straps. Drive hips up into an inverted V. Core and hip flexors under load. Progress to a pike rollout for more difficulty.',
+  'TRX chest press':                          'Feet in straps, push-up position. Press into a push-up. The suspended feet add instability that demands continuous core engagement throughout the press.',
+  'TRX biceps curl':                          'Face the anchor, lean back. Curl yourself up by bending the elbows. The more you lean back the harder it is. Supinated grip the whole way.',
   // ── CARDIO ──
   'Sprint intervals':                         'All-out effort for the full distance. Full recovery between reps — these are not tempo runs.',
   'Assault bike intervals':                   '30s max effort on the assault bike — arms and legs. Track your wattage and try to hold it across rounds.',
