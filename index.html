@@ -822,7 +822,7 @@ const STRETCH_SECTIONS=[
     {n:'Seated groin stretch',d:'60s',badge:'Groin',bc:'b-green'},
     {n:'Cross-body shoulder stretch',d:'30s / side',badge:'Shoulder',bc:'b-purple'},
   ]},
-  {label:'Sunday deep mobility flow (20 min)',rows:[
+  {label:'Thursday deep mobility flow (20 min)',rows:[
     {n:'90/90 hip flow — active rotation',d:'2 min / side',badge:'Hip',bc:'b-green'},
     {n:'Pigeon pose',d:'90s / side',badge:'Glute · hip',bc:'b-green'},
     {n:'Pancake stretch (wide squat hold)',d:'2 min',badge:'Groin',bc:'b-green'},
@@ -932,13 +932,13 @@ const SHOULDER_SECTIONS=[
 ];
 
 const DAY_STRETCH_NOTES=[
-  'Lift A — ankle + shoulder prehab before session. Static cool-down: lower body focus (quads, hamstrings, hip flexors).',
-  'Explosive — thoracic and hip rotation critical in warm-up. Calf and ankle static holds mandatory after.',
-  'Lift B — full shoulder prehab pre-session. Cool-down: posterior chain (hamstrings, glutes, lats).',
-  'Cardio — calf and soleus stretch mandatory after. Ankle stability work fits well as standalone here.',
-  'Lift C — full shoulder prehab pre-session. Lateral-plane flexibility post-lift: groin, lateral hip.',
-  'Power — both ankle and shoulder prehab post-session. Full cool-down including calf and chest.',
-  'Recovery — 20-min deep mobility flow. Longest stretch window of the week. Nothing skipped.',
+  'Sunday — Lift A (post wrestling). Dynamic warm-up before lifting. Static cool-down lower body focus: quads, hamstrings, hip flexors, lats.',
+  'Monday — HIIT · Agility · XC + Wrestling. Dynamic warm-up before conditioning. Static cool-down: calf, soleus, hip flexor, groin. Running muscles priority.',
+  'Tuesday — Lift B (heaviest session). Dynamic warm-up before lifting. Static cool-down posterior chain focus: hamstrings, glutes, lats, chest.',
+  'Wednesday — Light conditioning · XC + Wrestling. Brief dynamic warm-up. Static cool-down: calf, soleus, hip flexor, groin. Prep tissue for Thursday double practice.',
+  'Thursday — Full rest · XC + Wrestling. No session warm-up. Full 20-min deep mobility flow — longest stretch window of the week. Hip flexors, thoracic, shoulder capsule.',
+  'Friday — Lift C · XC only. Dynamic warm-up before lifting. Static cool-down lateral plane focus: cossack hold, lateral lunge, pigeon, cross-body shoulder.',
+  'Saturday — Explosive · Power · XC only. Dynamic warm-up before session. Static cool-down: calf and soleus priority, hip flexor lunge, pigeon, cross-body shoulder.',
 ];
 
 const SHOULDER_DAY_NOTES=[
@@ -1552,8 +1552,10 @@ function renderCardioContent() {
 // ----- STRETCHING -----
 function renderStretchDays() { makeDayTabs('stretchDays', stretchDay, 'setStretchDay'); }
 function renderStretchContent() {
+  const isThu = stretchDay===4;
   let html=`<div class="t-chips"><span class="t-chip">Pre: 8–10 min dynamic</span><span class="t-chip">Post: 10–12 min static</span><span class="t-chip">Evening: foam rolling (optional)</span></div>`;
   html+=`<div class="alert alert-gray">${DAY_STRETCH_NOTES[stretchDay]}</div>`;
+  if(isThu) html+=`<div style="font-size:12px;padding:9px 13px;background:rgba(29,184,122,0.1);color:#5FE0A8;border-radius:8px;margin-bottom:.75rem">★ Thursday is the weekly deep mobility investment day — full 20-min flow. No session to rush to. Use the entire Thursday deep mobility section below.</div>`;
   html+=buildSections(STRETCH_SECTIONS, null);
   html+=`<div class="note-box">Dynamic stretching before every session — always. Static holds only after training, never cold. Evening foam rolling (5–10 min) is more effective than static holds for tissue recovery and next-day readiness — focus on whatever was trained that day. Spend 60–90s per area, slow rolling, pause on tight spots.</div>`;
   document.getElementById('stretchContent').innerHTML=html;
@@ -1573,10 +1575,10 @@ function renderAnkleContent() {
 function renderShoulderDays() { makeDayTabs('shoulderDays', shoulderDay, 'setShoulderDay'); }
 function renderShoulderContent() {
   const isPress=(shoulderDay===0||shoulderDay===2||shoulderDay===4);
-  const isSun=(shoulderDay===6);
+  const isSat=(shoulderDay===6);
   let html=`<div class="t-chips"><span class="t-chip">Daily: 10–12 min</span><span class="t-chip">Before lifting or practice</span><span class="t-chip">Every day — especially pressing</span></div>`;
   if(isPress) html+=`<div class="alert alert-purple">Pressing day — run full protocol before lifting. 10–12 min dramatically reduces impingement risk. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> for images and cues.</div>`;
-  else if(isSun) html+=`<div class="alert alert-green">Recovery day — full protocol at relaxed pace. Best shoulder investment of the week. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
+  else if(isSat) html+=`<div class="alert alert-green">Saturday — non-pressing day. Full protocol at relaxed pace. Good shoulder investment before explosive work. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
   else html+=`<div class="alert alert-gray">Non-pressing day — abbreviated: band pull-aparts + face pulls + sleeper stretch (5 min). Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise for an image.</div>`;
   html+=buildSections(SHOULDER_SECTIONS, null);
   html+=`<div class="note-box">Shoulder prehab non-negotiable on pressing days. The bottoms-up KB press and Cuban press load the rotator cuff in positions that mirror real grappling demands.</div>`;
