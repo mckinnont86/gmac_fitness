@@ -222,6 +222,7 @@
   <button onclick="switchSection('progress')">Progress</button>
   <button class="active" onclick="switchSection('schedule')">Schedule</button>
   <button onclick="switchSection('lifting')">Lifting</button>
+  <button onclick="switchSection('conditioning')">Conditioning</button>
   <button onclick="switchSection('explosive')">Explosive</button>
   <button onclick="switchSection('cardio')">Cardio</button>
   <button onclick="switchSection('stretch')">Stretching</button>
@@ -249,6 +250,11 @@
   <div class="phase-scroll" id="liftPhaseNav"></div>
   <div class="day-tabs" id="liftDayTabs"></div>
   <div class="content-card" id="liftContent"></div>
+</div>
+
+<!-- ===================== CONDITIONING ===================== -->
+<div class="section" id="sec-conditioning">
+  <div class="content-card" id="condContent"></div>
 </div>
 
 <!-- ===================== EXPLOSIVE ===================== -->
@@ -312,23 +318,23 @@ const PHASES=[
 ];
 
 const WEEK_DAYS=[
-  {name:'Mon',tag:'Lift A',type:'lift',dot:'#1DB87A'},
-  {name:'Tue',tag:'Explosive',type:'explo',dot:'#E06030'},
-  {name:'Wed',tag:'Lift B',type:'lift',dot:'#1DB87A'},
-  {name:'Thu',tag:'Cardio',type:'cardio',dot:'#3B8BDB'},
+  {name:'Sun',tag:'Lift A',type:'lift',dot:'#1DB87A'},
+  {name:'Mon',tag:'HIIT · Agility',type:'cond',dot:'#E06030'},
+  {name:'Tue',tag:'Lift B',type:'lift',dot:'#1DB87A'},
+  {name:'Wed',tag:'HIIT · Agility',type:'cond',dot:'#E06030'},
+  {name:'Thu',tag:'Rest',type:'rest',dot:'#666'},
   {name:'Fri',tag:'Lift C',type:'lift',dot:'#1DB87A'},
-  {name:'Sat',tag:'Power',type:'explo',dot:'#E06030'},
-  {name:'Sun',tag:'Recovery',type:'rest',dot:'#666'},
+  {name:'Sat',tag:'Power · Ropes',type:'explo',dot:'#D85A30'},
 ];
 
 const DAY_DESCRIPTIONS={
-  0:{type:'lift',title:'Monday — Full body A',note:'XC and wrestling practices already provide significant single-leg loading. P1: 1 lower unilateral only. P2: both. P3+: pick 1. Upper unilateral unchanged throughout.'},
-  1:{type:'explo',title:'Tuesday — Explosive / Plyo',note:'Rest fully between explosive sets (2–3 min). Speed over fatigue.'},
-  2:{type:'lift',title:'Wednesday — Full body B',note:'Heaviest pull day. Trap bar deadlift is the anchor. TGU finisher at the end — light KB, full control each rep.'},
-  3:{type:'cardio',title:'Thursday — Cardio',note:'Choose 1–2 modalities based on recovery. TRX circuit is a full-body option on lighter recovery days. Sprints first priority for wrestling conditioning.'},
-  4:{type:'lift',title:'Friday — Full body C',note:'End of lifting week. P1: 1 lower unilateral only. P2: both. P3+: pick 1. Lateral plane work (cossack, lateral lunge) stays in even in later phases — frontal plane is always worth maintaining.'},
-  5:{type:'explo',title:'Saturday — Power complex',note:'Treat each block as a 2-min wrestling period. TGU closes the session — treat each rep as a skill drill, not a conditioning set.'},
-  6:{type:'rest',title:'Sunday — Recovery',note:'No training stress. This is where the week\'s work becomes fitness.'},
+  0:{type:'lift',   title:'Sunday — Full body A (Lift)',    note:'Post-wrestling. Keep session moderate — legs already loaded from practice. P1: 1 lower unilateral. P2: both. P3+: pick 1. This is the strength-endurance day by design.'},
+  1:{type:'cond',   title:'Monday — Agility · Jumps · Sprint · Bike HIIT', note:'XC and wrestling practice already done. Agility ladder, dot drills, reaction drills, tuck jumps, lateral bounds, 10m reactive sprint, then bike HIIT. No wrestling drills, no battle ropes.'},
+  2:{type:'lift',   title:'Tuesday — Full body B (Lift)',   note:'XC only day — heaviest lifting session of the week. Trap bar deadlift anchor. TGU finisher. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
+  3:{type:'cond',   title:'Wednesday — Light agility · Water recovery',  note:'XC and wrestling practice day. Light agility and technique work only — no jumps, no wrestling drills, no battle ropes. Water recovery is the primary add-on.'},
+  4:{type:'rest',   title:'Thursday — Full rest · Water recovery optional', note:'XC and wrestling practice. Zero additional training. Water recovery — light swim or lazy river — is the only appropriate add-on. Protect this day completely.'},
+  5:{type:'lift',   title:'Friday — Full body C (Lift)',    note:'XC only day. Full lifting session. P1: 1 lower unilateral. P2: both. P3+: pick 1. Lateral plane work stays in all phases.'},
+  6:{type:'explo',  title:'Saturday — Explosive · Power · Battle ropes', note:'XC only day. Full explosive and power session. Battle ropes at the end. TGU finisher closes the session.'},
 };
 
 const LIFT_A={
@@ -347,14 +353,14 @@ const LIFT_A={
       {n:'Half-kneeling single-arm DB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Landmine block',rows:[
-      {n:'Landmine squat (two-hand)',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
       {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
-      {n:'Landmine row (single-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
+      {n:'Landmine wood chop (low to high)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+      {n:'Landmine high pull (single-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
     ]},
-    {label:'Accessories',rows:[
-      {n:'Dumbbell incline press',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
-      {n:'Face pull (cable)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
-      {n:'Triceps pushdown',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
+    {label:'Banded accessories',rows:[
+      {n:'Banded face pull',badge:'RC · rear delt',bc:'b-orange',rep:'acc',uni:false},
+      {n:'Banded triceps pushdown',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
+      {n:'Banded pull-apart (pronated)',badge:'Scapula',bc:'b-purple',rep:'acc',uni:false},
     ]},
     {label:'Core',rows:[
       {n:'Ab wheel rollout',badge:'Core',bc:'b-gray',rep:'core',uni:false},
@@ -372,30 +378,29 @@ const LIFT_B={
       {n:'Push press (overhead)',badge:'Push',bc:'b-blue',rep:'main',uni:false},
     ]},
     {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
-      {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Step-up with knee drive',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper',rows:[
       {n:'Single-arm overhead KB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Landmine block',rows:[
-      {n:'Landmine deadlift (sumo stance)',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
       {n:'Landmine rotation (Meadows twist)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
       {n:'Landmine split-stance press',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
-      {n:'Landmine high pull (single-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
+      {n:'Landmine T-bar row (two-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
     ]},
-    {label:'Accessories',rows:[
-      {n:'Rear delt fly (chest-supported DB)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
-      {n:'Romanian deadlift',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
-      {n:'Neutral-grip chin-up (slow eccentric)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+    {label:'Banded accessories',rows:[
+      {n:'Banded clamshell',badge:'Glute med',bc:'b-green',rep:'acc',uni:true},
+      {n:'Banded hip extension — standing kickback',badge:'Glute max',bc:'b-green',rep:'acc',uni:true},
+      {n:'Banded ER at side (90° elbow)',badge:'RC',bc:'b-purple',rep:'acc',uni:true},
     ]},
     {label:'Core — anti-rotation',rows:[
       {n:'Pallof press',badge:'Core',bc:'b-gray',rep:'core',uni:true},
       {n:'Suitcase carry',badge:'Core',bc:'b-gray',rep:'core',uni:true},
       {n:'GHD sit-up',badge:'Core',bc:'b-gray',rep:'core',uni:false},
     ]},
-    {label:'Turkish get-up finisher — Wednesday',rows:[
+    {label:'Turkish get-up finisher',rows:[
       {n:'Turkish get-up (light KB)',badge:'TGU',bc:'b-purple',rep:'core',uni:true},
     ]},
   ]
@@ -409,8 +414,8 @@ const LIFT_C={
       {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
     {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
-      {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper',rows:[
       {n:'Dumbbell split press (kneeling)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
@@ -418,14 +423,13 @@ const LIFT_C={
     ]},
     {label:'Landmine block',rows:[
       {n:'Landmine 180 (rotational slam)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
-      {n:'Landmine squat to press (single-arm)',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
-      {n:'Landmine RDL to row combo',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
       {n:'Landmine lateral lunge',badge:'Unilateral',bc:'b-amber',rep:'acc',uni:true},
+      {n:'Landmine kneeling press',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
     ]},
-    {label:'Strength-endurance block',rows:[
-      {n:'Goblet squat',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
-      {n:'Push-up (weighted or archer)',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
-      {n:'TRX or ring row',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+    {label:'Banded accessories',rows:[
+      {n:'Banded lateral walk (monster walk)',badge:'Glute med',bc:'b-green',rep:'acc',uni:false},
+      {n:'Banded bird dog',badge:'Stability',bc:'b-purple',rep:'acc',uni:true},
+      {n:'Banded standing hip IR + ER',badge:'IR / ER',bc:'b-blue',rep:'acc',uni:true},
     ]},
     {label:'Core finisher',rows:[
       {n:'Hanging leg raise',badge:'Core',bc:'b-gray',rep:'core',uni:false},
@@ -515,6 +519,109 @@ const LEAN_C={
   ]
 };
 
+// Monday — agility, reaction, jumps, 10m sprint, bike HIIT (no wrestling drills, no battle ropes)
+const COND_MON=[
+  {ico:'🪜',n:'Agility ladder — linear',d:'4×down and back — high knees, one foot per rung, fast feet. Focus on quick ground contact.',dur:'Agility'},
+  {ico:'🪜',n:'Agility ladder — lateral',d:'3×down and back — lateral shuffle, ickey shuffle, crossover step patterns.',dur:'Agility'},
+  {ico:'⚫',n:'Dot drills — two-foot',d:'3×30s — standard 5-dot pattern, two feet. Fast and precise.',dur:'Dot drills'},
+  {ico:'⚫',n:'Dot drills — single-leg',d:'3×20s / side — same pattern, one foot. Balance and ankle stability.',dur:'Dot drills'},
+  {ico:'👁️',n:'Reaction drill — partner hand touch',d:'30s rounds — partner holds hands out at random, slap as fast as possible.',dur:'Reaction'},
+  {ico:'👁️',n:'Mirror drill',d:'4×20s — shadow opponent\'s movement exactly. Lateral, forward, back. Stance and footwork.',dur:'Reaction'},
+  {ico:'📦',n:'Tuck jump',d:'4×8 — explode up, drive knees to chest. Land soft. Full hip extension at takeoff.',dur:'Jumps'},
+  {ico:'📦',n:'Lateral bound',d:'3×6 / side — bound laterally, stick the landing 2s. Wrestling stance width.',dur:'Jumps'},
+  {ico:'💨',n:'10m reactive sprint',d:'6 reps — start on partner signal. Full acceleration from wrestling stance. Full rest between reps.',dur:'Speed'},
+  {ico:'🚴',n:'Bike HIIT — pick one option',d:'Option A: Tabata — 8 rounds × 20s all-out / 10s rest (4 min total). Option B: 30s on / 90s off × 8 rounds (16 min). Option C: Pyramid — 10s, 20s, 30s, 40s, 30s, 20s, 10s with equal rest each interval (~12 min). All at max effort on the working intervals.',dur:'Bike HIIT'},
+];
+
+// Wednesday — lighter agility and recovery focus only. No battle ropes, no wrestling drills, no jumps.
+const COND_WED=[
+  {ico:'🪜',n:'Agility ladder — linear',d:'3×down and back — lighter volume than Monday. Focus on technique over speed.',dur:'Agility'},
+  {ico:'🪜',n:'Agility ladder — lateral',d:'3×down and back — ickey shuffle and crossover step. Clean footwork.',dur:'Agility'},
+  {ico:'⚫',n:'Dot drills — two-foot',d:'2×30s — keep feet moving, stay light. Maintenance pattern.',dur:'Dot drills'},
+  {ico:'👁️',n:'Reaction drill — partner hand touch',d:'3×30s — reaction and lateral movement. Lower intensity than Monday.',dur:'Reaction'},
+];
+
+// Thursday — optional water recovery
+const THU_WATER=[
+  {ico:'🌊',n:'Lazy river walk',d:'10–15 min walking in the lazy river current. Hydrostatic pressure reduces soreness. Zero impact on joints. Do if available.',dur:'Optional'},
+  {ico:'🏊',n:'Easy swim',d:'Low-intensity laps — technique not speed. Outstanding joint recovery. Conversational pace throughout.',dur:'Optional'},
+  {ico:'🧘',n:'Pool mobility — hip circles and arm swings',d:'5 min — hip circles, leg swings, shoulder circles in the water. Do alongside the lazy river walk if available.',dur:'Optional'},
+];
+
+const THU_REQUIRED=[
+  {ico:'🍽️',n:'Nutrition — Thursday ★ required',d:'High protein meal within 60 min of finishing practice. Carbohydrates to replenish glycogen from the heaviest practice day of the week. Hydrate fully — XC and wrestling in the same day is a significant fluid loss.',dur:'Required'},
+  {ico:'😴',n:'Sleep — 8–9 hours ★ required',d:'Thursday night sleep is critical. Friday is Lift C — the only day you go into a full lifting session without a double practice on the same day. Protect this sleep window completely. 8 hours minimum, 9 is the target.',dur:'Required'},
+];
+
+// Wednesday evening — optional water, required nutrition and sleep
+const WED_EVENING=[
+  {ico:'🌊',n:'Lazy river walk',d:'10–15 min. Hydrostatic pressure reduces soreness. Zero impact. Do if available.',dur:'Optional'},
+  {ico:'🧘',n:'Pool mobility — hip circles and arm swings',d:'5 min in the water. Buoyancy assists range of motion when fatigued. Do alongside lazy river if available.',dur:'Optional'},
+  {ico:'🍽️',n:'Nutrition — Wednesday evening ★ required',d:'High protein meal within 60 min of finishing practice. Carbohydrates to replenish glycogen from XC and wrestling. Hydrate fully before sleep. Wednesday night nutrition directly fuels Thursday\'s double practice day.',dur:'Required'},
+  {ico:'😴',n:'Sleep — 8–9 hours ★ required',d:'Wednesday night sleep is the most important recovery window of the week. Thursday is XC and wrestling back to back with no added training buffer. Go to bed early. No screens 30 min before sleep.',dur:'Required'},
+];
+
+// Phase-scaled HIIT circuits (wrestling-specific, 20 min max)
+const COND_HIIT={
+  base:{
+    label:'P1 — Base HIIT · 1:1 work/rest · 15 min',
+    rows:[
+      {ico:'🤼',n:'Shot clock interval',d:'30s continuous level changes, 30s rest × 5 rounds. Drive from the hip each rep.',dur:'HIIT'},
+      {ico:'🤼',n:'Sprawl and base',d:'30s sprawl to base × 4 rounds. Snap hips hard, explode back to stance.',dur:'HIIT'},
+      {ico:'💨',n:'10m reactive sprint',d:'6 reps — start on partner signal. Full acceleration from wrestling stance.',dur:'HIIT'},
+    ]
+  },
+  hyp:{
+    label:'P2 — Conditioning HIIT · 2:1 work/rest · 18 min',
+    rows:[
+      {ico:'🤼',n:'Takedown chain drill',d:'40s continuous — level change, shot, finish, reset × 4 rounds. No stopping.',dur:'HIIT'},
+      {ico:'🤼',n:'Sprawl to scramble',d:'40s — sprawl, pop to base, immediately hand fight × 4 rounds.',dur:'HIIT'},
+      {ico:'💨',n:'20m sprint and backpedal',d:'8 reps — sprint 20m, backpedal to start. Active recovery between.',dur:'HIIT'},
+      {ico:'👁️',n:'Command reaction drill',d:'4×30s — coach calls direction or move, athlete reacts instantly.',dur:'HIIT'},
+    ]
+  },
+  str:{
+    label:'P3 — Max intensity HIIT · 2:1 · 20 min',
+    rows:[
+      {ico:'🤼',n:'Live stance and movement',d:'45s live shadow wrestling + 20s rest × 5 rounds. Full intensity stance work.',dur:'HIIT'},
+      {ico:'🤼',n:'Resisted shot burst',d:'6×5 reps — band-resisted penetration steps. Explosive hip drive.',dur:'HIIT'},
+      {ico:'💨',n:'Sprint ladder',d:'2×10m, 2×20m, 2×30m — full recovery between. Max acceleration each rep.',dur:'HIIT'},
+      {ico:'📦',n:'Depth drop to lateral bound',d:'4×5 — step off box, land, immediately bound laterally. Reactive power.',dur:'HIIT'},
+    ]
+  },
+  peak:{
+    label:'P4 — Peaking HIIT · Quality over volume · 15 min',
+    rows:[
+      {ico:'🤼',n:'Explosive level change burst',d:'5×6 reps — 45s full rest between. Max speed each rep.',dur:'HIIT'},
+      {ico:'💨',n:'10m acceleration sprint',d:'8 reps — full rest. Fastest possible first 3 steps.',dur:'HIIT'},
+      {ico:'👁️',n:'Reactive mirror drill',d:'3×20s — maximum responsiveness, partner-led.',dur:'HIIT'},
+    ]
+  },
+  pre:{
+    label:'P5 — Preseason HIIT · Practice-load aware · 12 min',
+    rows:[
+      {ico:'🤼',n:'Shot and finish drill',d:'4×30s — quick shot, finish, reset. Practice tempo.',dur:'HIIT'},
+      {ico:'💨',n:'Reactive 10m sprint',d:'5 reps — partner signal start. Short and fast.',dur:'HIIT'},
+      {ico:'⚫',n:'Dot drill — alternating',d:'3×20s — keep feet moving, stay light.',dur:'HIIT'},
+    ]
+  },
+  early:{
+    label:'P6 — Early season HIIT · Maintenance · 10 min',
+    rows:[
+      {ico:'🤼',n:'Level change activation',d:'3×10 reps — easy, controlled. Keep the pattern sharp.',dur:'HIIT'},
+      {ico:'💨',n:'10m sprint × 4 reps',d:'Full rest between. Maintenance speed.',dur:'HIIT'},
+      {ico:'🪜',n:'Agility ladder — one pattern',d:'3×down and back. Pick one pattern and nail it.',dur:'HIIT'},
+    ]
+  },
+  'in':{
+    label:'P7 — In-season HIIT · Minimal · 8 min',
+    rows:[
+      {ico:'🤼',n:'Level change drill',d:'2×8 reps — controlled. Stay sharp, don\'t fatigue.',dur:'HIIT'},
+      {ico:'💨',n:'10m sprint × 3 reps',d:'Full rest. Three crisp reps only.',dur:'HIIT'},
+    ]
+  },
+};
+
 const EXPLO_TUE=[
   {ico:'⚡',n:'Broad jump',d:'4×5 — max distance each rep. Soft landing, absorb through hips and knees.',dur:'Neural activation'},
   {ico:'⚡',n:'Lateral hurdle hop',d:'3×8 / side — quick ground contact, stay on balls of feet.',dur:'Neural activation'},
@@ -547,93 +654,126 @@ const EXPLO_SAT=[
 ];
 
 // Battle ropes — phase-specific rotations
-// Constants per session marked with * in note — always kept regardless of phase
-// Tue constants: alternating waves (conditioning anchor) + power slam (max force anchor)
-// Sat constants: double wave (bilateral anchor) + grappler toss (wrestling anchor)
+// Mon + Wed: alternating waves (★) + power slam (★) + rotating variation
+// Sat: double wave (★) + grappler toss (★) + rotating variation
 const BATTLE_ROPES = {
-  //           [constant1,          constant2,           rotating variation]
   base: {
-    tue: [
-      {ico:'🔄',n:'Battle rope alternating waves',    d:'4×30s on / 30s rest — build the pattern. Focus on full arm extension and hip drive. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope power slam',            d:'3×8 — overhead raise, slam down with max force. Reset fully each rep. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope outside circles',       d:'3×20s / dir — make large outward circles with both ropes. Shoulder and rotator cuff warm-up.',dur:'Battle ropes'},
+    mon: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'4×30s on / 30s rest — build the pattern. Full arm extension, drive from hips. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'3×8 — raise overhead, slam down with max force. Reset fully. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope outside circles',d:'3×20s / dir — large outward circles with both ropes. Shoulder and RC warm-up.',dur:'Battle ropes'},
+    ],
+    wed: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'4×30s on / 30s rest — same as Monday. Focus on hip drive. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'3×8 — max force each rep. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral shuffle wave',d:'3×20s — lateral shuffle while maintaining alternating waves. Foot speed + arm endurance.',dur:'Battle ropes'},
     ],
     sat: [
-      {ico:'🔄',n:'Battle rope double wave',           d:'4×30s on / 30s rest — both ropes together. Athletic stance, drive from hips. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope grappler toss',         d:'3×8 / side — rotate and slam both ropes to one side. Hip pivot, wrestling throw pattern. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope lateral shuffle wave',  d:'3×20s — lateral shuffle while maintaining alternating waves. Foot speed + arm endurance.',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope double wave',d:'4×30s on / 30s rest — both ropes together. Athletic stance, drive from hips. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',d:'3×8 / side — rotate and slam both ropes to one side. Hip pivot, wrestling throw pattern. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral shuffle wave',d:'3×20s — lateral shuffle while maintaining waves. Foot speed + arm endurance.',dur:'Battle ropes'},
     ],
   },
   hyp: {
-    tue: [
-      {ico:'🔄',n:'Battle rope alternating waves',    d:'5×30s on / 30s rest — increase volume from P1. Drive harder from the hips. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope power slam',            d:'4×10 — full reset between reps. Max force output. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope lateral slam',          d:'4×20s — slam both ropes to each side alternately. Rotate through the core.',dur:'Battle ropes'},
+    mon: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'5×30s on / 30s rest — volume increase from P1. Drive harder from hips. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'4×10 — full reset between reps. Max force. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral slam',d:'4×20s — slam both ropes to each side alternately. Rotate through the core.',dur:'Battle ropes'},
+    ],
+    wed: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'5×30s on / 30s rest — hold quality across all 5 sets. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'4×10 — max force output. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope outside circles',d:'4×20s / dir — outward circles. Shoulder and rotator cuff.',dur:'Battle ropes'},
     ],
     sat: [
-      {ico:'🔄',n:'Battle rope double wave',           d:'5×30s on / 30s rest — volume increase. Stay in stance the full 30s. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope grappler toss',         d:'4×10 / side — full hip rotation each rep. Build explosiveness. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope squat to wave',         d:'4×20s — squat down, explode up and wave simultaneously. Lower body drives the ropes.',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope double wave',d:'5×30s on / 30s rest — volume increase. Stay in stance the full 30s. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',d:'4×10 / side — full hip rotation each rep. Build explosiveness. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope squat to wave',d:'4×20s — squat down, explode up and wave simultaneously. Lower body drives the ropes.',dur:'Battle ropes'},
     ],
   },
   str: {
-    tue: [
-      {ico:'🔄',n:'Battle rope alternating waves',    d:'5×30s on / 30s rest — maintain intensity throughout. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope power slam',            d:'4×10 — treat like a lift. Full hip extension, max force. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope sprint',               d:'4×15s all-out / 45s rest — absolute max speed alternating waves. Pure power output.',dur:'Battle ropes'},
+    mon: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'5×30s on / 30s rest — maintain intensity throughout. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'4×10 — treat like a lift. Full hip extension, max force. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope sprint',d:'4×15s all-out / 45s rest — absolute max speed alternating waves. Pure power output.',dur:'Battle ropes'},
+    ],
+    wed: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'5×30s on / 30s rest — peak conditioning volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'4×10 — heavy intent. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope single-arm wave',d:'3×20s / side — unilateral demand, core anti-rotation.',dur:'Battle ropes'},
     ],
     sat: [
-      {ico:'🔄',n:'Battle rope double wave',           d:'5×30s on / 30s rest — peak volume phase. Hold wattage across all 5 sets. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope grappler toss',         d:'4×10 / side — maximum rotation and power. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope jump slam',             d:'4×8 — jump and slam both ropes on landing. Explosive triple extension into the ropes.',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope double wave',d:'5×30s on / 30s rest — peak volume phase. Hold wattage across all 5 sets. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',d:'4×10 / side — maximum rotation and power. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope jump slam',d:'4×8 — jump and slam both ropes on landing. Explosive triple extension.',dur:'Battle ropes'},
     ],
   },
   peak: {
-    tue: [
-      {ico:'🔄',n:'Battle rope alternating waves',    d:'4×20s on / 40s rest — quality over quantity. CNS is peaking, keep rest full. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope power slam',            d:'3×6 — max force, full reset. Heavy intent. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope single-arm wave',       d:'3×15s / side — one rope, one arm. Unilateral demand, shoulder stability.',dur:'Battle ropes'},
+    mon: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'4×20s on / 40s rest — quality over quantity. CNS peaking. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'3×6 — max force, full reset. Heavy intent. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope single-arm wave',d:'3×15s / side — one rope, one arm. Unilateral demand.',dur:'Battle ropes'},
+    ],
+    wed: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'4×20s on / 40s rest — taper volume, keep intensity. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'3×6 — heavy intent, full rest. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope rotational slam',d:'3×6 / side — stand sideways, slam with full hip rotation. Match intensity.',dur:'Battle ropes'},
     ],
     sat: [
-      {ico:'🔄',n:'Battle rope double wave',           d:'4×20s on / 40s rest — taper volume, keep intensity. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope grappler toss',         d:'3×8 / side — maximum intent each rep. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope rotational slam',       d:'3×6 / side — stand sideways, slam ropes laterally with full hip rotation. Match intensity.',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope double wave',d:'4×20s on / 40s rest — taper volume, keep intensity. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',d:'3×8 / side — maximum intent each rep. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope rotational slam',d:'3×6 / side — stand sideways, full hip rotation each slam.',dur:'Battle ropes'},
     ],
   },
   pre: {
-    tue: [
-      {ico:'🔄',n:'Battle rope alternating waves',    d:'3×30s on / 30s rest — maintenance. Practice is the primary load now. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope power slam',            d:'3×8 — keep the explosive pattern sharp. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope lateral slam',          d:'3×15s — rotational conditioning for wrestling periods.',dur:'Battle ropes'},
+    mon: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'3×30s on / 30s rest — maintenance. Practice is the primary load. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'3×8 — keep the explosive pattern sharp. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral slam',d:'3×15s — rotational conditioning for wrestling periods.',dur:'Battle ropes'},
+    ],
+    wed: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'3×30s on / 30s rest — same as Monday, maintenance volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'3×8 — maintain explosive output. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope outside circles',d:'3×20s / dir — shoulder health focus. Lower demand.',dur:'Battle ropes'},
     ],
     sat: [
-      {ico:'🔄',n:'Battle rope double wave',           d:'3×30s on / 30s rest — maintenance volume. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope grappler toss',         d:'3×8 / side — wrestling-specific rotation. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope squat to wave',         d:'3×15s — leg drive into the ropes. Keeps the chain connected.',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope double wave',d:'3×30s on / 30s rest — maintenance volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',d:'3×8 / side — wrestling-specific rotation. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope squat to wave',d:'3×15s — leg drive into the ropes. Keeps the chain connected.',dur:'Battle ropes'},
     ],
   },
   early: {
-    tue: [
-      {ico:'🔄',n:'Battle rope alternating waves',    d:'3×20s on / 40s rest — competition mode, full recovery between sets. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope power slam',            d:'2×8 — explosive intent maintained. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope outside circles',       d:'2×20s / dir — shoulder health and activation. Lower demand, good for recovery days.',dur:'Battle ropes'},
+    mon: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'3×20s on / 40s rest — competition mode, full recovery between. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'2×8 — explosive intent maintained. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope outside circles',d:'2×20s / dir — shoulder activation, lower demand.',dur:'Battle ropes'},
+    ],
+    wed: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'3×20s on / 40s rest — match schedule governs volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'2×8 — stay sharp. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope single-arm wave',d:'2×15s / side — low demand, shoulder activation.',dur:'Battle ropes'},
     ],
     sat: [
-      {ico:'🔄',n:'Battle rope double wave',           d:'3×20s on / 40s rest — match schedule governs volume. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope grappler toss',         d:'2×8 / side — stay sharp on the wrestling pattern. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope sprint',               d:'2×10s all-out — short and fast. Pre-match activation if needed.',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope double wave',d:'3×20s on / 40s rest — match schedule governs volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',d:'2×8 / side — stay sharp on the wrestling pattern. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope sprint',d:'2×10s all-out — short and fast. Pre-match activation.',dur:'Battle ropes'},
     ],
   },
-  in: {
-    tue: [
-      {ico:'🔄',n:'Battle rope alternating waves',    d:'2×20s on / 40s rest — in-season minimal. Keep neural pattern without fatigue. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope power slam',            d:'2×6 — maintain explosive output. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope single-arm wave',       d:'2×15s / side — low volume, shoulder activation.',dur:'Battle ropes'},
+  'in': {
+    mon: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'2×20s on / 40s rest — in-season minimal. Keep neural pattern. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'2×6 — maintain explosive output. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope single-arm wave',d:'2×15s / side — low volume, shoulder activation.',dur:'Battle ropes'},
+    ],
+    wed: [
+      {ico:'🔄',n:'Battle rope alternating waves',d:'2×20s on / 40s rest — in-season. Brief and focused. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',d:'2×6 — explosive intent. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral slam',d:'2×15s — rotational pattern maintenance.',dur:'Battle ropes'},
     ],
     sat: [
-      {ico:'🔄',n:'Battle rope double wave',           d:'2×20s on / 40s rest — minimal in-season volume. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope grappler toss',         d:'2×6 / side — keep the wrestling pattern. ★ constant',dur:'Battle ropes'},
-      {ico:'🔄',n:'Battle rope rotational slam',       d:'2×6 / side — stay explosive, brief.',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope double wave',d:'2×20s on / 40s rest — minimal in-season volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',d:'2×6 / side — keep the wrestling pattern. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope rotational slam',d:'2×6 / side — stay explosive, brief.',dur:'Battle ropes'},
     ],
   },
 };
@@ -648,9 +788,13 @@ const CARDIO_DATA=[
 
 const REST_DATA=[
   {ico:'🧘',n:'Mobility flow',d:'Hip flexors 10 min · Thoracic spine 10 min · Shoulder capsule 10 min',dur:'30 min'},
-  {ico:'🏊',n:'Easy swim (optional)',d:'Low-intensity laps — technique not speed. Outstanding joint recovery.',dur:'20 min'},
   {ico:'🚶',n:'Light walk',d:'15–30 min easy pace. Keep blood moving.',dur:'20 min'},
-  {ico:'🍽️',n:'Nutrition and sleep',d:'High protein, 8–9 hrs sleep. Recovery is where adaptation happens.',dur:'All day'},
+];
+
+const WATER_RECOVERY=[
+  {ico:'🌊',n:'Lazy river walk',d:'10–15 min walking in the lazy river current. Hydrostatic pressure reduces soreness. Zero impact on joints. Do if available.',dur:'Active recovery'},
+  {ico:'🏊',n:'Easy swim',d:'Low-intensity laps — technique not speed. Outstanding joint recovery. Conversational pace throughout.',dur:'20 min'},
+  {ico:'🧘',n:'Pool mobility — hip circles and arm swings',d:'5 min — hip circles, leg swings, shoulder circles in the water. Buoyancy assists range of motion when fatigued.',dur:'Mobility'},
 ];
 
 const STRETCH_SECTIONS=[
@@ -926,7 +1070,7 @@ const RUN_PLAN = {
     {day:'Sun', mi:10,  pace:'Long run', note:'Hold at 10mi — XC athletes skip this; non-XC maintain aerobic base'},
   ],
   // Phase 7 — In-season — minimal maintenance only
-  in: [
+  'in': [
     {day:'Mon', mi:2,   pace:'Easy',     note:'Easy 20 min max — match week recovery'},
     {day:'Tue', mi:2,   pace:'Easy',     note:'Easy only, skip if fatigued from matches'},
     {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
@@ -944,6 +1088,208 @@ function toggleRun() {
   const toggle = document.getElementById('runToggle');
   if(body) { body.classList.toggle('open', runOpen); }
   if(toggle) { toggle.classList.toggle('open', runOpen); toggle.textContent = runOpen ? '▲' : '▼'; }
+}
+
+// ----- DAILY REQUIREMENTS -----
+// schedDay: 0=Sun(LiftA) 1=Mon(Cond) 2=Tue(LiftB) 3=Wed(Cond) 4=Thu(Rest) 5=Fri(LiftC) 6=Sat(Explo)
+// Order: pre (dynamic stretch — before session) → [SESSION] → post (static cool-down — after session) → prehab (anytime) → daily (grip/foam/nutrition/sleep)
+const DAILY_REQS = {
+  0: { // Sunday — Lift A (post wrestling, pressing day)
+    pre:[
+      {ico:'🤸',t:'Dynamic warm-up — before lifting',d:'8–10 min — leg swings, hip 90/90, thoracic rotation, arm circles, world\'s greatest stretch.'},
+    ],
+    post:[
+      {ico:'🧘',t:'Static cool-down — lower body focus',d:'Pigeon pose 60s/side · Couch stretch 60s/side · Supine hamstring 45s/side · Lat stretch 45s/side · Child\'s pose 60s.'},
+    ],
+    prehab:[
+      {ico:'💪',t:'Shoulder prehab — full protocol (anytime)',d:'10–12 min — band pull-aparts, YTWL, wall slides, sleeper stretch, physio ball ABCs. Pressing day — do not skip.'},
+      {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board stretches, ABCs, tibialis raise, single-leg balance. Morning or evening works fine.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'10 min — oscillating bar tissue prep, 90/90 flow, banded clamshells and lateral walk.'},
+    ],
+    daily:[
+      {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 full squeezes per hand. Every day — anytime. Watching film, before bed, in the morning.'},
+      {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — quads, hamstrings, glutes, upper back. Slow rolling with pauses on tight spots.'},
+    ],
+    optional:[
+      {ico:'🌊',t:'Lazy river or easy swim',d:'If available — outstanding joint recovery with zero impact.'},
+    ]
+  },
+  1: { // Monday — Conditioning (XC + wrestling already done)
+    pre:[
+      {ico:'🤸',t:'Dynamic warm-up — before conditioning',d:'8–10 min — leg swings, hip flow, lateral shuffles to warm ankles before agility work.'},
+    ],
+    post:[
+      {ico:'🧘',t:'Static cool-down — running focus',d:'Standing calf stretch straight knee 45s/side · Bent knee soleus 45s/side · Hip flexor lunge 60s/side · Seated groin 60s · Cross-body shoulder 30s/side.'},
+    ],
+    prehab:[
+      {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board, ABCs, tibialis raise, peroneal walk. Critical after XC mileage.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'5 min minimum — banded clamshells and lateral walk. Full protocol if energy allows.'},
+    ],
+    daily:[
+      {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day — anytime.'},
+      {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — calves, quads, IT band, glutes. Legs priority after XC and wrestling.'},
+    ],
+    optional:[]
+  },
+  2: { // Tuesday — Lift B (XC only, heaviest session, pressing day)
+    pre:[
+      {ico:'🤸',t:'Dynamic warm-up — before lifting',d:'8–10 min — leg swings, hip 90/90, thoracic rotation, world\'s greatest stretch.'},
+    ],
+    post:[
+      {ico:'🧘',t:'Static cool-down — posterior chain focus',d:'Pigeon pose 60s/side · Couch stretch 60s/side · Supine hamstring 45s/side · Child\'s pose with reach 60s · Doorway chest stretch 45s/side.'},
+    ],
+    prehab:[
+      {ico:'💪',t:'Shoulder prehab — full protocol (anytime)',d:'10–12 min — band pull-aparts, YTWL, wall slides, physio ball ABCs, sleeper stretch. Pressing day.'},
+      {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board, tibialis raise 3×20, single-leg balance, lateral hop and stick. Shin splint prevention priority.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'10 min — oscillating bar, clamshells, lateral walk, hip CARs.'},
+    ],
+    daily:[
+      {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Especially important on deadlift day — grip is training.'},
+      {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — hamstrings, glutes, upper back, lats. Focus on what was trained.'},
+    ],
+    optional:[]
+  },
+  3: { // Wednesday — Light conditioning (XC + wrestling)
+    pre:[
+      {ico:'🤸',t:'Dynamic warm-up — before conditioning',d:'5–8 min light — leg swings and hip flow only. Brief before light agility work.'},
+    ],
+    post:[
+      {ico:'🧘',t:'Static cool-down — running muscles',d:'Calf stretch straight knee 45s/side · Soleus bent knee 45s/side · Hip flexor lunge 60s/side · Groin stretch 60s.'},
+    ],
+    prehab:[
+      {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board stretches, ABCs, tibialis raise. Especially important after XC mileage.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'Banded clamshells and lateral walk — 5 min minimum. Non-negotiable.'},
+    ],
+    daily:[
+      {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day.'},
+      {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — calves, quads, IT band. Prep tissue for Thursday\'s double practice.'},
+      {ico:'🍽️',t:'Nutrition ★',d:'High protein meal within 60 min. Carbs to replenish glycogen. Hydrate fully before sleep.'},
+      {ico:'😴',t:'Sleep 8–9 hrs ★',d:'Most important recovery window of the week. Thursday is XC and wrestling back to back. Go to bed early.'},
+    ],
+    optional:[
+      {ico:'🌊',t:'Lazy river walk',d:'10–15 min if available. Hydrostatic pressure reduces soreness with zero impact.'},
+      {ico:'🧘',t:'Pool mobility',d:'Hip circles and arm swings in the water.'},
+    ]
+  },
+  4: { // Thursday — Full rest (XC + wrestling)
+    pre:[],
+    post:[],
+    prehab:[
+      {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board, ABCs, tibialis raise, peroneal walk, stability drills. Do at any point in the day.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'Full protocol — oscillating bar, clamshells, lateral walk, hip CARs, cossack hold, pigeon pose.'},
+      {ico:'🧘',t:'Full mobility flow — deep session (anytime)',d:'Hip flexors · thoracic spine · shoulder capsule — 10 min each zone. This is the weekly deep mobility session.'},
+    ],
+    daily:[
+      {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day without exception.'},
+      {ico:'🪵',t:'Foam rolling — full body',d:'10 min — calves, quads, hamstrings, glutes, upper back, lats. Longest foam rolling session of the week.'},
+      {ico:'🍽️',t:'Nutrition ★',d:'High protein + carbs within 60 min of practice. Hydrate fully. Thursday is the highest fluid loss day.'},
+      {ico:'😴',t:'Sleep 8–9 hrs ★',d:'Thursday night sleep determines Friday lifting quality. 8 hours minimum, 9 is the target.'},
+    ],
+    optional:[
+      {ico:'🌊',t:'Lazy river walk',d:'10–15 min. Gentle recovery. Zero impact.'},
+      {ico:'🏊',t:'Easy swim',d:'Low-intensity laps. Outstanding joint recovery. Conversational pace only.'},
+      {ico:'🧘',t:'Pool mobility',d:'Hip circles and arm swings in the water.'},
+    ]
+  },
+  5: { // Friday — Lift C (XC only, pressing day)
+    pre:[
+      {ico:'🤸',t:'Dynamic warm-up — before lifting',d:'8–10 min — leg swings, hip 90/90, lateral lunge, thoracic rotation, arm circles.'},
+    ],
+    post:[
+      {ico:'🧘',t:'Static cool-down — lateral plane focus',d:'Cossack squat hold 45s/side · Lateral lunge stretch 45s/side · Pigeon pose 60s/side · Doorway chest stretch 45s/side · Cross-body shoulder 30s/side.'},
+    ],
+    prehab:[
+      {ico:'💪',t:'Shoulder prehab — full protocol (anytime)',d:'10–12 min — band pull-aparts, YTWL, wall slides, physio ball ABCs, sleeper stretch. Pressing day.'},
+      {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board, tibialis raise 3×20, weighted tibialis raise if ready, stability work.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'10 min — oscillating bar, clamshells, lateral walk, cossack squat mobility hold.'},
+    ],
+    daily:[
+      {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day.'},
+      {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — quads, IT band, glutes, upper back. Focus on what felt loaded.'},
+    ],
+    optional:[]
+  },
+  6: { // Saturday — Explosive (XC only, non-pressing day)
+    pre:[
+      {ico:'🤸',t:'Dynamic warm-up — before session',d:'8–10 min — thoracic rotation, hip flow, leg swings, arm circles, reactive drop steps to prime the nervous system.'},
+    ],
+    post:[
+      {ico:'🧘',t:'Static cool-down — explosive / calf focus',d:'Standing calf stretch straight knee 45s/side · Soleus bent knee 45s/side · Hip flexor lunge 60s/side · Pigeon pose 60s/side · Cross-body shoulder 30s/side.'},
+    ],
+    prehab:[
+      {ico:'💪',t:'Shoulder prehab — abbreviated (anytime)',d:'5 min — band pull-aparts × 20, face pulls × 15, sleeper stretch 45s/side. Non-pressing day.'},
+      {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board, tibialis raise, lateral hop and stick. Critical before box jumps and bounds.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'Banded clamshells, lateral walk, hip CARs. Primes hip for max power output.'},
+    ],
+    daily:[
+      {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day — consistency builds grip strength.'},
+      {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — calves, quads, glutes. Lower body priority after box jumps, carries, and battle ropes.'},
+    ],
+    optional:[]
+  },
+};
+
+function buildDailyReqs(dayIdx, section) {
+  // section: 'pre' = before session block only, 'rest' = everything after
+  const reqs = DAILY_REQS[dayIdx];
+  if (!reqs) return '';
+  let html = '';
+
+  if (section === 'pre') {
+    if (reqs.pre && reqs.pre.length > 0) {
+      html += `<div class="sec-head" style="color:#7F77DD;margin-bottom:6px">Before session — dynamic warm-up<span class="sec-line"></span></div>`;
+      reqs.pre.forEach(r => {
+        html += `<div class="c-row" style="border-left:2px solid #7F77DD;margin-bottom:6px">
+          <div class="c-ico">${r.ico}</div>
+          <div style="flex:1"><div class="c-name" style="color:#7F77DD">${r.t}</div><div class="c-desc">${r.d}</div></div>
+        </div>`;
+      });
+      html += `<div style="height:8px"></div>`;
+    }
+    return html;
+  }
+
+  if (reqs.post && reqs.post.length > 0) {
+    html += `<div class="sec-head" style="color:#378ADD;margin-top:1rem">After session — static cool-down<span class="sec-line"></span></div>`;
+    reqs.post.forEach(r => {
+      html += `<div class="c-row" style="border-left:2px solid #378ADD">
+        <div class="c-ico">${r.ico}</div>
+        <div style="flex:1"><div class="c-name" style="color:#378ADD">${r.t}</div><div class="c-desc">${r.d}</div></div>
+      </div>`;
+    });
+  }
+
+  if (reqs.prehab && reqs.prehab.length > 0) {
+    html += `<div class="sec-head" style="color:#BA7517;margin-top:.75rem">Prehab — anytime during the day<span class="sec-line"></span></div>`;
+    reqs.prehab.forEach(r => {
+      html += `<div class="c-row" style="border-left:2px solid #BA7517">
+        <div class="c-ico">${r.ico}</div>
+        <div style="flex:1"><div class="c-name" style="color:#BA7517">${r.t}</div><div class="c-desc">${r.d}</div></div>
+      </div>`;
+    });
+  }
+
+  if (reqs.daily && reqs.daily.length > 0) {
+    html += `<div class="sec-head" style="color:#1DB87A;margin-top:.75rem">Daily — every day required<span class="sec-line"></span></div>`;
+    reqs.daily.forEach(r => {
+      html += `<div class="c-row" style="border-left:2px solid #1DB87A">
+        <div class="c-ico">${r.ico}</div>
+        <div style="flex:1"><div class="c-name" style="color:#1DB87A">${r.t}</div><div class="c-desc">${r.d}</div></div>
+      </div>`;
+    });
+  }
+
+  if (reqs.optional && reqs.optional.length > 0) {
+    html += `<div class="sec-head" style="margin-top:.75rem">Optional<span class="sec-line"></span></div>`;
+    reqs.optional.forEach(r => {
+      html += `<div class="c-row" style="opacity:0.7">
+        <div class="c-ico">${r.ico}</div>
+        <div style="flex:1"><div class="c-name">${r.t}</div><div class="c-desc">${r.d}</div></div>
+      </div>`;
+    });
+  }
+
+  return html;
 }
 
 function buildRunBlock(phaseId, dayIndex) {
@@ -1051,18 +1397,28 @@ function renderScheduleContent() {
   const wk=WEEK_DAYS[schedDay];
   let html='';
   const isLean = curPhase>=5;
-  if(isLean&&d.type==='lift') {
-    const leanData = schedDay===0?LEAN_A:schedDay===2?LEAN_B:LEAN_C;
+
+  // Sun=0 Lift A, Tue=2 Lift B, Fri=5 Lift C
+  const liftDayMap = {0:0, 2:1, 5:2}; // schedDay -> lift index (0=A,1=B,2=C)
+  const liftIdx = liftDayMap[schedDay];
+
+  if(isLean && d.type==='lift') {
+    const leanArr=[LEAN_A,LEAN_B,LEAN_C];
+    const leanData = leanArr[liftIdx];
     const schemeBank = curPhase===6 ? P7_SCHEMES : LEAN_SCHEMES;
     const ls = schemeBank[leanData.schemeKey];
     html+=`<div class="in-season-alert">${ls.label} · 6 exercises · under 60 min</div>`;
   }
+
   if(d.type==='lift') {
-    const fullData = schedDay===0?LIFT_A:schedDay===2?LIFT_B:LIFT_C;
-    const leanData = schedDay===0?LEAN_A:schedDay===2?LEAN_B:LEAN_C;
+    const fullArr=[LIFT_A,LIFT_B,LIFT_C];
+    const leanArr=[LEAN_A,LEAN_B,LEAN_C];
+    const fullData = fullArr[liftIdx];
+    const leanData = leanArr[liftIdx];
     const ldata = isLean ? leanData : fullData;
     const schemeBank = curPhase===6 ? P7_SCHEMES : LEAN_SCHEMES;
     const scheme = isLean ? schemeBank[leanData.schemeKey] : p.scheme;
+    html+=buildDailyReqs(schedDay,'pre');
     html+=`<div class="scheme-row">`;
     p.chips.forEach(c=>{html+=`<span class="chip ${c.c}">${c.t}</span>`;});
     html+=`</div>`;
@@ -1070,21 +1426,46 @@ function renderScheduleContent() {
     html+=buildSections(ldata.sections, scheme);
     const note = isLean ? ldata.note : d.note;
     html+=`<div class="note-box">${note}</div>`;
+
+  } else if(d.type==='cond') {
+    const isMon = schedDay===1;
+    if(isMon) {
+      html+=buildDailyReqs(schedDay,'pre');
+      html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(224,96,48,0.1);color:#E06030;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Monday — brief and sharp.</strong> XC and wrestling practice already done. Agility, jumps, sprint, bike HIIT only. No wrestling drills, no battle ropes.</div>`;
+      html+=`<div class="sec-head">Agility · reaction · jumps · sprint · bike HIIT<span class="sec-line"></span></div>`;
+      html+=buildCardioRows(COND_MON);
+    } else {
+      html+=buildDailyReqs(schedDay,'pre');
+      html+=`<div class="alert alert-gray" style="margin-bottom:10px;background:rgba(59,139,219,0.1);color:#5BA8F0;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Wednesday — recovery focus.</strong> Light agility only. Water recovery optional. Nutrition and sleep are not optional.</div>`;
+      html+=`<div class="sec-head">Light agility — technique focus<span class="sec-line"></span></div>`;
+      html+=buildCardioRows(COND_WED);
+      html+=`<div class="sec-head">Optional — water recovery<span class="sec-line"></span></div>`;
+      html+=buildCardioRows(WED_EVENING.slice(0,2));
+      html+=`<div class="sec-head" style="color:#1DB87A">Required — nutrition and sleep<span class="sec-line"></span></div>`;
+      html+=buildCardioRows(WED_EVENING.slice(2));
+    }
+    html+=`<div class="note-box">${d.note}</div>`;
+
   } else if(d.type==='explo') {
-    const edata=schedDay===1?EXPLO_TUE:EXPLO_SAT;
-    const ropeKey=schedDay===1?'tue':'sat';
-    const ropes=(BATTLE_ROPES[p.id]||BATTLE_ROPES['base'])[ropeKey];
-    html+=buildCardioRows(edata);
+    html+=buildDailyReqs(schedDay,'pre');
+    const ropes=(BATTLE_ROPES[p.id]||BATTLE_ROPES['base'])['sat'];
+    html+=buildCardioRows(EXPLO_TUE);
+    html+=buildCardioRows(EXPLO_SAT);
     html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${p.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
     html+=buildCardioRows(ropes);
     html+=`<div class="note-box">${d.note}</div>`;
-  } else if(d.type==='cardio') {
-    html+=buildCardioRows(CARDIO_DATA);
-    html+=`<div class="note-box">${d.note}</div>`;
+
   } else {
+    html+=`<div class="alert alert-gray" style="margin-bottom:10px;background:rgba(59,139,219,0.1);color:#5BA8F0;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Full rest day.</strong> XC and wrestling practice complete. No additional training. Water recovery is optional — nutrition and sleep are not.</div>`;
+    html+=`<div class="sec-head">Optional — water recovery<span class="sec-line"></span></div>`;
+    html+=buildCardioRows(THU_WATER);
+    html+=`<div class="sec-head" style="color:#1DB87A">Required — nutrition and sleep<span class="sec-line"></span></div>`;
+    html+=buildCardioRows(THU_REQUIRED);
     html+=buildCardioRows(REST_DATA);
     html+=`<div class="note-box">${d.note}</div>`;
   }
+
+  html+=buildDailyReqs(schedDay,'rest');
   html+=buildRunBlock(p.id, schedDay);
   html+=buildDayCheckbox(curPhase, schedDay);
   document.getElementById('scheduleContent').innerHTML=html;
@@ -1099,7 +1480,7 @@ function renderLiftPhaseNav() {
 }
 function renderLiftDayTabs() {
   const el=document.getElementById('liftDayTabs');
-  const liftDays=[{name:'Mon',tag:'Full body A'},{name:'Wed',tag:'Full body B'},{name:'Fri',tag:'Full body C'}];
+  const liftDays=[{name:'Sun',tag:'Lift A — post wrestling'},{name:'Tue',tag:'Lift B — heaviest'},{name:'Fri',tag:'Lift C'}];
   el.innerHTML=`<div style="grid-column:1/4;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px">`+liftDays.map((d,i)=>`
     <div class="day-tab ${i===liftDay?'active':''}" onclick="setLiftDay(${i})">
       <div class="dn">${d.name}</div>
@@ -1125,7 +1506,7 @@ function renderLiftContent() {
   }
   if(isLean&&ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
   html+=buildSections(ldata.sections,scheme);
-  const notes=['XC in AM — lift afternoon. 90–120s rest on main lifts, 60s accessories.','Heaviest pull day. Trap bar deadlift is the anchor. Posterior chain and hip stability focus.','End of lifting week. Higher-rep block builds lactate tolerance. Lateral-plane unilateral work.'];
+  const notes=['Post-wrestling Sunday — moderate intensity, legs already loaded from practice. 90–120s rest on main lifts.','Tuesday — XC only day, heaviest lifting session. Trap bar deadlift anchor. TGU finisher. Full rest periods.','Friday — XC only day. Full session. Lateral plane unilateral stays all phases.'];
   html+=`<div class="note-box">${isLean?ldata.note:notes[liftDay]}</div>`;
   document.getElementById('liftContent').innerHTML=html;
 }
@@ -1148,15 +1529,14 @@ function renderExploDays() {
   el.style.gridTemplateColumns='1fr';
 }
 function renderExploContent() {
-  const edata=exploDay===0?EXPLO_TUE:EXPLO_SAT;
-  const ropeKey=exploDay===0?'tue':'sat';
   const ph=PHASES[curPhase];
-  const ropes=(BATTLE_ROPES[ph.id]||BATTLE_ROPES['base'])[ropeKey];
-  const notes=['Rest fully 2–3 min between explosive sets. Speed and power output matter more than fatigue.','Treat each explosive block as a 2-min wrestling period. Loaded carries build clinch strength.'];
-  let html=buildCardioRows(edata);
+  const ropes=(BATTLE_ROPES[ph.id]||BATTLE_ROPES['base'])['sat'];
+  const notes=['Rest fully 2–3 min between explosive sets. Speed and power output matter more than fatigue. TGU closes the session.'];
+  let html=buildCardioRows(EXPLO_TUE);
+  html+=buildCardioRows(EXPLO_SAT);
   html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${ph.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
   html+=buildCardioRows(ropes);
-  html+=`<div class="note-box">${notes[exploDay]}</div>`;
+  html+=`<div class="note-box">${notes[0]}</div>`;
   document.getElementById('exploContent').innerHTML=html;
 }
 function setExploDay(i){exploDay=i;renderExploDays();renderExploContent();}
@@ -1172,10 +1552,10 @@ function renderCardioContent() {
 // ----- STRETCHING -----
 function renderStretchDays() { makeDayTabs('stretchDays', stretchDay, 'setStretchDay'); }
 function renderStretchContent() {
-  let html=`<div class="t-chips"><span class="t-chip">Pre: 8–10 min dynamic</span><span class="t-chip">Post: 10–12 min static</span><span class="t-chip">Evening: 5 min holds (optional)</span></div>`;
+  let html=`<div class="t-chips"><span class="t-chip">Pre: 8–10 min dynamic</span><span class="t-chip">Post: 10–12 min static</span><span class="t-chip">Evening: foam rolling (optional)</span></div>`;
   html+=`<div class="alert alert-gray">${DAY_STRETCH_NOTES[stretchDay]}</div>`;
   html+=buildSections(STRETCH_SECTIONS, null);
-  html+=`<div class="note-box">Dynamic stretching before every session — always. Static holds only after training, never cold. Evening hold work (60–90s per stretch) is where long-term flexibility gains accumulate fastest.</div>`;
+  html+=`<div class="note-box">Dynamic stretching before every session — always. Static holds only after training, never cold. Evening foam rolling (5–10 min) is more effective than static holds for tissue recovery and next-day readiness — focus on whatever was trained that day. Spend 60–90s per area, slow rolling, pause on tight spots.</div>`;
   document.getElementById('stretchContent').innerHTML=html;
 }
 function setStretchDay(i){stretchDay=i;renderStretchDays();renderStretchContent();}
@@ -1287,6 +1667,14 @@ const EX_CUES = {
   'Bulgarian split squat':             'Rear foot elevated, front foot out. Lower the knee toward the floor, drive through the front heel.',
   'Single-arm dumbbell row':           'Brace on bench, row DB to hip. Elbow close, full stretch at bottom, squeeze at top.',
   'Half-kneeling single-arm DB press': 'One knee down, opposite foot forward. Press DB straight overhead on the kneeling side. The half-kneeling position removes leg drive and demands core stability to resist lateral lean. Completely different demand to a standing or landmine press.',
+  // ── BANDED ACCESSORIES ──
+  'Banded face pull':                   'Band at face height, step back to create tension. Pull to forehead with elbows flared high and wide. Thumbs back. External rotation and rear delt at the end range. Lighter and more controlled than cable version — great for high rep activation.',
+  'Banded triceps pushdown':            'Band overhead or at high anchor. Press down to full extension, elbows pinned to sides. The band increases resistance at the bottom — opposite to a cable — which trains the triceps at a different point of the strength curve.',
+  'Banded pull-apart (pronated)':       'Arms straight in front, band between hands. Pull apart to chest level. High reps — 20–25. Scapular retraction and rear delt activation. One of the best shoulder health exercises in the program.',
+  'Banded face pull':                   'Band at face height, pull to forehead with elbows high. Rear delt, external rotation, scapular retraction all in one movement.',
+  'Banded lateral walk (monster walk)': 'Band above or below knees, athletic stance. Step laterally keeping constant band tension. Glute med endurance — highest priority band exercise in the program.',
+  'Banded bird dog':                    'Band around wrists or ankles. Quadruped, extend opposite arm and leg against band resistance. Challenges core stability and hip stability simultaneously.',
+  'Banded standing hip IR + ER':        'Band at ankle, stand on one leg. Rotate the free leg internally then externally against the band. Trains active hip rotation range critical for wrestling base control.',
   'Single-arm overhead KB press':      'Stand or half-kneel, KB in one hand at shoulder. Press straight overhead to full lockout. Keep the rib cage down — do not flare and arch. Demands rotator cuff and scapular stability throughout the press. The KB offset grip increases the stability demand over a dumbbell.',
   'Single-leg hip thrust':             'Upper back on bench, one foot planted. Drive hips up hard, squeeze glute at top.',
   'Step-up with knee drive':           'Step up onto box, drive opposite knee up at the top. Controlled step back down.',
@@ -1490,6 +1878,39 @@ const EX_CUES = {
   'Battle rope jump slam':                   'Jump and slam both ropes simultaneously on landing. The landing force transfers into the slam. Triple extension — ankles, knees, hips — before the slam.',
   'Battle rope single-arm wave':             'One rope, one arm. The unilateral demand challenges the core to resist rotation while producing the wave. Builds shoulder stability and unilateral endurance.',
   'Battle rope rotational slam':             'Stand sideways to the anchor. Slam both ropes to the far side using full hip rotation. Pivot the back foot. Most wrestling-specific movement pattern in the battle rope toolkit.',
+  // ── CONDITIONING / AGILITY / REACTION ──
+  'Agility ladder — linear':                 'One foot per rung, high knees, fast ground contact. Drive the arms. Keep hips tall — do not lean forward. The goal is minimal time on the ground each step.',
+  'Agility ladder — lateral':               'Move laterally through the ladder. Patterns: lateral shuffle (two feet each rung), ickey shuffle, crossover step. Stay on the balls of the feet throughout.',
+  'Dot drills — two-foot':                  'Five dots in an X pattern. Jump two-footed between dots in sequence — standard, in-and-out, around the world. Fast and precise. Times yourself to track progress.',
+  'Dot drills — single-leg':               'Same patterns as two-foot but on one foot only. Significantly harder — trains single-leg balance, power, and ankle stability simultaneously.',
+  'Reaction drill — partner hand touch':    'Stand in wrestling stance facing a partner. Partner holds hands out at random heights and positions. Slap the hand as fast as possible. Trains visual reaction time and lateral movement.',
+  'Mirror drill':                            'Shadow your partner\'s movement exactly — lateral, forward, backward. Stay in wrestling stance throughout. Develops footwork, defensive positioning, and reaction speed.',
+  'Tuck jump':                              'Explode upward and drive both knees to the chest at the top. Land soft — absorb through the ankles, knees, and hips. Full hip extension at takeoff every rep.',
+  'Lateral bound':                          'Push off one foot laterally, land on the opposite foot. Stick the landing for 2 seconds before the next bound. Wrestling stance width gives you the target landing position.',
+  'Shot clock interval':                    'Continuous level changes for the full work interval. Each level change is a real shot — drive from the hips, not just the upper body. This is the single most sport-specific conditioning drill in the program.',
+  'Sprawl and base':                        'From stance, sprawl hard — snap hips to the floor — then immediately pop back to wrestling base. The hip snap is everything. Do not drift into a slow movement.',
+  '10m reactive sprint':                    'Start in wrestling stance. Sprint 10m at full speed the instant your partner gives a signal — hand drop, whistle, word. Trains the first-step acceleration critical for shots and scrambles.',
+  'Takedown chain drill':                   'String multiple offensive sequences together continuously — level change, shot, finish position, stand, repeat. No stopping between reps. Builds the cardiovascular base for sustained offensive pressure.',
+  'Sprawl to scramble':                     'Sprawl defensively, pop to base, immediately transition to an offensive hand fight or inside position. Trains the ability to flip from defense to offense under fatigue.',
+  '20m sprint and backpedal':              'Sprint 20m forward at full speed, immediately backpedal to the start. The backpedal is not a jog — stay in athletic position and move with intent.',
+  'Command reaction drill':                 'Coach or partner calls a direction, movement, or action — athlete reacts immediately. Removes anticipation and trains true reactive speed. Rotate commands unpredictably.',
+  'Live stance and movement':              'Full-intensity shadow wrestling — movement, levels, hand fighting, level changes — for the full work period. Treat it as a real match period with no opponent.',
+  'Resisted shot burst':                    'Band around the hips anchored behind. Drive a penetration step against the resistance. Explosive hip extension against the band. This directly overloads the shot mechanics.',
+  'Sprint ladder':                          'Sprint distances in ascending order — 10m, 20m, 30m — with full recovery between each. Maximum acceleration on every rep. Not conditioning — pure speed and first-step power.',
+  'Depth drop to lateral bound':           'Step off a box, absorb the landing, immediately bound laterally as far as possible. Trains reactive power from a deceleration position — mirrors defensive scramble mechanics.',
+  'Explosive level change burst':          'Single explosive level changes with full rest between. Maximum speed and hip drive on each. Treat it like a max-effort lift — quality over quantity.',
+  '10m acceleration sprint':              'Short sprint focused entirely on the first three steps. Explode from wrestling stance. The acceleration is the training stimulus — not the distance.',
+  'Reactive mirror drill':                 'Maximum intensity mirror drill. Every movement is a reaction to your partner. No anticipating — read and respond only. Advanced version of the standard mirror drill.',
+  'Shot and finish drill':                 'Level change, shot, drive through to a finish position. Reset and repeat. Practice-tempo — clean mechanics, not maximum speed. Reinforces the full takedown sequence.',
+  'Level change activation':              'Slow, controlled level changes. Not a conditioning drill — a movement pattern reinforcement. Keep the hips driving the movement, not the upper body.',
+  'Level change drill':                    'Standard level changes at practice tempo. Maintain wrestling posture throughout — back flat, knees tracking over toes, weight on the balls of the feet.',
+  // ── WATER RECOVERY ──
+  'Light swim — easy laps':               'Easy freestyle or backstroke at a pace you could hold a conversation. Focus on long strokes and relaxed breathing. Not a workout — active recovery to flush out muscle soreness and reduce inflammation.',
+  'Lazy river walk':                       'Walk through the lazy river current in either direction. The gentle water resistance provides light full-body stimulus with zero ground impact. Hydrostatic pressure reduces muscle soreness and joint inflammation — one of the best recovery tools available.',
+  'Pool walk — chest deep':               'Walk in chest-deep water — the water resistance adds a light full-body stimulus with zero impact on the joints. Excellent on heavy-legged days after hard XC or wrestling practice. Far easier than any land-based movement but still keeps blood moving.',
+  'Pool mobility — hip circles and arm swings': 'Perform hip circles, leg swings forward and lateral, and shoulder circles in the water. Buoyancy assists range of motion, allowing you to access positions that would be difficult on land when fatigued. Doubles as active mobility work.',
+  'Nutrition — Wednesday evening':        'High protein meal within 60 min of finishing practice — chicken, fish, eggs, or Greek yogurt. Include carbohydrates to replenish glycogen depleted by XC and wrestling. Hydrate fully with water or electrolytes before sleep. Wednesday night nutrition directly fuels Thursday\'s double practice.',
+  'Sleep — 8–9 hours':                    'Wednesday night sleep is the most important recovery window of the week — Thursday is XC and wrestling back to back with no additional training added. Go to bed early enough to get 8–9 full hours. No screens 30 min before sleep. This is not optional recovery — it is part of the training program.',
   // ── TURKISH GET-UP ──
   'Turkish get-up (light KB)':               'Wednesday finisher — 2×2/side with a light KB. Each rep is a separate skill drill, not a conditioning set. Sequence: roll to elbow → press to hand → hip bridge → sweep to half-kneeling → stand → reverse exactly. Stop the set immediately if any stage loses control or the KB drifts from vertical. The movement quality is the entire point — volume is deliberately low.',
   'Turkish get-up (KB)':                     'Saturday finisher — 2×2/side at moderate KB. Full sequence: roll to elbow → hand → hip bridge → sweep to half-kneeling → lunge to stand → reverse. 60–90s per rep. If any stage is shaky, the weight is too heavy. Two clean reps per side is the goal — never chase more reps at the expense of the movement.',
@@ -1504,6 +1925,7 @@ const EX_CUES = {
   // ── CARDIO ──
   'Sprint intervals':                         'All-out effort for the full distance. Full recovery between reps — these are not tempo runs.',
   'Assault bike intervals':                   '30s max effort on the assault bike — arms and legs. Track your wattage and try to hold it across rounds.',
+  'Bike HIIT — pick one option':              'Three options — pick based on time and energy. Option A Tabata: 8 rounds of 20s absolute max effort, 10s rest. Total 4 min — deceptively brutal. Option B: 30s max effort, 90s easy spin, 8 rounds. Total 16 min — builds aerobic and anaerobic capacity. Option C Pyramid: 10s on/10s off, 20s on/20s off, 30s on/30s off, 40s on/40s off, then back down 30/20/10. Total ~12 min. All options at genuine maximum effort on the working intervals — if you could go harder, you did not go hard enough.',
   'Pool sprint sets':                         'Sprint each 50m rep hard. Focus on breath control and flip turns. Active rest on the wall.',
   'Grip and neck prehab':                     'Towel pull-ups build wrestling-specific grip. Neck bridging done slowly with full control — never rush.',
 };
@@ -1590,6 +2012,34 @@ function renderHipContent() {
   document.getElementById('hipContent').innerHTML=html;
 }
 
+// ----- CONDITIONING -----
+function renderCondContent() {
+  const ph=PHASES[curPhase];
+  const hiit=COND_HIIT[ph.id]||COND_HIIT['base'];
+  const monRopes=(BATTLE_ROPES[ph.id]||BATTLE_ROPES['base'])['mon'];
+  let html=`<div class="t-chips" style="margin-bottom:10px">
+    <span class="t-chip" style="background:rgba(224,96,48,0.1);color:#E06030;border-color:#E06030">Monday — full conditioning</span>
+    <span class="t-chip" style="background:rgba(59,139,219,0.1);color:#5BA8F0;border-color:#5BA8F0">Wednesday — light + recovery</span>
+  </div>`;
+
+  // Monday section
+  html+=`<div class="sec-head" style="color:#E06030">Monday — agility · reaction · jumps · sprint · bike HIIT<span class="sec-line"></span></div>`;
+  html+=`<div class="alert-box alert-gray" style="font-size:11px;color:var(--text2);margin-bottom:8px;padding:8px 12px;background:rgba(224,96,48,0.08);border-radius:8px">XC and wrestling practice already done. No wrestling drills, no battle ropes. Agility, jumps, 10m sprint, and bike HIIT only.</div>`;
+  html+=buildCardioRows(COND_MON);
+
+  // Wednesday section
+  html+=`<div class="sec-head" style="color:#5BA8F0;margin-top:1.25rem">Wednesday — light agility · water recovery only<span class="sec-line"></span></div>`;
+  html+=`<div class="alert-box alert-gray" style="font-size:11px;color:var(--text2);margin-bottom:8px;padding:8px 12px;background:rgba(59,139,219,0.08);border-radius:8px">No jumps · no wrestling drills · no battle ropes. Light technique work then water recovery.</div>`;
+  html+=buildCardioRows(COND_WED);
+  html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin:8px 0 4px">Optional — water recovery</div>`;
+  html+=buildCardioRows(WED_EVENING.slice(0,2));
+  html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#1DB87A;margin:8px 0 4px">★ Required — nutrition and sleep</div>`;
+  html+=buildCardioRows(WED_EVENING.slice(2));
+
+  html+=`<div class="note-box">Rotate agility patterns week to week on Monday so the same ladder drills do not repeat every session. Wednesday stays consistent — light agility and water recovery every week regardless of phase.</div>`;
+  document.getElementById('condContent').innerHTML=html;
+}
+
 function renderLandmineContent() {
   let html=`<div class="alert alert-gray" style="margin-bottom:12px">The landmine is one of the best tools for wrestling — every movement loads rotational force, asymmetrical strength, and hip drive simultaneously. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise for an image and coaching cue.</div>`;
   html+=`<div class="t-chips" style="margin-bottom:12px">
@@ -1616,7 +2066,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','lifting','explosive','cardio','stretch','ankle','shoulder','hip','landmine'];
+    const ids=['progress','schedule','lifting','conditioning','explosive','cardio','stretch','ankle','shoulder','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
@@ -1689,6 +2139,7 @@ function renderProgressContent(){
 renderProgressContent();
 renderPhaseNav(); renderPhaseInfo(); renderScheduleDays(); renderScheduleContent();
 renderLiftPhaseNav(); renderLiftDayTabs(); renderLiftContent();
+renderCondContent();
 renderExploDays(); renderExploContent();
 renderCardioContent();
 renderStretchDays(); renderStretchContent();
