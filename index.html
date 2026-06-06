@@ -226,6 +226,7 @@
   <button onclick="switchSection('explosive')">Explosive</button>
   <button onclick="switchSection('cardio')">Cardio</button>
   <button onclick="switchSection('stretch')">Stretching</button>
+  <button onclick="switchSection('foam')">Foam rolling</button>
   <button onclick="switchSection('ankle')">Ankle prehab</button>
   <button onclick="switchSection('shoulder')">Shoulder prehab</button>
   <button onclick="switchSection('hip')">Hip prehab</button>
@@ -272,6 +273,11 @@
 <div class="section" id="sec-stretch">
   <div class="day-tabs" id="stretchDays"></div>
   <div class="content-card" id="stretchContent"></div>
+</div>
+
+<!-- ===================== FOAM ROLLING ===================== -->
+<div class="section" id="sec-foam">
+  <div class="content-card" id="foamContent"></div>
 </div>
 
 <!-- ===================== ANKLE ===================== -->
@@ -1563,6 +1569,67 @@ function renderStretchContent() {
 function setStretchDay(i){stretchDay=i;renderStretchDays();renderStretchContent();}
 
 // ----- ANKLE -----
+// ----- FOAM ROLLING -----
+const FOAM_SECTIONS=[
+  {label:'Lower body — posterior chain',rows:[
+    {n:'Hamstrings — double leg',d:'60–90s each side — sit on roller, roll from glute crease to back of knee. Pause on tight spots.',badge:'Lower',bc:'b-green'},
+    {n:'Hamstrings — single leg (cross over)',d:'60s / side — cross one leg over for increased pressure. Slow 1-inch movements over tight areas.',badge:'Lower',bc:'b-green'},
+    {n:'Glutes — seated',d:'60–90s / side — sit on roller, cross ankle over knee, lean into the hip. Targets glute med and piriformis.',badge:'Lower',bc:'b-green'},
+    {n:'Piriformis — figure-4 position',d:'60s / side — cross ankle over knee, tilt toward the hip. Deep pressure into the external rotators.',badge:'Lower',bc:'b-green'},
+    {n:'Calves — gastrocnemius',d:'60s / side — straight leg on roller, roll from ankle to back of knee. Stack legs for more pressure.',badge:'Lower',bc:'b-green'},
+    {n:'Calves — soleus (bent knee)',d:'60s / side — bend the rolling knee slightly. Shifts pressure to the deeper soleus. Important for XC runners.',badge:'Lower',bc:'b-green'},
+    {n:'Achilles and lower calf',d:'45s / side — roller just above the heel. Slow micro-movements. Gentle — do not over-compress the Achilles.',badge:'Lower',bc:'b-green'},
+  ]},
+  {label:'Lower body — anterior and lateral chain',rows:[
+    {n:'Quadriceps — bilateral',d:'60–90s — face down, roller under both quads. Roll from hip crease to just above the knee.',badge:'Lower',bc:'b-amber'},
+    {n:'Quadriceps — unilateral',d:'60s / side — single leg, opposite leg raised. More pressure and control per leg.',badge:'Lower',bc:'b-amber'},
+    {n:'IT band and lateral quad',d:'60–90s / side — side-lying, roller under the outer thigh. Move slowly from hip to knee. One of the tightest areas for runners.',badge:'Lower',bc:'b-amber'},
+    {n:'TFL — tensor fascia latae',d:'45–60s / side — roller just below the hip bone on the outer hip. Small area, big impact on knee and hip.',badge:'Lower',bc:'b-amber'},
+    {n:'Hip flexors — kneeling',d:'60s / side — half-kneeling, roller under the front of the hip. Move forward and back slowly.',badge:'Lower',bc:'b-amber'},
+    {n:'Adductors — inner thigh',d:'60–90s / side — face down, leg out to side, roller under inner thigh. Often undertreated. Critical for wrestling base.',badge:'Lower',bc:'b-amber'},
+    {n:'Tibialis anterior — shin',d:'45s / side — roll the front of the shin from ankle to below the knee. Prevents and treats shin splints.',badge:'Lower',bc:'b-amber'},
+  ]},
+  {label:'Upper body — back and lats',rows:[
+    {n:'Thoracic spine — upper and mid back',d:'60–90s — roller perpendicular to spine, arms crossed over chest. Extend over the roller at each segment. Works T4–T9.',badge:'Upper',bc:'b-blue'},
+    {n:'Thoracic spine — thoracic extension',d:'45s at each level — pause and breathe into the extension. Do not roll the lumbar spine.',badge:'Upper',bc:'b-blue'},
+    {n:'Lats — side-lying',d:'60–90s / side — arm overhead, roller under the lat/armpit area. Roll from armpit to lower ribcage. Critical for overhead lifting.',badge:'Upper',bc:'b-blue'},
+    {n:'Lower back — avoid direct rolling',d:'Use a peanut roller or two balls along the erectors only. Never roll directly on the lumbar spine with a foam roller.',badge:'Upper',bc:'b-blue'},
+    {n:'Rhomboids and upper back',d:'60s — roller between shoulder blades, arms crossed. Small rocks side to side to get between the blades.',badge:'Upper',bc:'b-blue'},
+  ]},
+  {label:'Arms — forearms and biceps',rows:[
+    {n:'Forearm flexors — palm up',d:'60–90s / side — palm facing up, roller under the forearm. Roll from wrist to elbow. Relieves grip fatigue from lifting, deadlifts, and wrestling hand fighting.',badge:'Arms',bc:'b-orange'},
+    {n:'Forearm extensors — palm down',d:'60s / side — palm facing down, roller on top of forearm. Roll slowly from wrist to elbow. Balances the flexor work.',badge:'Arms',bc:'b-orange'},
+    {n:'Brachioradialis — outer forearm',d:'45s / side — thumb up position, roller on the outer forearm. Targets the muscle most stressed by thick bar and fat gripz work.',badge:'Arms',bc:'b-orange'},
+    {n:'Biceps — seated arm roll',d:'45–60s / side — arm extended on a surface or roller on a table. Roll from shoulder crease to elbow. Reduces stiffness from heavy pulling sessions.',badge:'Arms',bc:'b-orange'},
+    {n:'Triceps — side-lying',d:'45s / side — arm overhead, roller under the back of the upper arm. Roll from elbow to shoulder crease.',badge:'Arms',bc:'b-orange'},
+  ]},
+  {label:'Shoulders and neck',rows:[
+    {n:'Posterior shoulder and rear delt',d:'60s / side — side-lying, roller behind the shoulder. Small rotations to get into the posterior capsule.',badge:'Shoulder',bc:'b-purple'},
+    {n:'Pec minor and anterior shoulder',d:'60s / side — face down, roller under the front of the shoulder and upper chest. Works better than a lacrosse ball for this area.',badge:'Shoulder',bc:'b-purple'},
+    {n:'Upper trap — oscillating bar or ball',d:'45–60s / side — use the oscillating bar or a lacrosse ball on the upper trap. Roller is too large for this area.',badge:'Shoulder',bc:'b-purple'},
+    {n:'Levator scapulae — base of neck',d:'45s / side — ball or oscillating bar at the base of the neck and top of the shoulder blade. Reduces neck stiffness from wrestling.',badge:'Shoulder',bc:'b-purple'},
+  ]},
+  {label:'Full body — daily priority order',rows:[
+    {n:'Morning (5 min) — quick session',d:'Calves · quads · thoracic spine. Three areas that respond well to morning rolling before they tighten from daily activity.',badge:'Priority',bc:'b-gray'},
+    {n:'Post-lifting (5–8 min)',d:'Focus on what was trained. Lift A: quads, glutes, hamstrings. Lift B: hamstrings, lats, upper back. Lift C: quads, adductors, IT band.',badge:'Priority',bc:'b-gray'},
+    {n:'Post-XC or wrestling (5 min)',d:'Calves, soleus, IT band, quads. These four areas tighten fastest after running or mat work.',badge:'Priority',bc:'b-gray'},
+    {n:'Thursday full body (10 min)',d:'Hit everything — calves, hamstrings, glutes, quads, IT band, lats, thoracic, forearms, posterior shoulder. This is the investment session.',badge:'Priority',bc:'b-gray'},
+  ]},
+];
+
+// ----- FOAM ROLLING -----
+function renderFoamContent() {
+  let html=`<div class="t-chips" style="margin-bottom:10px">
+    <span class="t-chip">5 min post-session minimum</span>
+    <span class="t-chip">10 min Thursday — full body</span>
+    <span class="t-chip">60–90s per area</span>
+  </div>`;
+  html+=`<div class="alert alert-gray" style="margin-bottom:10px">Slow rolling with pauses on tight spots is far more effective than fast rolling. Find a tight area, stop, and breathe into it for 5–10 seconds before moving. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise for a YouTube demo.</div>`;
+  html+=buildSections(FOAM_SECTIONS, null);
+  html+=`<div class="note-box">Never roll directly on a joint (knee, elbow, ankle). Avoid rolling the lumbar spine directly — use erector work alongside the spine only. If an area is acutely sore or injured, skip it and use gentle movement instead. The forearm and arm rolling is especially valuable during heavy lifting phases when grip and pulling volume is high.</div>`;
+  document.getElementById('foamContent').innerHTML=html;
+}
+
 function renderAnkleContent() {
   let html=`<div class="t-chips"><span class="t-chip">Daily: 8–10 min</span><span class="t-chip">After warm-up or evening</span><span class="t-chip">Every day — non-negotiable</span></div>`;
   html+=`<div class="alert alert-gray">Ankles absorb constant stress from running, shooting, sprawling, and mat work. Builds dorsiflexion range, peroneal strength, tibialis strength, and proprioception. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> for images and cues.</div>`;
@@ -1906,7 +1973,39 @@ const EX_CUES = {
   'Shot and finish drill':                 'Level change, shot, drive through to a finish position. Reset and repeat. Practice-tempo — clean mechanics, not maximum speed. Reinforces the full takedown sequence.',
   'Level change activation':              'Slow, controlled level changes. Not a conditioning drill — a movement pattern reinforcement. Keep the hips driving the movement, not the upper body.',
   'Level change drill':                    'Standard level changes at practice tempo. Maintain wrestling posture throughout — back flat, knees tracking over toes, weight on the balls of the feet.',
-  // ── WATER RECOVERY ──
+  // ── FOAM ROLLING ──
+  'Hamstrings — double leg':              'Sit on roller, both legs extended. Roll from the glute crease to just above the back of the knee. Pause anywhere that feels tight for 5–10 seconds before moving.',
+  'Hamstrings — single leg (cross over)': 'Cross one leg over the other to focus pressure on one hamstring at a time. Much more intensity than double leg. Move 1 inch at a time over tight areas.',
+  'Glutes — seated':                      'Sit on the roller, cross one ankle over the opposite knee, tilt toward the crossed leg. Gets into the glute med and piriformis — two of the most commonly tight muscles in wrestlers and runners.',
+  'Piriformis — figure-4 position':       'Same as glute seated but lean further into the hip. The piriformis is deep and needs sustained pressure. Breathe and let it release.',
+  'Calves — gastrocnemius':               'Straight leg on roller, roll from ankle to back of knee. Stack the legs or cross one over for more pressure. Pause on tight spots.',
+  'Calves — soleus (bent knee)':          'Bend the knee of the rolling leg to about 90 degrees. This shifts the stretch off the gastrocnemius and onto the deeper soleus — the muscle most involved in XC running fatigue.',
+  'Achilles and lower calf':              'Roller just above the heel. Very slow micro-movements. The Achilles itself should not be compressed directly — stay on the lower calf muscle belly.',
+  'Quadriceps — bilateral':               'Face down, roller under both quads. Support yourself on elbows. Roll from hip crease to just above the knee. Contract and relax the quads as you roll.',
+  'Quadriceps — unilateral':              'Single leg, opposite leg raised or bent. Far more pressure and control. Essential before and after heavy squat days.',
+  'IT band and lateral quad':             'Side-lying, roller under the outer thigh. One of the most sensitive areas — start with moderate pressure and build. Move very slowly from hip to knee.',
+  'TFL — tensor fascia latae':            'Just below the hip bone on the outer hip. Small area so use a lacrosse ball or the end of the roller for precision. Releases the root cause of much IT band tightness.',
+  'Hip flexors — kneeling':               'Half-kneeling, roller under the front of the hip crease. Rock forward and back slowly. Targets the psoas and rectus femoris — tight in virtually every athlete.',
+  'Adductors — inner thigh':              'Face down, leg out to the side, roller under the inner thigh. Rotate the leg internally and externally as you roll. Often undertreated and critical for wrestling stance.',
+  'Tibialis anterior — shin':             'Roll the front of the shin from just below the knee to the ankle. Use moderate pressure. This directly prevents shin splints — prioritize during high XC volume weeks.',
+  'Thoracic spine — upper and mid back':  'Roller perpendicular to the spine. Arms crossed over chest. Move one vertebral segment at a time from mid-back upward. Do not roll the lower back.',
+  'Thoracic spine — thoracic extension':  'Pause at each segment and take a breath. Let the spine extend over the roller. Works best in the T4–T9 range. Improves overhead range and posture.',
+  'Lats — side-lying':                    'Arm overhead, roller under the lat and armpit. Roll from armpit to lower ribcage. Pause anywhere tight. Essential before overhead pressing and pull-up sessions.',
+  'Lower back — avoid direct rolling':    'Use two lacrosse balls taped together or a peanut roller alongside the erectors only. Never place a foam roller directly under the lumbar spine.',
+  'Rhomboids and upper back':             'Roller between the shoulder blades, arms crossed. Small rocks side to side. Relieves the tension between the blades from heavy rowing and pulling sessions.',
+  'Forearm flexors — palm up':            'Palm facing up, roller under the forearm. Start at the wrist and roll toward the elbow. Pause on tight spots. Relieves grip fatigue from lifting, deadlifts, and wrestling hand fighting.',
+  'Forearm extensors — palm down':        'Palm facing down, roller on top of the forearm. Roll from wrist to elbow. Balances the flexor work and prevents wrist extensor overuse.',
+  'Brachioradialis — outer forearm':      'Thumb-up position, roller on the outer forearm. The brachioradialis is most stressed by thick bar and fat gripz work — prioritize on heavy pulling days.',
+  'Biceps — seated arm roll':             'Arm extended on a flat surface or foam roller on a table edge. Roll from the shoulder crease to just above the elbow. Reduces stiffness from heavy chin-up and row sessions.',
+  'Triceps — side-lying':                 'Arm overhead, roller under the back of the upper arm. Roll from elbow to shoulder. Tight after heavy pressing and TGU sessions.',
+  'Posterior shoulder and rear delt':     'Side-lying, roller behind the shoulder. Small internal and external rotations as you apply pressure. Works the posterior capsule better than stretching alone.',
+  'Pec minor and anterior shoulder':      'Face down, roller under the front of the shoulder and upper chest. Tilt into the shoulder rather than staying flat. Opens the anterior capsule before pressing.',
+  'Upper trap — oscillating bar or ball': 'Use the oscillating bar or a lacrosse ball — a foam roller is too large for the upper trap. Apply sustained pressure and breathe. Reduces neck stiffness from wrestling.',
+  'Levator scapulae — base of neck':      'Ball or oscillating bar at the junction of the neck and top of the shoulder blade. Sustained pressure for 30–60 seconds. One of the most common tight spots in wrestlers.',
+  'Morning (5 min) — quick session':      'Calves, quads, and thoracic spine respond well to morning rolling before they tighten during the day. Keep it quick — 60–90s per area.',
+  'Post-lifting (5–8 min)':              'Roll whatever you trained. Lift A: quads, glutes, hamstrings. Lift B: hamstrings, lats, upper back. Lift C: quads, adductors, IT band.',
+  'Post-XC or wrestling (5 min)':        'Calves, soleus, IT band, and quads tighten fastest after running or mat work. These four in 5 minutes is the minimum effective dose.',
+  'Thursday full body (10 min)':         'Hit every region — start at the feet and work up: calves, hamstrings, glutes, quads, IT band, adductors, hip flexors, lats, thoracic, forearms, posterior shoulder.',
   'Light swim — easy laps':               'Easy freestyle or backstroke at a pace you could hold a conversation. Focus on long strokes and relaxed breathing. Not a workout — active recovery to flush out muscle soreness and reduce inflammation.',
   'Lazy river walk':                       'Walk through the lazy river current in either direction. The gentle water resistance provides light full-body stimulus with zero ground impact. Hydrostatic pressure reduces muscle soreness and joint inflammation — one of the best recovery tools available.',
   'Pool walk — chest deep':               'Walk in chest-deep water — the water resistance adds a light full-body stimulus with zero impact on the joints. Excellent on heavy-legged days after hard XC or wrestling practice. Far easier than any land-based movement but still keeps blood moving.',
@@ -2068,7 +2167,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','lifting','conditioning','explosive','cardio','stretch','ankle','shoulder','hip','landmine'];
+    const ids=['progress','schedule','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
@@ -2145,6 +2244,7 @@ renderCondContent();
 renderExploDays(); renderExploContent();
 renderCardioContent();
 renderStretchDays(); renderStretchContent();
+renderFoamContent();
 renderAnkleContent();
 renderShoulderDays(); renderShoulderContent();
 renderHipContent();
