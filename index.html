@@ -334,37 +334,37 @@ const WEEK_DAYS=[
 ];
 
 const DAY_DESCRIPTIONS={
-  0:{type:'lift',   title:'Sunday — Full body A (Lift)',    note:'Post-wrestling. Keep session moderate — legs already loaded from practice. P1: 1 lower unilateral. P2: both. P3+: pick 1. This is the strength-endurance day by design.'},
+  0:{type:'lift',   title:'Sunday — Full body A (Lift)',    note:'Post-wrestling. Front squat and incline press — technically demanding but lower absolute load than back squat, appropriate post-practice. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
   1:{type:'cond',   title:'Monday — Agility · Jumps · Sprint · Bike HIIT', note:'XC and wrestling practice already done. Agility ladder, dot drills, reaction drills, tuck jumps, lateral bounds, 10m reactive sprint, then bike HIIT. No wrestling drills, no battle ropes.'},
   2:{type:'lift',   title:'Tuesday — Full body B (Lift)',   note:'XC only day — heaviest lifting session of the week. Trap bar deadlift anchor. TGU finisher. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
   3:{type:'cond',   title:'Wednesday — Light agility · Water recovery',  note:'XC and wrestling practice day. Light agility and technique work only — no jumps, no wrestling drills, no battle ropes. Water recovery is the primary add-on.'},
   4:{type:'rest',   title:'Thursday — Full rest · Water recovery optional', note:'XC and wrestling practice. Zero additional training. Water recovery — light swim or lazy river — is the only appropriate add-on. Protect this day completely.'},
-  5:{type:'lift',   title:'Friday — Full body C (Lift)',    note:'XC only day. Full lifting session. P1: 1 lower unilateral. P2: both. P3+: pick 1. Lateral plane work stays in all phases.'},
+  5:{type:'lift',   title:'Friday — Full body C (Lift)',    note:'Freshest day of the week — 2 full rest days behind you. Back squat and barbell bench press go here. Hit these heavy. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
   6:{type:'explo',  title:'Saturday — Explosive · Power · Battle ropes', note:'XC only day. Full explosive and power session. Battle ropes at the end. TGU finisher closes the session.'},
 };
 
 const LIFT_A={
   sections:[
     {label:'Primary compound lifts',rows:[
-      {n:'Back squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
-      {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
-      {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+      {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
     {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
+      {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Single-leg hip thrust',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper',rows:[
-      {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Lat pulldown (wide or neutral grip)',badge:'Pull',bc:'b-orange',rep:'uni',uni:false},
       {n:'Half-kneeling single-arm DB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Landmine block',rows:[
       {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
       {n:'Landmine wood chop (low to high)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
-      {n:'Landmine high pull (single-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
+      {n:'Landmine Romanian deadlift',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
     ]},
     {label:'Banded accessories',rows:[
-      {n:'Banded face pull',badge:'RC · rear delt',bc:'b-orange',rep:'acc',uni:false},
+      {n:'DB chest fly (flat)',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
       {n:'Banded triceps pushdown',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
       {n:'Banded pull-apart (pronated)',badge:'Scapula',bc:'b-purple',rep:'acc',uni:false},
     ]},
@@ -392,13 +392,11 @@ const LIFT_B={
       {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Landmine block',rows:[
-      {n:'Landmine rotation (Meadows twist)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
-      {n:'Landmine split-stance press',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
-      {n:'Landmine T-bar row (two-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+      {n:'Landmine clean (single-arm)',badge:'Explosive',bc:'b-orange',rep:'acc',uni:true},
+      {n:'Landmine 180 (rotational slam)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
     ]},
-    {label:'Banded accessories',rows:[
-      {n:'Banded clamshell',badge:'Glute med',bc:'b-green',rep:'acc',uni:true},
-      {n:'Banded hip extension — standing kickback',badge:'Glute max',bc:'b-green',rep:'acc',uni:true},
+    {label:'Accessories',rows:[
+      {n:'Rear delt fly (chest-supported DB)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
       {n:'Banded ER at side (90° elbow)',badge:'RC',bc:'b-purple',rep:'acc',uni:true},
     ]},
     {label:'Core — anti-rotation',rows:[
@@ -415,27 +413,27 @@ const LIFT_B={
 const LIFT_C={
   sections:[
     {label:'Primary compound lifts',rows:[
-      {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
-      {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
-      {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+      {n:'Back squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
     {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
-      {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper',rows:[
       {n:'Dumbbell split press (kneeling)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Single-arm cable row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Neutral grip lat pulldown',badge:'Pull',bc:'b-orange',rep:'uni',uni:false},
     ]},
     {label:'Landmine block',rows:[
       {n:'Landmine 180 (rotational slam)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
       {n:'Landmine lateral lunge',badge:'Unilateral',bc:'b-amber',rep:'acc',uni:true},
-      {n:'Landmine kneeling press',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
+      {n:'Landmine high pull (single-arm)',badge:'Explosive',bc:'b-orange',rep:'acc',uni:true},
     ]},
     {label:'Banded accessories',rows:[
+      {n:'DB incline chest fly',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
       {n:'Banded lateral walk (monster walk)',badge:'Glute med',bc:'b-green',rep:'acc',uni:false},
       {n:'Banded bird dog',badge:'Stability',bc:'b-purple',rep:'acc',uni:true},
-      {n:'Banded standing hip IR + ER',badge:'IR / ER',bc:'b-blue',rep:'acc',uni:true},
     ]},
     {label:'Core finisher',rows:[
       {n:'Hanging leg raise',badge:'Core',bc:'b-gray',rep:'core',uni:false},
@@ -460,19 +458,19 @@ const P7_SCHEMES={
 };
 
 const LEAN_A={
-  label:'Monday — Hypertrophy',
+  label:'Sunday — Hypertrophy',
   schemeKey:'hyp',
-  note:'Hypertrophy focus — moderate load, controlled tempo, 60–75s rest. Bilateral squat + single-leg hip thrust covers both leg patterns without excessive CNS demand.',
+  note:'Post-wrestling hypertrophy session. Front squat is technically demanding but lower absolute load than back squat — appropriate post-practice. Cossack squat adds lateral plane demand that complements rather than duplicates the front squat. Moderate tempo, 60–75s rest.',
   sections:[
     {label:'Bilateral lower',rows:[
-      {n:'Back squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
     ]},
     {label:'Unilateral lower',rows:[
-      {n:'Single-leg hip thrust',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Upper push / pull',rows:[
-      {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
-      {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+      {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
     {label:'Landmine + core',rows:[
       {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
@@ -506,17 +504,17 @@ const LEAN_B={
 const LEAN_C={
   label:'Friday — Strength',
   schemeKey:'str',
-  note:'Strength focus — heavy and brief. 4×5 front squat + reverse lunge keeps leg strength sharp without digging a hole before Saturday. Full 2–3 min rest between main sets.',
+  note:'Freshest day of the week. Back squat and barbell bench press go here — hit these heavy. 2 full rest days behind you means full CNS recovery. Full 2–3 min rest between main sets.',
   sections:[
     {label:'Bilateral lower',rows:[
-      {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Back squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
     ]},
     {label:'Unilateral lower',rows:[
       {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Upper push / pull',rows:[
-      {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
-      {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+      {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
     {label:'Landmine + core',rows:[
       {n:'Landmine squat to press (single-arm)',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
@@ -1512,7 +1510,7 @@ function renderLiftContent() {
   }
   if(isLean&&ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
   html+=buildSections(ldata.sections,scheme);
-  const notes=['Post-wrestling Sunday — moderate intensity, legs already loaded from practice. 90–120s rest on main lifts.','Tuesday — XC only day, heaviest lifting session. Trap bar deadlift anchor. TGU finisher. Full rest periods.','Friday — XC only day. Full session. Lateral plane unilateral stays all phases.'];
+  const notes=['Post-wrestling Sunday — front squat and incline press. Moderate intensity, appropriate post-practice. 90–120s rest on main lifts.','Tuesday — XC only day, heaviest lifting session. Trap bar deadlift anchor. TGU finisher. Full rest periods.','Friday — freshest day of the week. Back squat and barbell bench — hit these heavy. 2 full rest days behind you.'];
   html+=`<div class="note-box">${isLean?ldata.note:notes[liftDay]}</div>`;
   document.getElementById('liftContent').innerHTML=html;
 }
@@ -1736,6 +1734,11 @@ const EX_CUES = {
   'Romanian deadlift':                 'Soft knees, hinge back until hamstrings load. Bar stays close to legs throughout.',
   'Bulgarian split squat':             'Rear foot elevated, front foot out. Lower the knee toward the floor, drive through the front heel.',
   'Single-arm dumbbell row':           'Brace on bench, row DB to hip. Elbow close, full stretch at bottom, squeeze at top.',
+  'Lat pulldown (wide or neutral grip)':'Sit tall, slight lean back, pull bar to upper chest leading with the elbows. Do not lean excessively — the lats do the work, not the bodyweight. Squeeze at the bottom, controlled return. Vertical pull pattern that complements the horizontal barbell row perfectly.',
+  'Neutral grip lat pulldown':          'Palms facing each other, shoulder-width grip. Pull to chin level, lead with the elbows. The neutral grip is the strongest pulling position and maximally activates the lower lat fibers. Critical vertical pull on Friday after the chest-supported row.',
+  'DB chest fly (flat)':                'Flat bench, slight bend in the elbows — hold that angle the entire set. Lower the DBs out to the sides in a wide arc until you feel a full pec stretch, then squeeze back up. This is not a press — the elbows stay bent but fixed. Loads the pec through a stretch-dominated range the barbell bench press misses completely.',
+  'DB incline chest fly':               'Bench at 30 degrees. Same mechanics as the flat fly but emphasizes the upper pec and clavicular head. Control the descent — the stretch at the bottom is where the growth stimulus comes from. Keep the elbows soft and fixed throughout.',
+  'Rear delt fly (chest-supported DB)': 'Lie prone on incline bench, DBs hanging. Raise arms out to sides in a wide arc, elbows slightly soft, lead with the elbows. Squeeze rear delts at top. Light weight — this is a targeted isolation movement, not a strength exercise.',
   'Half-kneeling single-arm DB press': 'One knee down, opposite foot forward. Press DB straight overhead on the kneeling side. The half-kneeling position removes leg drive and demands core stability to resist lateral lean. Completely different demand to a standing or landmine press.',
   // ── BANDED ACCESSORIES ──
   'Banded face pull':                   'Band at face height, step back to create tension. Pull to forehead with elbows flared high and wide. Thumbs back. External rotation and rear delt at the end range. Lighter and more controlled than cable version — great for high rep activation.',
