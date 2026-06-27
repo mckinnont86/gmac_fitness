@@ -219,6 +219,7 @@
 </div>
 
 <div class="main-nav" id="mainNav">
+  <button onclick="switchSection('travel')">Travel workouts</button>
   <button onclick="switchSection('progress')">Progress</button>
   <button class="active" onclick="switchSection('schedule')">Schedule</button>
   <button onclick="switchSection('lifting')">Lifting</button>
@@ -231,6 +232,11 @@
   <button onclick="switchSection('shoulder')">Shoulder prehab</button>
   <button onclick="switchSection('hip')">Hip prehab</button>
   <button onclick="switchSection('landmine')">Landmine guide</button>
+</div>
+
+<!-- ===================== TRAVEL ===================== -->
+<div class="section" id="sec-travel">
+  <div id="travelContent"></div>
 </div>
 
 <!-- ===================== PROGRESS ===================== -->
@@ -2172,7 +2178,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
+    const ids=['travel','progress','schedule','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
@@ -2241,7 +2247,162 @@ function renderProgressContent(){
   document.getElementById('progressContent').innerHTML=html;
 }
 
+// ----- TRAVEL WORKOUTS -----
+const TRAVEL_WORKOUTS = [
+  {
+    id: 0,
+    name: 'The Ladder',
+    type: 'Bodyweight only',
+    tag: 'Full body · 20–30 min',
+    color: '#1DB87A',
+    bg: 'rgba(29,184,122,0.1)',
+    desc: 'Classic descending ladder. Start at 50, work down. No rest between movements within a round — rest 60–90s between rounds. Scale by starting at 30 if needed.',
+    rounds: [
+      {label:'Round 1 — 50 reps each',items:['Push-ups','Air squats','Sit-ups']},
+      {label:'Round 2 — 40 reps each',items:['Push-ups','Air squats','Sit-ups']},
+      {label:'Round 3 — 30 reps each',items:['Push-ups','Air squats','Sit-ups']},
+      {label:'Round 4 — 20 reps each',items:['Push-ups','Air squats','Sit-ups']},
+      {label:'Round 5 — 10 reps each',items:['Push-ups','Air squats','Sit-ups']},
+    ],
+    note: 'Total: 150 reps each movement. Pace yourself on the first round — most people blow up at 50 and crawl through the rest. Strict form on every rep. Time yourself and try to beat it next trip.',
+  },
+  {
+    id: 1,
+    name: 'Hotel Room AMRAP',
+    type: 'Bodyweight only',
+    tag: 'Conditioning · 20 min',
+    color: '#378ADD',
+    bg: 'rgba(59,139,219,0.1)',
+    desc: 'As Many Rounds As Possible in 20 minutes. Minimal space required — a hotel room is enough. Keep moving, track your rounds.',
+    rounds: [
+      {label:'Each round — complete in order',items:[
+        '10 push-ups',
+        '15 jump squats',
+        '10 burpees',
+        '20 mountain climbers (each leg)',
+        '10 pike push-ups (shoulders)',
+        '15 reverse lunges (each leg)',
+        '30s plank hold',
+      ]},
+    ],
+    note: 'Goal: 5+ rounds in 20 min is strong. 7+ is excellent. Scale burpees to step-back burpees if needed. Pike push-ups — hips high, head toward floor, targets the shoulder like a press.',
+  },
+  {
+    id: 2,
+    name: 'Band Only — Full Body',
+    type: 'Resistance bands required',
+    tag: 'Strength · 30–35 min',
+    color: '#7F77DD',
+    bg: 'rgba(127,119,221,0.1)',
+    desc: 'Full strength session with nothing but a band. 3 sets of each exercise, 12–15 reps, 45–60s rest. Covers push, pull, hinge, squat, and core — the full movement pattern map.',
+    rounds: [
+      {label:'Push',items:[
+        'Banded push-up (band across back) — 3×12',
+        'Banded overhead press (stand on band) — 3×12',
+      ]},
+      {label:'Pull',items:[
+        'Banded pull-apart (pronated) — 3×20',
+        'Banded row (anchor to door) — 3×15',
+        'Banded face pull — 3×15',
+      ]},
+      {label:'Hinge and squat',items:[
+        'Banded Romanian deadlift (stand on band) — 3×12',
+        'Banded squat (band under feet, over shoulders) — 3×15',
+        'Banded hip thrust (band across hips, back on bed/chair) — 3×15',
+      ]},
+      {label:'Unilateral and core',items:[
+        'Banded lateral walk — 3×15 steps each direction',
+        'Banded clamshell — 3×20 each side',
+        'Pallof press (anchor to door) — 3×12 each side',
+      ]},
+    ],
+    note: 'Anchor the band in a door with a door anchor, or loop it around any fixed object. Heavier band = more resistance. Double up the band if too easy. This session hits every pattern in the main lifting program.',
+  },
+  {
+    id: 3,
+    name: 'Bodyweight + Band Chipper',
+    type: 'Band optional',
+    tag: 'Full body · 25–35 min',
+    color: '#D85A30',
+    bg: 'rgba(216,90,48,0.1)',
+    desc: 'Complete all reps of each exercise before moving on — that\'s a chipper. One shot through the whole list. Go at your own pace but do not stop. Band exercises marked with ★.',
+    rounds: [
+      {label:'Complete all reps in order — one pass',items:[
+        '100 jumping jacks',
+        '50 air squats',
+        '40 push-ups',
+        '30 sit-ups',
+        '★ 30 banded lateral walks (each direction)',
+        '25 reverse lunges (each leg)',
+        '20 burpees',
+        '★ 20 banded pull-aparts',
+        '15 pike push-ups',
+        '★ 15 banded Romanian deadlifts (each side)',
+        '10 broad jumps',
+        '★ 10 banded face pulls',
+        '60s plank hold',
+      ]},
+    ],
+    note: 'No band? Sub the starred exercises: banded lateral walk → lateral lunge, pull-aparts → reverse snow angel on the floor, banded RDL → single-leg RDL bodyweight, face pulls → prone Y raise. Takes 25–35 min depending on fitness. Brutal finisher.',
+  },
+];
+
+let travelDay = 0;
+
+function renderTravelNav() {
+  const tabs = document.getElementById('travelTabs');
+  if (!tabs) return;
+  tabs.innerHTML = TRAVEL_WORKOUTS.map((w,i) => `
+    <div class="day-tab ${i===travelDay?'active':''}" onclick="setTravelDay(${i})" style="${i===travelDay?`border-color:${w.color};background:${w.bg}`:''}">
+      <div class="dn" style="${i===travelDay?`color:${w.color}`:''}">${w.name}</div>
+      <div class="dtype">${w.type}</div>
+      <div class="day-dot" style="background:${w.color}"></div>
+    </div>`).join('');
+}
+
+function setTravelDay(i) { travelDay=i; renderTravelNav(); renderTravelDetail(); }
+
+function renderTravelDetail() {
+  const w = TRAVEL_WORKOUTS[travelDay];
+  let html = `<div class="content-card" style="border-color:${w.color}30">`;
+  html += `<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+    <div>
+      <div style="font-size:16px;font-weight:600;color:${w.color}">${w.name}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px">${w.tag}</div>
+    </div>
+    <span class="chip" style="background:${w.bg};color:${w.color};border:0.5px solid ${w.color}40">${w.type}</span>
+  </div>`;
+  html += `<div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6">${w.desc}</div>`;
+  w.rounds.forEach(r => {
+    html += `<div class="sec-head" style="color:${w.color}">${r.label}<span class="sec-line"></span></div>`;
+    html += `<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px">`;
+    r.items.forEach(item => {
+      const isBand = item.startsWith('★');
+      html += `<div class="ex-row" style="${isBand?`border-left:2px solid ${w.color}`:''}">
+        <div class="ex-name">${isBand?`<span style="color:${w.color};margin-right:4px">★</span>`:''}${item.replace('★ ','')}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `<div class="note-box" style="border-color:${w.color}50">${w.note}</div>`;
+  html += `</div>`;
+  document.getElementById('travelDetail').innerHTML = html;
+}
+
+function renderTravelContent() {
+  document.getElementById('travelContent').innerHTML = `
+    <div style="margin-bottom:12px">
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:4px">Travel workouts</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5">No gym, no problem. Four sessions — bodyweight and band — that maintain strength, conditioning, and athleticism anywhere. Not part of the weekly schedule. Pull these out whenever you are away from the weight room.</div>
+    </div>
+    <div class="day-tabs" id="travelTabs" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:12px"></div>
+    <div id="travelDetail"></div>`;
+  renderTravelNav();
+  renderTravelDetail();
+}
+
 // ----- INIT -----
+renderTravelContent();
 renderProgressContent();
 renderPhaseNav(); renderPhaseInfo(); renderScheduleDays(); renderScheduleContent();
 renderLiftPhaseNav(); renderLiftDayTabs(); renderLiftContent();
