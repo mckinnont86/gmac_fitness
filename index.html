@@ -219,9 +219,9 @@
 </div>
 
 <div class="main-nav" id="mainNav">
-  <button onclick="switchSection('travel')">Travel workouts</button>
   <button onclick="switchSection('progress')">Progress</button>
   <button class="active" onclick="switchSection('schedule')">Schedule</button>
+  <button onclick="switchSection('travel')">Travel workouts</button>
   <button onclick="switchSection('lifting')">Lifting</button>
   <button onclick="switchSection('conditioning')">Conditioning</button>
   <button onclick="switchSection('explosive')">Explosive</button>
@@ -2178,7 +2178,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['travel','progress','schedule','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
+    const ids=['progress','schedule','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
