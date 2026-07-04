@@ -38,7 +38,7 @@
   html, body { background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Text', sans-serif; font-size: 14px; min-height: 100vh; }
 
   /* HEADER */
-  .app-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 16px 12px; position: sticky; top: 0; z-index: 100; }
+  .app-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 16px 12px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
   .app-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
   .app-title span { }
   .app-subtitle { font-size: 12px; color: var(--text3); margin-top: 2px; }
@@ -214,8 +214,11 @@
 <body>
 
 <div class="app-header">
-  <div class="app-title"><span style="color:#8B7FDD">Mc</span><span style="color:#8B7FDD">Lifts</span> — <span style="color:#C9A84C">2026</span></div>
-  <div class="app-subtitle">June – November · Advanced wrestling athlete</div>
+  <div>
+    <div class="app-title"><span style="color:#8B7FDD">Mc</span><span style="color:#8B7FDD">Lifts</span> — <span style="color:#C9A84C">2026</span></div>
+    <div class="app-subtitle">June – November · Advanced wrestling athlete</div>
+  </div>
+  <a href="https://mckinnont86.github.io/gmac_nutrition/" target="_blank" style="font-size:11px;color:var(--text3);text-decoration:none;border:0.5px solid var(--border);border-radius:6px;padding:4px 9px;white-space:nowrap;flex-shrink:0">🥗 Nutrition</a>
 </div>
 
 <div class="main-nav" id="mainNav">
