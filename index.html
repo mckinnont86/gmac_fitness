@@ -323,9 +323,9 @@
 
 <script>
 const PHASES=[
-  {id:'base',name:'Phase 1 — Base building',dates:'June 2 – June 22',weeks:'Wks 1–3',load:'50–60% 1RM · Low intensity',goal:'XC and wrestling practices already running 3–4 days each. Unilateral lower volume kept to 1 exercise per lifting day — running provides sufficient single-leg loading. Technique focus on all lifts. No max efforts.',chips:[{t:'3×10–12 main',c:'chip-green'},{t:'1 lower unilateral / day',c:'chip-amber'},{t:'2×20 core',c:'chip-amber'}],scheme:{main:'3×10',uni:'3×15',acc:'3×12',core:'2×20'}},
-  {id:'hyp',name:'Phase 2 — Hypertrophy',dates:'June 23 – Aug 3',weeks:'Wks 4–9',load:'65–72% 1RM · Moderate',goal:'Drive muscle mass for weight class durability. Push close to failure on last sets of accessories.',chips:[{t:'4×8 main',c:'chip-green'},{t:'4×10–12 unilateral',c:'chip-amber'},{t:'3×15 acc',c:'chip-amber'}],scheme:{main:'4×8',uni:'4×10',acc:'3×12',core:'3×15'}},
-  {id:'str',name:'Phase 3 — Strength',dates:'Aug 4 – Sept 20',weeks:'Wks 10–16',load:'78–85% 1RM · High',goal:'Peak force production. Heavy compounds, full rest, progressive overload weekly. This feeds the explosive days.',chips:[{t:'5×5 main',c:'chip-green'},{t:'3×8 unilateral',c:'chip-amber'},{t:'3×6–8 acc',c:'chip-amber'}],scheme:{main:'5×5',uni:'3×8',acc:'3×6',core:'3×10'}},
+  {id:'base',name:'Phase 1 — Base building',dates:'June 2 – June 22',weeks:'Wks 1–3',load:'50–60% 1RM · Low intensity',goal:'XC and wrestling practices already running 3–4 days each. Unilateral lower volume kept to 1 exercise per lifting day — running provides sufficient single-leg loading. Technique focus on all lifts. No max efforts.',chips:[{t:'3×10–12 main',c:'chip-green'},{t:'1 lower unilateral / day',c:'chip-amber'},{t:'2×12 acc',c:'chip-amber'}],scheme:{main:'3×10',uni:'3×15',acc:'2×12',core:'2×20'}},
+  {id:'hyp',name:'Phase 2 — Hypertrophy',dates:'June 23 – Aug 3',weeks:'Wks 4–9',load:'65–72% 1RM · Moderate',goal:'Drive muscle mass for weight class durability. Push close to failure on last sets of accessories.',chips:[{t:'4×8 main',c:'chip-green'},{t:'4×10–12 unilateral',c:'chip-amber'},{t:'2×12 acc',c:'chip-amber'}],scheme:{main:'4×8',uni:'4×10',acc:'2×12',core:'3×15'}},
+  {id:'str',name:'Phase 3 — Strength',dates:'Aug 4 – Sept 20',weeks:'Wks 10–16',load:'78–85% 1RM · High',goal:'Peak force production. 4×5 on all main lifts — heavy but manageable within a 75-min session. On P3 days superset press and row (they don\'t compete) to compress time. Progressive overload weekly. Feeds the explosive days.',chips:[{t:'4×5 main',c:'chip-green'},{t:'3×8 unilateral',c:'chip-amber'},{t:'2×6–8 acc',c:'chip-amber'}],scheme:{main:'4×5',uni:'3×8',acc:'2×6',core:'3×10'}},
   {id:'peak',name:'Phase 4 — Peaking',dates:'Sept 21 – Oct 4',weeks:'Wks 17–18',load:'85–90% 1RM · Very high',goal:'Reduce volume, hold intensity. Body consolidates strength gains. Explosive days dominate.',chips:[{t:'3×3 main',c:'chip-green'},{t:'2×6 unilateral',c:'chip-amber'},{t:'Daily core circuit',c:'chip-amber'}],scheme:{main:'3×3',uni:'2×6',acc:'2×5',core:'daily'}},
   {id:'pre',name:'Phase 5 — Preseason',dates:'Oct 5 – Oct 18',weeks:'Wks 19–20',load:'75–80% 1RM · Moderate',goal:'XC and wrestling practice in full swing. Lifting is pure maintenance — 2×/week max. Practice drives all conditioning.',chips:[{t:'2×5 main (maint.)',c:'chip-green'},{t:'2×8 unilateral',c:'chip-amber'},{t:'Post-practice only',c:'chip-red'}],scheme:{main:'2×5',uni:'2×8',acc:'2×8',core:'post-practice'}},
   {id:'early',name:'Phase 6 — Early season',dates:'Oct 19 – Nov 9',weeks:'Wks 21–23',load:'70–75% 1RM · Low–moderate',goal:'Competition begins. Lifting 1–2×/week. Recovery becomes the primary training variable.',chips:[{t:'2×5 main (maint.)',c:'chip-green'},{t:'1×8 unilateral',c:'chip-amber'},{t:'Recovery priority',c:'chip-red'}],scheme:{main:'2×5',uni:'2×8',acc:'2×8',core:'mobility'}},
@@ -343,12 +343,12 @@ const WEEK_DAYS=[
 ];
 
 const DAY_DESCRIPTIONS={
-  0:{type:'lift',   title:'Sunday — Full body A (Lift)',    note:'Post-wrestling. Front squat and incline press — technically demanding but lower absolute load than back squat, appropriate post-practice. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
+  0:{type:'lift',   title:'Sunday — Full body A (Lift)',    note:'Sunday is the heavy intention day — no XC, so you arrive with legs that have only wrestling load. Push the front squat hard. Superset press and row in P3 to keep session under 75 min. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
   1:{type:'cond',   title:'Monday — Agility · Jumps · Sprint · Bike HIIT', note:'XC and wrestling practice already done. Agility ladder, dot drills, reaction drills, tuck jumps, lateral bounds, 10m reactive sprint, then bike HIIT. No wrestling drills, no battle ropes.'},
   2:{type:'lift',   title:'Tuesday — Full body B (Lift)',   note:'XC only day — heaviest lifting session of the week. Trap bar deadlift anchor. TGU finisher. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
   3:{type:'cond',   title:'Wednesday — Light agility · Water recovery',  note:'XC and wrestling practice day. Light agility and technique work only — no jumps, no wrestling drills, no battle ropes. Water recovery is the primary add-on.'},
   4:{type:'rest',   title:'Thursday — Full rest · Water recovery optional', note:'XC and wrestling practice. Zero additional training. Water recovery — light swim or lazy river — is the only appropriate add-on. Protect this day completely.'},
-  5:{type:'lift',   title:'Friday — Full body C (Lift)',    note:'Freshest day of the week — 2 full rest days behind you. Back squat and barbell bench press go here. Hit these heavy. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
+  5:{type:'lift',   title:'Friday — Full body C (Lift)',    note:'Freshest day of the week — 2 full rest days behind you. Back squat and bench press go here. Hit these hard but Sunday is the primary heavy intention day. Superset bench and barbell row in P3 to stay under 75 min. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
   6:{type:'explo',  title:'Saturday — Explosive · Power · Battle ropes', note:'XC only day. Full explosive and power session. Battle ropes at the end. TGU finisher closes the session.'},
 };
 
@@ -456,9 +456,9 @@ const LIFT_C={
 // P6 & P7 — 6 exercises per day, full legs (bilateral + unilateral), day-specific rep focus
 // Monday = hypertrophy, Wednesday = endurance, Friday = strength
 const LEAN_SCHEMES={
-  hyp: {main:'4×8', uni:'3×10',acc:'3×12',core:'3×15', label:'Hypertrophy — 4×8 main · 3×10 uni · 60–75s rest'},
+  hyp: {main:'4×8', uni:'3×10',acc:'2×12',core:'3×15', label:'Hypertrophy — 4×8 main · 3×10 uni · 60–75s rest'},
   end: {main:'3×15',uni:'3×15',acc:'3×20',core:'3×20', label:'Endurance — 3×15–20 · 45–60s rest · lactate threshold'},
-  str: {main:'4×5', uni:'3×6', acc:'3×6', core:'3×8',  label:'Strength — 4×5 main · 3×6 uni · 2–3 min rest'},
+  str: {main:'4×5', uni:'3×6', acc:'2×6', core:'3×8',  label:'Strength — 4×5 main · 3×6 uni · 2–3 min rest'},
 };
 // P7 overrides — heavier 3–4 reps on bilateral + unilateral, core/landmine unchanged
 const P7_SCHEMES={
@@ -1433,6 +1433,13 @@ function renderScheduleContent() {
     const schemeBank = curPhase===6 ? P7_SCHEMES : LEAN_SCHEMES;
     const scheme = isLean ? schemeBank[leanData.schemeKey] : p.scheme;
     html+=buildDailyReqs(schedDay,'pre');
+
+    // Sunday heavy day banner
+    if(schedDay===0) html+=`<div class="alert alert-purple" style="margin-bottom:8px">💪 <strong>Heavy intention day</strong> — no XC today. Drive the front squat with full focus. This is your primary strength session of the week.</div>`;
+
+    // P3 superset reminder
+    if(p.id==='str' && !isLean) html+=`<div style="padding:8px 12px;background:rgba(186,117,23,0.12);color:#C9A84C;border-radius:8px;font-size:11px;margin-bottom:8px">⏱ <strong>P3 time saver:</strong> Superset press + row — rest one while working the other. Saves ~10 min without losing intensity.</div>`;
+
     html+=`<div class="scheme-row">`;
     p.chips.forEach(c=>{html+=`<span class="chip ${c.c}">${c.t}</span>`;});
     html+=`</div>`;
@@ -1513,6 +1520,8 @@ function renderLiftContent() {
   let html=`<div class="scheme-row">`;
   p.chips.forEach(c=>{html+=`<span class="chip ${c.c}">${c.t}</span>`;});
   html+=`</div>`;
+  if(liftDay===0) html+=`<div class="alert alert-purple" style="margin-bottom:8px">💪 <strong>Heavy intention day</strong> — no XC today. Drive the front squat with full focus. Primary strength session of the week.</div>`;
+  if(p.id==='str'&&!isLean) html+=`<div style="padding:8px 12px;background:rgba(186,117,23,0.12);color:#C9A84C;border-radius:8px;font-size:11px;margin-bottom:8px">⏱ <strong>P3 time saver:</strong> Superset press + row — rest one while working the other. Saves ~10 min without losing intensity.</div>`;
   if(isLean){
     const schemeBank=liftPhase===6?P7_SCHEMES:LEAN_SCHEMES;
     const ls=schemeBank[leanData.schemeKey];
@@ -1520,7 +1529,7 @@ function renderLiftContent() {
   }
   if(isLean&&ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
   html+=buildSections(ldata.sections,scheme);
-  const notes=['Post-wrestling Sunday — front squat and incline press. Moderate intensity, appropriate post-practice. 90–120s rest on main lifts.','Tuesday — XC only day, heaviest lifting session. Trap bar deadlift anchor. TGU finisher. Full rest periods.','Friday — freshest day of the week. Back squat and barbell bench — hit these heavy. 2 full rest days behind you.'];
+  const notes=['Sunday — heavy intention day. Front squat and incline press. Drive these hard — no XC today. 90–120s rest on main lifts.','Tuesday — XC only, pull-dominant day. Trap bar deadlift anchor. TGU finisher. Full rest periods.','Friday — freshest day of the week. Back squat and bench press. 2 full rest days behind you — hit these hard.'];
   html+=`<div class="note-box">${isLean?ldata.note:notes[liftDay]}</div>`;
   document.getElementById('liftContent').innerHTML=html;
 }
