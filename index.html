@@ -1028,76 +1028,73 @@ function buildCardioRows(rows) {
 // Per phase, per day [Mon,Tue,Wed,Thu,Fri,Sat,Sun] — distances in miles, null = rest
 // Sunday = long run anchor, building 5mi → 13.1mi, tapering after P3
 // Pace guidance: easy = conversational, moderate = comfortably hard, long = 60-90s/mi slower than race pace
+// T-MAC HALF MARATHON PLAN — goal: 27-min 5K / sub-2:00 half
+// Lift days: Sun / Tue / Fri — Long run: Saturday — Intervals: Tuesday AM before lifting
+// Target 5K pace: 8:42/mile — Interval pace: 8:00–8:20/mile — Tempo: 9:00–9:15/mile
+// Current base: 12–15 miles/week — Race: October (aligns with P4 taper)
 const RUN_PLAN = {
-  // Phase 1 — Base (Wks 1-3) — establish aerobic habit, easy paces only
   base: [
-    {day:'Mon', mi:3,   pace:'Easy',     note:'Easy effort, conversational pace'},
-    {day:'Tue', mi:3,   pace:'Easy',     note:'Post-explosive — short and relaxed'},
-    {day:'Wed', mi:null,pace:null,       note:'Rest or walk only'},
-    {day:'Thu', mi:4,   pace:'Easy',     note:'Steady easy run, pair with bike/swim if desired'},
-    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Sat', mi:3,   pace:'Easy',     note:'Short recovery run after power session'},
-    {day:'Sun', mi:5,   pace:'Long run', note:'Wk1: 5mi · Wk2: 6mi · Wk3: 7mi — slow and steady'},
+    {day:'Sun', mi:3,  pace:'Easy 3 mi',      note:'Easy before lifting — 10:30–11:00/mi. Short enough to not affect front squat. Legs should feel fresh by 10am.'},
+    {day:'Mon', mi:3,  pace:'Easy 3 mi',       note:'Recovery shake-out — 10:30–11:00/mi. Flush out Sunday lifting. Keep it conversational.'},
+    {day:'Tue', mi:5,  pace:'Intervals',        note:'P1 intervals — 6×400m @ 9:00/mi with 90s rest. Learn the faster pace, build comfort. Run in the morning before lifting.'},
+    {day:'Wed', mi:3,  pace:'Easy 3 mi',        note:'Easy — 10:30–11:00/mi. Fits into Wednesday recovery protocol.'},
+    {day:'Thu', mi:4,  pace:'Easy 4 mi',        note:'Easy to moderate — 10:00–10:30/mi. Can add 2–3 short hills if feeling good.'},
+    {day:'Fri', mi:null,pace:null,              note:'Rest from running — lift day. Protect legs for Saturday long run.'},
+    {day:'Sat', mi:8,  pace:'Long run',         note:'Wk1: 8mi · Wk2: 9mi · Wk3: 10mi — 10:30–11:00/mi easy. No explosive session on long run Saturdays over 9 miles.'},
   ],
-  // Phase 2 — Hypertrophy (Wks 4-9) — build mileage, introduce moderate efforts
   hyp: [
-    {day:'Mon', mi:4,   pace:'Easy',     note:'Easy — legs are working hard in the weight room'},
-    {day:'Tue', mi:4,   pace:'Easy',     note:'Post-explosive — keep effort low'},
-    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Thu', mi:5,   pace:'Moderate', note:'Comfortably hard — can speak in short sentences'},
-    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Sat', mi:4,   pace:'Easy',     note:'Short easy run after power session'},
-    {day:'Sun', mi:8,   pace:'Long run', note:'Wk4: 7mi · Wk5-6: 8mi · Wk7-8: 9mi · Wk9: 10mi'},
+    {day:'Sun', mi:3,  pace:'Easy 3 mi',        note:'Easy before lifting — 10:30/mi. Keep it short and comfortable.'},
+    {day:'Mon', mi:3,  pace:'Easy 3 mi',        note:'Recovery — 10:30–11:00/mi. Shake out Sunday lifting load.'},
+    {day:'Tue', mi:6,  pace:'Intervals',         note:'P2 intervals — 6×800m @ 8:15/mi with 2 min rest. Longer intervals build race-specific fitness. Run AM before lifting.'},
+    {day:'Wed', mi:3,  pace:'Easy 3 mi',         note:'Easy — fits Wednesday recovery protocol. 10:30/mi.'},
+    {day:'Thu', mi:5,  pace:'Tempo',             note:'Threshold run — 20–25 min @ 9:00–9:15/mi in the middle. Warm up 10 min easy, tempo 20–25 min, cool down 10 min easy. Most important run of the week for half marathon fitness.'},
+    {day:'Fri', mi:null,pace:null,               note:'Rest from running — lift day. Save legs for Saturday long run.'},
+    {day:'Sat', mi:10, pace:'Long run',          note:'Wk4: 9mi · Wk5–6: 10mi · Wk7–8: 11mi · Wk9: 12mi — 10:30–11:00/mi. Skip explosive session when long run exceeds 10 miles.'},
   ],
-  // Phase 3 — Strength (Wks 10-16) — peak mileage, long run reaches 13.1
   str: [
-    {day:'Mon', mi:4,   pace:'Easy',     note:'Easy — heavy lifting takes priority, run relaxed'},
-    {day:'Tue', mi:4,   pace:'Easy',     note:'Post-explosive — keep easy, no tempo effort'},
-    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Thu', mi:5,   pace:'Moderate', note:'Tempo or fartlek — 20 min moderate effort in the middle'},
-    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Sat', mi:5,   pace:'Easy',     note:'Easy shakeout before Sunday long run'},
-    {day:'Sun', mi:12,  pace:'Long run', note:'Wk10-11: 10-11mi · Wk12-13: 11-12mi · Wk14-15: 12-13mi · Wk16: 13.1mi'},
+    {day:'Sun', mi:3,  pace:'Easy 3 mi',         note:'Easy before lifting — 10:30/mi. Protect Sunday heavy session.'},
+    {day:'Mon', mi:4,  pace:'Easy 4 mi',          note:'Recovery — 10:30/mi. Easy after Sunday heavy day.'},
+    {day:'Tue', mi:7,  pace:'Intervals',           note:'P3 intervals — 4×1 mile @ 8:20/mi with 2:30 rest. Mile repeats are the most direct 5K prep. This is where the pace drop happens. Run AM before lifting.'},
+    {day:'Wed', mi:3,  pace:'Easy 3 mi',           note:'Easy — 10:30/mi. Feeds Wednesday recovery protocol.'},
+    {day:'Thu', mi:5,  pace:'Tempo',               note:'Tempo run — 25–30 min @ 9:00/mi. Peak tempo work. Comfortably hard — can speak in short sentences but not paragraphs.'},
+    {day:'Fri', mi:null,pace:null,                 note:'Rest from running — lift day. Legs need to be fresh for back squat.'},
+    {day:'Sat', mi:12, pace:'Long run',            note:'Wk10–11: 11–12mi · Wk12–13: 12–13mi · Wk14–15: 13mi · Wk16: 13.1mi — 10:30–11:00/mi. Peak long run phase. Skip explosive session on 13+ mile Saturdays.'},
   ],
-  // Phase 4 — Peaking (Wks 17-18) — lifting peaks, long run holds at 10-12mi for non-XC runners
   peak: [
-    {day:'Mon', mi:3,   pace:'Easy',     note:'Short and easy — protect CNS for heavy lifting'},
-    {day:'Tue', mi:3,   pace:'Easy',     note:'Minimal volume, keep legs moving'},
-    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Thu', mi:4,   pace:'Easy',     note:'Easy only — no moderate effort during peaking'},
-    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Sat', mi:3,   pace:'Easy',     note:'Easy shakeout'},
-    {day:'Sun', mi:11,  pace:'Long run', note:'Wk17: 12mi · Wk18: 10mi — hold aerobic base, easy pace only'},
+    {day:'Sun', mi:3,  pace:'Easy 3 mi',           note:'Easy shake-out — 10:30–11:00/mi. Protect Sunday heavy lifting.'},
+    {day:'Mon', mi:3,  pace:'Easy 3 mi',            note:'Recovery run only — 11:00/mi. Taper begins.'},
+    {day:'Tue', mi:5,  pace:'Sharpening intervals', note:'P4 sharpening — 4×800m @ 8:00/mi with 90s rest. Faster than before, shorter volume. Sharpen the blade before race month. Run AM before lifting.'},
+    {day:'Wed', mi:3,  pace:'Easy 3 mi',             note:'Easy — taper week. 10:30–11:00/mi.'},
+    {day:'Thu', mi:4,  pace:'Moderate',              note:'Easy to moderate — 9:30/mi. Short and comfortable. No hard efforts this close to the race.'},
+    {day:'Fri', mi:null,pace:null,                   note:'Rest from running — lift day.'},
+    {day:'Sat', mi:10, pace:'Long run',              note:'Wk17: 10mi · Wk18: 8mi — 10:30/mi easy. Volume drops but distance stays respectable. Race is close.'},
   ],
-  // Phase 5 — Preseason (Wks 19-20) — practice starts, long run stays strong for non-XC runners
   pre: [
-    {day:'Mon', mi:3,   pace:'Easy',     note:'Practice in AM counts — this is optional extra'},
-    {day:'Tue', mi:3,   pace:'Easy',     note:'Easy only — explosive session takes priority'},
-    {day:'Wed', mi:null,pace:null,       note:'Rest from extra running — practice covers it'},
-    {day:'Thu', mi:4,   pace:'Easy',     note:'Easy run or skip if practice load is high'},
-    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Sat', mi:3,   pace:'Easy',     note:'Easy shakeout'},
-    {day:'Sun', mi:10,  pace:'Long run', note:'Wk19: 11mi · Wk20: 10mi — XC athletes skip; non-XC hold this distance'},
+    {day:'Sun', mi:3,  pace:'Easy 3 mi',             note:'Easy before lifting — 10:30/mi. Race is near, nothing heroic.'},
+    {day:'Mon', mi:3,  pace:'Easy 3 mi',              note:'Easy shake-out — 11:00/mi.'},
+    {day:'Tue', mi:4,  pace:'Easy with strides',      note:'Easy 4 mi with 4×100m strides at the end — keep legs sharp without accumulating fatigue. AM before lifting.'},
+    {day:'Wed', mi:3,  pace:'Easy 3 mi',               note:'Easy — 10:30–11:00/mi.'},
+    {day:'Thu', mi:3,  pace:'Easy 3 mi',               note:'Easy only — no tempo this close to the race.'},
+    {day:'Fri', mi:null,pace:null,                     note:'Rest from running.'},
+    {day:'Sat', mi:6,  pace:'Pre-race long run',       note:'6 miles easy — 10:30–11:00/mi. Last longer run before race week. Keep it comfortable and confidence-building.'},
   ],
-  // Phase 6 — Early season (Wks 21-23) — competition begins, long run stays at 10mi for non-XC runners
   early: [
-    {day:'Mon', mi:3,   pace:'Easy',     note:'Maintenance only — competition is primary load'},
-    {day:'Tue', mi:3,   pace:'Easy',     note:'Easy — no hard running on explosive days'},
-    {day:'Wed', mi:null,pace:null,       note:'Rest from extra running'},
-    {day:'Thu', mi:3,   pace:'Easy',     note:'Easy 20-30 min only'},
-    {day:'Fri', mi:null,pace:null,       note:'Rest from running — save legs for Saturday'},
-    {day:'Sat', mi:3,   pace:'Easy',     note:'Easy shakeout only'},
-    {day:'Sun', mi:10,  pace:'Long run', note:'Hold at 10mi — XC athletes skip this; non-XC maintain aerobic base'},
+    {day:'Sun', mi:2,  pace:'Easy 2 mi',               note:'Easy shake-out — 11:00/mi. Race mode.'},
+    {day:'Mon', mi:2,  pace:'Easy 2 mi',                note:'Easy — 11:00/mi. Maintenance only.'},
+    {day:'Tue', mi:3,  pace:'Easy with strides',        note:'Easy 3 mi with 4×100m strides — keep legs sharp. AM before lifting.'},
+    {day:'Wed', mi:2,  pace:'Easy 2 mi',                note:'Easy — 10:30–11:00/mi.'},
+    {day:'Thu', mi:3,  pace:'Easy 3 mi',                note:'Easy — 11:00/mi.'},
+    {day:'Fri', mi:null,pace:null,                      note:'Rest from running.'},
+    {day:'Sat', mi:4,  pace:'Easy 4 mi',                note:'Easy shake-out — 10:30–11:00/mi. Post-race maintenance.'},
   ],
-  // Phase 7 — In-season — minimal maintenance only
   'in': [
-    {day:'Mon', mi:2,   pace:'Easy',     note:'Easy 20 min max — match week recovery'},
-    {day:'Tue', mi:2,   pace:'Easy',     note:'Easy only, skip if fatigued from matches'},
-    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
-    {day:'Thu', mi:3,   pace:'Easy',     note:'Easy 25-30 min to stay aerobically sharp'},
-    {day:'Fri', mi:null,pace:null,       note:'Rest from running — match tomorrow'},
-    {day:'Sat', mi:2,   pace:'Easy',     note:'Easy shakeout if no match, skip if competing'},
-    {day:'Sun', mi:2,   pace:'Slow/easy',note:'Very easy 20 min — active recovery only, no effort'},
+    {day:'Sun', mi:2,  pace:'Easy 2 mi',                note:'Easy — 11:00/mi. Maintenance only post-race.'},
+    {day:'Mon', mi:2,  pace:'Easy 2 mi',                 note:'Easy — 11:00/mi.'},
+    {day:'Tue', mi:3,  pace:'Easy 3 mi',                 note:'Easy — 10:30–11:00/mi. No intervals in-season.'},
+    {day:'Wed', mi:2,  pace:'Easy 2 mi',                 note:'Easy — 11:00/mi.'},
+    {day:'Thu', mi:3,  pace:'Easy 3 mi',                 note:'Easy — 11:00/mi. Aerobic maintenance.'},
+    {day:'Fri', mi:null,pace:null,                       note:'Rest from running.'},
+    {day:'Sat', mi:null,pace:null,                       note:'Rest — post-race season. No long run required.'},
   ],
 };
 
@@ -1335,21 +1332,29 @@ function buildRunBlock(phaseId, dayIndex) {
 
   const todayDist = day.mi !== null ? day.mi + ' mi' : 'Rest day';
   const openState = runOpen ? 'open' : '';
+  const isInterval = day.pace && (day.pace.toLowerCase().includes('interval') || day.pace.toLowerCase().includes('tempo') || day.pace.toLowerCase().includes('sharp'));
+  const paceTarget = isInterval ? `<div style="font-size:10px;color:#E06030;margin-top:3px">⚡ Quality session — run AM before lifting</div>` : '';
 
   return `<div class="run-block">
     <div class="run-header" onclick="toggleRun()">
       <div class="run-header-left">
         <span style="font-size:16px">🏃</span>
         <div>
-          <div class="run-title">Half marathon training — ${todayDist}</div>
-          <div class="run-optional">Optional · not needed if doing XC · tap to expand week</div>
+          <div class="run-title">T-Mac half marathon plan — ${todayDist}</div>
+          <div class="run-optional">Goal: 27-min 5K · Race: October · Tap to expand week</div>
+          ${paceTarget}
         </div>
       </div>
       <span class="run-toggle ${openState}" id="runToggle">${runOpen?'▲':'▼'}</span>
     </div>
     <div class="run-body ${openState}" id="runBody">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 0;border-bottom:0.5px solid var(--border);margin-bottom:8px">
+        <div style="text-align:center"><div style="font-size:10px;color:var(--text3)">Easy pace</div><div style="font-size:12px;font-weight:500;color:var(--text2)">10:30–11:00</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:var(--text3)">Tempo pace</div><div style="font-size:12px;font-weight:500;color:#E06030">9:00–9:15</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:var(--text3)">Interval pace</div><div style="font-size:12px;font-weight:500;color:#D85A30">8:00–8:20</div></div>
+      </div>
       ${rows}
-      <div class="run-xc-note">🎽 XC athletes: your practice runs already cover this volume. Treat these distances as a guide only — skip any day where practice load is already high.</div>
+      <div class="run-xc-note" style="margin-top:8px">🎽 G-Mac: your XC practice covers this volume — treat as a guide only. T-Mac: Tuesday intervals run AM before lifting. Saturday long run replaces explosive session when distance exceeds 10 miles.</div>
     </div>
   </div>`;
 }
