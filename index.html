@@ -368,8 +368,8 @@ const LIFT_A={
       {n:'Half-kneeling single-arm DB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Explosive primer — front squat warm-up complex',rows:[
-      {n:'Hang power clean (barbell) — 2×3+1',badge:'Explosive',bc:'b-orange',rep:'acc',uni:false},
-      {n:'Hang clean (barbell) — 2×3+1',badge:'Technical',bc:'b-purple',rep:'acc',uni:false},
+      {n:'Hang power clean (barbell) — 2×3+1',badge:'Explosive',bc:'b-orange',rep:'fix',uni:false},
+      {n:'Hang clean (barbell) — 2×3+1',badge:'Technical',bc:'b-purple',rep:'fix',uni:false},
     ]},
     {label:'Landmine block',rows:[
       {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
@@ -478,8 +478,8 @@ const LEAN_A={
   note:'Post-wrestling hypertrophy session. Front squat is technically demanding but lower absolute load than back squat — appropriate post-practice. Cossack squat adds lateral plane demand that complements rather than duplicates the front squat. Moderate tempo, 60–75s rest.',
   sections:[
     {label:'Explosive primer — front squat warm-up complex',rows:[
-      {n:'Hang power clean (barbell) — 2×3+1',badge:'Explosive',bc:'b-orange',rep:'acc',uni:false},
-      {n:'Hang clean (barbell) — 2×3+1',badge:'Technical',bc:'b-purple',rep:'acc',uni:false},
+      {n:'Hang power clean (barbell) — 2×3+1',badge:'Explosive',bc:'b-orange',rep:'fix',uni:false},
+      {n:'Hang clean (barbell) — 2×3+1',badge:'Technical',bc:'b-purple',rep:'fix',uni:false},
     ]},
     {label:'Bilateral lower',rows:[
       {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
@@ -997,16 +997,22 @@ function buildSections(sections, scheme) {
     ${s.rows.map(r => {
       // use uni_lower scheme key for lower unilateral rows if available
       const schemeKey = (r.rep==='uni' && isLowerUni && scheme && scheme.uni_lower) ? 'uni_lower' : r.rep;
-      const reps = scheme ? scheme[schemeKey] : r.d;
-      const setsRaw = scheme ? scheme[schemeKey] : '';
+      // 'fix' rep key = fixed scheme embedded in exercise name, extract it
       let setsStr = '', repsStr = '';
-      if(scheme && setsRaw && setsRaw.includes('×')) {
-        setsStr = setsRaw.split('×')[0]+' sets';
-        repsStr = setsRaw.split('×')[1]+' reps';
-      } else if(scheme) {
-        setsStr = setsRaw; repsStr = '';
+      if(r.rep==='fix') {
+        const match = r.n.match(/(\d+×[\d\+]+)\s*$/);
+        setsStr = match ? match[1] : 'See name';
+        repsStr = '';
       } else {
-        setsStr = r.d; repsStr = '';
+        const setsRaw = scheme ? scheme[schemeKey] : r.d;
+        if(scheme && setsRaw && setsRaw.includes('×')) {
+          setsStr = setsRaw.split('×')[0]+' sets';
+          repsStr = setsRaw.split('×')[1]+' reps';
+        } else if(scheme) {
+          setsStr = setsRaw; repsStr = '';
+        } else {
+          setsStr = r.d; repsStr = '';
+        }
       }
       return `<div class="ex-row">
         <div>
