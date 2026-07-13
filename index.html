@@ -323,8 +323,8 @@
 
 <script>
 const PHASES=[
-  {id:'base',name:'Phase 1 — Base building',dates:'June 2 – June 22',weeks:'Wks 1–3',load:'50–60% 1RM · Low intensity',goal:'XC and wrestling practices already running 3–4 days each. Unilateral lower volume kept to 1 exercise per lifting day — running provides sufficient single-leg loading. Technique focus on all lifts. No max efforts.',chips:[{t:'3×10–12 main',c:'chip-green'},{t:'1 lower unilateral / day',c:'chip-amber'},{t:'2×12 acc',c:'chip-amber'}],scheme:{main:'3×10',uni:'2×15',acc:'2×12',core:'2×20'}},
-  {id:'hyp',name:'Phase 2 — Hypertrophy',dates:'June 23 – Aug 3',weeks:'Wks 4–9',load:'65–72% 1RM · Moderate',goal:'Drive muscle mass for weight class durability. Push close to failure on last sets of accessories.',chips:[{t:'4×8 main',c:'chip-green'},{t:'2×10 lower uni · 2×10 upper uni',c:'chip-amber'},{t:'2×12 acc',c:'chip-amber'}],scheme:{main:'4×8',uni:'2×10',uni_lower:'2×10',acc:'2×12',core:'2×15'}},
+  {id:'base',name:'Phase 1 — Base building',dates:'June 2 – June 22',weeks:'Wks 1–3',load:'50–60% 1RM · Low intensity',goal:'XC and wrestling practices already running 3–4 days each. Unilateral lower volume kept to 1 exercise per lifting day — running provides sufficient single-leg loading. Technique focus on all lifts. No max efforts.',chips:[{t:'3×10–12 main',c:'chip-green'},{t:'1 lower unilateral / day',c:'chip-amber'},{t:'2×12 acc',c:'chip-amber'},{t:'90s main rest · 3–4 RIR',c:'chip-gray'}],scheme:{main:'3×10',uni:'2×15',acc:'2×12',core:'2×20'}},
+  {id:'hyp',name:'Phase 2 — Hypertrophy',dates:'June 23 – Aug 3',weeks:'Wks 4–9',load:'65–72% 1RM · Moderate',goal:'Drive muscle mass for weight class durability. Push close to failure on last sets of accessories.',chips:[{t:'4×8 main',c:'chip-green'},{t:'2×10 lower uni · 2×10 upper uni',c:'chip-amber'},{t:'2×12 acc',c:'chip-amber'},{t:'2 min main rest · 2–3 RIR',c:'chip-gray'}],scheme:{main:'4×8',uni:'2×10',uni_lower:'2×10',acc:'2×12',core:'2×15'}},
   {id:'str',name:'Phase 3 — Strength',dates:'Aug 4 – Sept 20',weeks:'Wks 10–16',load:'78–85% 1RM · High',goal:'Peak force production. 4×5 on all main lifts — heavy but manageable within a 75-min session. On P3 days superset press and row (they don\'t compete) to compress time. Progressive overload weekly. Feeds the explosive days.',chips:[{t:'4×5 main',c:'chip-green'},{t:'2×8 unilateral',c:'chip-amber'},{t:'2×6–8 acc',c:'chip-amber'}],scheme:{main:'4×5',uni:'2×8',acc:'2×6',core:'2×10'}},
   {id:'peak',name:'Phase 4 — Peaking',dates:'Sept 21 – Oct 4',weeks:'Wks 17–18',load:'85–90% 1RM · Very high',goal:'Reduce volume, hold intensity. Body consolidates strength gains. Explosive days dominate.',chips:[{t:'3×3 main',c:'chip-green'},{t:'2×6 unilateral',c:'chip-amber'},{t:'Daily core circuit',c:'chip-amber'}],scheme:{main:'3×3',uni:'2×6',acc:'2×5',core:'daily'}},
   {id:'pre',name:'Phase 5 — Preseason',dates:'Oct 5 – Oct 18',weeks:'Wks 19–20',load:'75–80% 1RM · Moderate',goal:'XC and wrestling practice in full swing. Lifting is pure maintenance — 2×/week max. Practice drives all conditioning.',chips:[{t:'2×5 main (maint.)',c:'chip-green'},{t:'2×8 unilateral',c:'chip-amber'},{t:'Post-practice only',c:'chip-red'}],scheme:{main:'2×5',uni:'2×8',acc:'2×8',core:'post-practice'}},
@@ -354,24 +354,24 @@ const DAY_DESCRIPTIONS={
 
 const LIFT_A={
   sections:[
-    {label:'Explosive primer — front squat warm-up complex',rows:[
+    {label:'Explosive primer — 2 min rest · stop when bar speed drops',rows:[
       {n:'Hang power clean (barbell) — 2×3+1',badge:'Explosive',bc:'b-orange',rep:'fix',uni:false},
       {n:'Hang clean (barbell) — 2×3+1',badge:'Technical',bc:'b-purple',rep:'fix',uni:false},
     ]},
-    {label:'Primary compound lifts',rows:[
+    {label:'Primary compound lifts — 90s rest P1 · 2 min P2 · 2:30 P3 · 3 min P4 · 1:30 P5 · 1–2 RIR P3+ · 3 RIR P1–P2',rows:[
       {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
       {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
       {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
-    {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
+    {label:'Unilateral — lower — 60s rest P1–P2 · 75s P3 · 90s P4 · 2–3 RIR all phases (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
       {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
-    {label:'Unilateral — upper',rows:[
+    {label:'Unilateral — upper — 45s rest P1 · 60s P2–P3 · 75s P4 · 2–3 RIR',rows:[
       {n:'Seated cable row',badge:'Pull',bc:'b-orange',rep:'uni',uni:false},
       {n:'Half-kneeling single-arm DB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
-    {label:'Landmine block',rows:[
+    {label:'Landmine block — 45s rest · 3 RIR · movement quality focus',rows:[
       {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
       {n:'Landmine wood chop (low to high)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
     ]},
@@ -379,7 +379,7 @@ const LIFT_A={
       {n:'Cable triceps pushdown (straight bar or rope)',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
       {n:'Cable external rotation (90° elbow)',badge:'RC',bc:'b-purple',rep:'acc',uni:true},
     ]},
-    {label:'Core — 2 sets each',rows:[
+    {label:'Core — 45s rest · 2–3 RIR · never grind to failure',rows:[
       {n:'Ab wheel rollout',badge:'Core',bc:'b-gray',rep:'core',uni:false},
       {n:'Dead bug',badge:'Core',bc:'b-gray',rep:'core',uni:false},
       {n:'Copenhagen plank hold',badge:'Core',bc:'b-gray',rep:'core',uni:true},
@@ -389,28 +389,28 @@ const LIFT_A={
 
 const LIFT_B={
   sections:[
-    {label:'Primary compound lifts',rows:[
+    {label:'Primary compound lifts — 90s rest P1 · 2 min P2 · 2:30 P3 · 3 min P4 · 1:30 P5 · 1–2 RIR P3+ · 3 RIR P1–P2',rows:[
       {n:'Trap bar deadlift',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
       {n:'Weighted pull-up',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
       {n:'Push press (overhead)',badge:'Push',bc:'b-blue',rep:'main',uni:false},
     ]},
-    {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
+    {label:'Unilateral — lower — 60s rest P1–P2 · 75s P3 · 90s P4 · 2–3 RIR all phases (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
       {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
-    {label:'Unilateral — upper',rows:[
+    {label:'Unilateral — upper — 45s rest P1 · 60s P2–P3 · 75s P4 · 2–3 RIR',rows:[
       {n:'Single-arm overhead KB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
-    {label:'Landmine block',rows:[
+    {label:'Landmine block — explosive: 90s rest · stop when speed drops · rotational: 45s rest · 3 RIR',rows:[
       {n:'Landmine clean (single-arm)',badge:'Explosive',bc:'b-orange',rep:'acc',uni:true},
       {n:'Landmine 180 (rotational slam)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
     ]},
-    {label:'Accessories',rows:[
+    {label:'Accessories — 30–45s rest · 1–2 RIR · isolation focus',rows:[
       {n:'TRX row',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
       {n:'Banded ER at side (90° elbow)',badge:'RC',bc:'b-purple',rep:'acc',uni:true},
     ]},
-    {label:'Core — 2 sets each',rows:[
+    {label:'Core — 45s rest · Nordic: 90–120s rest · 2–3 RIR · TGU: technical focus',rows:[
       {n:'Pallof press',badge:'Core',bc:'b-gray',rep:'core',uni:true},
       {n:'GHD sit-up',badge:'Core',bc:'b-gray',rep:'core',uni:false},
       {n:'Nordic hamstring curl',badge:'Hamstring',bc:'b-orange',rep:'core',uni:false},
@@ -423,28 +423,28 @@ const LIFT_B={
 
 const LIFT_C={
   sections:[
-    {label:'Primary compound lifts',rows:[
+    {label:'Primary compound lifts — 90s rest P1 · 2 min P2 · 2:30 P3 · 3 min P4 · 1:30 P5 · 1–2 RIR P3+ · 3 RIR P1–P2',rows:[
       {n:'Back squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
       {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
       {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
-    {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
+    {label:'Unilateral — lower — 60s rest P1–P2 · 75s P3 · 90s P4 · 2–3 RIR all phases (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
       {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Step-up with knee drive',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
-    {label:'Unilateral — upper (P2–P3: single-arm Z press · other phases: split press)',rows:[
+    {label:'Unilateral — upper — 45s rest P1 · 60s P2–P3 · 75s P4 · 2–3 RIR (P2–P3: single-arm Z press · other phases: split press)',rows:[
       {n:'Single-arm Z press (DB or KB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Neutral grip lat pulldown',badge:'Pull',bc:'b-orange',rep:'uni',uni:false},
     ]},
-    {label:'Landmine block',rows:[
+    {label:'Landmine block — lateral lunge: 60s rest · 2–3 RIR · high pull: 90s rest · stop when speed drops',rows:[
       {n:'Landmine lateral lunge',badge:'Unilateral',bc:'b-amber',rep:'acc',uni:true},
       {n:'Landmine high pull (single-arm)',badge:'Explosive',bc:'b-orange',rep:'acc',uni:true},
     ]},
-    {label:'Accessories',rows:[
+    {label:'Accessories — 30–45s rest · 1–2 RIR · isolation focus',rows:[
       {n:'DB incline chest fly',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
       {n:'Banded bird dog',badge:'Stability',bc:'b-purple',rep:'acc',uni:true},
     ]},
-    {label:'Core finisher — 2 sets each',rows:[
+    {label:'Core finisher — 45s rest · suitcase carry: 60s rest · 2–3 RIR · never grind',rows:[
       {n:'Hanging leg raise',badge:'Core',bc:'b-gray',rep:'core',uni:false},
       {n:'Plank to push-up',badge:'Core',bc:'b-gray',rep:'core',uni:false},
       {n:'Suitcase carry',badge:'Core',bc:'b-gray',rep:'core',uni:true},
@@ -471,7 +471,7 @@ const LEAN_A={
   schemeKey:'hyp',
   note:'Post-wrestling hypertrophy session. Front squat is technically demanding but lower absolute load than back squat — appropriate post-practice. Cossack squat adds lateral plane demand that complements rather than duplicates the front squat. Moderate tempo, 60–75s rest.',
   sections:[
-    {label:'Explosive primer — front squat warm-up complex',rows:[
+    {label:'Explosive primer — 2 min rest · stop when bar speed drops',rows:[
       {n:'Hang power clean (barbell) — 2×3+1',badge:'Explosive',bc:'b-orange',rep:'fix',uni:false},
       {n:'Hang clean (barbell) — 2×3+1',badge:'Technical',bc:'b-purple',rep:'fix',uni:false},
     ]},
