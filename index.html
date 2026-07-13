@@ -879,10 +879,11 @@ const ANKLE_SECTIONS=[
     {n:'Lateral hop + stick on angle board (hold 2s)',d:'3×6 / side',badge:'Stability',bc:'b-purple'},
     {n:'Banded ankle 4-way pull resist',d:'3×12 / direction',badge:'Stability',bc:'b-purple'},
   ]},
-  {label:'Oscillating bar — tissue prep (do first)',rows:[
-    {n:'Oscillating bar — Achilles and calf',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
-    {n:'Oscillating bar — lateral ankle and peroneals',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
-    {n:'Oscillating bar — plantar fascia (sole of foot)',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
+  {label:'Tissue prep — foam roller and massage gun (do first)',rows:[
+    {n:'Foam roller — calf and gastrocnemius',d:'60s / side — slow rolling from ankle to back of knee',badge:'Tissue',bc:'b-gray'},
+    {n:'Massage gun — Achilles and lower calf',d:'30–45s / side — moderate pressure along the Achilles tendon and lower calf',badge:'Tissue',bc:'b-gray'},
+    {n:'Massage gun — peroneals and lateral ankle',d:'30–45s / side — along the outside of the ankle and up the peroneal muscles',badge:'Tissue',bc:'b-gray'},
+    {n:'Massage gun — plantar fascia (sole of foot)',d:'30s / side — along the arch and heel. Especially valuable after long runs',badge:'Tissue',bc:'b-gray'},
   ]},
   {label:'Sport-specific loading',rows:[
     {n:'Jump rope — single leg (30s / side)',d:'3 rounds',badge:'Dynamic',bc:'b-orange'},
@@ -1163,7 +1164,7 @@ const DAILY_REQS = {
       {ico:'🧘',t:'Static cool-down — running and agility focus',d:'Calf stretch straight knee 45s/side · Soleus bent knee 45s/side · Hip flexor lunge 60s/side · Groin stretch 60s · Cross-body shoulder 30s/side.'},
     ],
     prehab:[
-      {ico:'🦋',t:'Hip prehab (anytime)',d:'8–10 min — oscillating bar hip and TFL, banded clamshells and lateral walk, hip CARs. Lateral bounds and agility ladder demand hip stability — do before the session if possible.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'8–10 min — foam roller on IT band and glutes, massage gun on TFL. Then banded clamshells and lateral walk, hip CARs.'},
     ],
     daily:[
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day — anytime.'},
@@ -1219,7 +1220,7 @@ const DAILY_REQS = {
       {ico:'🧘',t:'Static cool-down — lateral plane focus',d:'Cossack squat hold 45s/side · Lateral lunge stretch 45s/side · Pigeon pose 60s/side · Doorway chest stretch 45s/side · Cross-body shoulder 30s/side.'},
     ],
     prehab:[
-      {ico:'🦋',t:'Hip prehab (anytime)',d:'8–10 min — oscillating bar hip and TFL, banded clamshells and lateral walk, cossack squat hold. Back squat and cossack squat demand hip mobility and glute activation — do before session if possible.'},
+      {ico:'🦋',t:'Hip prehab (anytime)',d:'8–10 min — foam roller on glutes and quads, massage gun on TFL. Then banded clamshells, lateral walk, cossack squat hold.'},
     ],
     daily:[
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day.'},
@@ -2101,11 +2102,12 @@ function imgBtn(name) {
 }
 
 const HIP_SECTIONS=[
-  {label:'Oscillating bar — tissue prep (do first)',rows:[
-    {n:'Oscillating bar — hip flexor and TFL',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
-    {n:'Oscillating bar — glute and piriformis',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
-    {n:'Oscillating bar — IT band and lateral hip',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
-    {n:'Oscillating bar — adductors (inner thigh)',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
+  {label:'Tissue prep — foam roller and massage gun (do first)',rows:[
+    {n:'Foam roller — IT band and lateral hip',d:'60–90s / side — side-lying, roller under the outer thigh. Slow from hip to knee',badge:'Tissue',bc:'b-gray'},
+    {n:'Foam roller — quads and hip flexors',d:'60s / side — face down, roller under the front of the thigh and hip crease',badge:'Tissue',bc:'b-gray'},
+    {n:'Foam roller — glutes and piriformis',d:'60–90s / side — seated, cross ankle over knee, lean into the hip',badge:'Tissue',bc:'b-gray'},
+    {n:'Massage gun — TFL and outer hip',d:'30–45s / side — just below the hip bone on the outer hip. Small area, use moderate pressure',badge:'Tissue',bc:'b-gray'},
+    {n:'Massage gun — adductors (inner thigh)',d:'30–45s / side — inner thigh from groin to knee. Often the tightest hip structure in wrestlers',badge:'Tissue',bc:'b-gray'},
   ]},
   {label:'Hip mobility',rows:[
     {n:'Hip 90/90 active rotation',d:'2×10 / side',badge:'Mobility',bc:'b-amber'},
