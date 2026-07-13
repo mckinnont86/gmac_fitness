@@ -395,7 +395,7 @@ const LIFT_B={
       {n:'Push press (overhead)',badge:'Push',bc:'b-blue',rep:'main',uni:false},
     ]},
     {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
-      {n:'Step-up with knee drive',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper',rows:[
@@ -430,7 +430,7 @@ const LIFT_C={
     ]},
     {label:'Unilateral — lower (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
       {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Step-up with knee drive',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper (P2–P3: single-arm Z press · other phases: split press)',rows:[
       {n:'Single-arm Z press (DB or KB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
@@ -1145,7 +1145,7 @@ const DAILY_REQS = {
     pre:[],
     post:[],
     prehab:[
-      {ico:'🦋',t:'Hip prehab — full protocol (anytime)',d:'Full 10–15 min — rest day means time to do this properly. Oscillating bar tissue prep, 90/90 flow, banded clamshells, lateral walk, hip CARs, pigeon pose, couch stretch. Fold into the hip mobility session already happening.'},
+      {ico:'🦋',t:'Hip prehab — full protocol (anytime)',d:'Full 10–15 min — rest day means time to do this properly. Foam roller and massage gun tissue prep first, then 90/90 flow, banded clamshells, lateral walk, hip CARs, pigeon pose, couch stretch. Fold into the hip mobility session already happening.'},
       {ico:'🦶',t:'Ankle prehab — full protocol (anytime)',d:'Full 8–10 min — rest day gives time to do both. Angle board stretches and dorsiflexion, ABCs, tibialis raise 3×20, single-leg balance, peroneal walk. Monday is the best day to do both prehab areas properly.'},
     ],
     daily:[
@@ -1907,18 +1907,18 @@ const EX_CUES = {
   'Physio ball push-up plus (hands on ball)':            'Push-up position with both hands on physio ball. At the top, push through to protract scapulae fully. Instability forces RC engagement.',
   'Physio ball single-arm balance hold':                 'One hand pressed into physio ball on the floor, hold the position. Demands continuous RC activation to stabilize the unstable surface.',
   // ── OSCILLATING BAR — ANKLE ──
-  'Oscillating bar — Achilles and calf':                      'Apply oscillating bar along the Achilles tendon and calf belly with moderate pressure and vibration. Reduces tissue tone before dorsiflexion work.',
-  'Oscillating bar — lateral ankle and peroneals':            'Run oscillating bar along the outside of the ankle and up the peroneals. Loosens lateral chain tissue before stability work.',
-  'Oscillating bar — plantar fascia (sole of foot)':          'Apply along the arch and heel. Prep work before loading the foot — especially valuable after long runs or heavy days.',
+  'Oscillating bar — Achilles and calf':                      'Use massage gun along the Achilles tendon and lower calf — moderate pressure. Foam roller for the upper calf. Reduces tissue tone before dorsiflexion work.',
+  'Oscillating bar — lateral ankle and peroneals':            'Use massage gun along the outside of the ankle and up the peroneal muscles. Loosens lateral chain tissue before stability work.',
+  'Oscillating bar — plantar fascia (sole of foot)':          'Use massage gun along the arch and heel with moderate pressure. Especially valuable after long runs or heavy days. A lacrosse ball also works well here.',
   // ── OSCILLATING BAR — SHOULDER ──
   'Oscillating bar — pec minor and anterior shoulder':        'Run oscillating bar across the pec minor and front of the shoulder. Reduces tissue tension before pressing — helps the posterior capsule mobilize more freely.',
   'Oscillating bar — posterior capsule and rear delt':        'Apply oscillating bar across the back of the shoulder and rear delt. Prep for sleeper stretch — loosens the posterior capsule.',
   'Oscillating bar — upper trap and levator scapulae':        'Run oscillating bar along the upper trap from shoulder to neck base. Reduces tone in muscles that restrict overhead range.',
   // ── OSCILLATING BAR — HIP ──
-  'Oscillating bar — hip flexor and TFL':                     'Apply oscillating bar along the front of the hip and TFL (outer hip). Reduces tone in hip flexors that restrict extension — do before hip mobility work.',
-  'Oscillating bar — glute and piriformis':                   'Apply to the glute and deep into the piriformis area. Moderate pressure with vibration. Key prep before clamshells and hip rotational work.',
-  'Oscillating bar — IT band and lateral hip':                'Run oscillating bar along the IT band and lateral hip. Prep for lateral chain before banded lateral walks and abduction work.',
-  'Oscillating bar — adductors (inner thigh)':               'Apply along the inner thigh adductors. Inner thigh is often the tightest hip structure in wrestlers — critical prep before lateral lunge and banded sumo work.',
+  'Oscillating bar — hip flexor and TFL':                     'Use foam roller or massage gun along the front of the hip and TFL (outer hip). Foam roller: face down, roll the hip crease and front of thigh. Massage gun: moderate pressure on the TFL just below the hip bone. Reduces tone before hip mobility work.',
+  'Oscillating bar — glute and piriformis':                   'Use foam roller or massage gun on the glute and piriformis. Foam roller: seated, cross ankle over knee, lean into the hip. Massage gun: deeper pressure into the piriformis area. Key prep before clamshells and hip rotational work.',
+  'Oscillating bar — IT band and lateral hip':                'Use foam roller along the IT band and lateral hip. Side-lying, roller under the outer thigh. Slow from hip to knee — one of the tightest areas for runners and wrestlers. Prep for lateral chain work.',
+  'Oscillating bar — adductors (inner thigh)':               'Use massage gun along the inner thigh adductors from groin to knee. Often the tightest hip structure in wrestlers — critical prep before lateral lunge and banded sumo work. Foam roller works too but massage gun reaches deeper.',
   // ── HIP MOBILITY ──
   'Hip 90/90 active rotation':                                'Sit with both legs in 90 degree position. Actively rotate hips to drop the front shin flat, pause, switch sides. Builds active internal rotation range.',
   'Hip CARs (controlled articular rotations)':               'Stand on one leg, lift the other and make the largest possible slow hip circle — forward, out, back, in. Own every degree of range through the full circle.',
@@ -2154,9 +2154,9 @@ function renderHipContent() {
   let html=`<div class="t-chips" style="margin-bottom:10px">
     <span class="t-chip">Daily: 10–12 min</span>
     <span class="t-chip">Best done: pre-session or evening</span>
-    <span class="t-chip">Oscillating bar first, then banded work</span>
+    <span class="t-chip">Foam roller + massage gun first, then banded work</span>
   </div>`;
-  html+=`<div class="alert alert-gray" style="margin-bottom:10px">Hip strength and mobility is the engine of wrestling — takedowns, scrambles, and defensive base all load the hip. The oscillating bar loosens tissue before banded activation and loaded movement. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
+  html+=`<div class="alert alert-gray" style="margin-bottom:10px">Hip strength and mobility is the engine of wrestling — takedowns, scrambles, and defensive base all load the hip. Use foam roller and massage gun for tissue prep before banded activation and loaded movement. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
   html+=buildSections(HIP_SECTIONS, null);
   html+=`<div class="note-box">Banded clamshells and lateral walks are the highest-priority exercises here — glute med weakness is one of the most common contributors to knee, hip, and low back issues in wrestlers. Run those every single day. The full protocol 3–4×/week is plenty.</div>`;
   document.getElementById('hipContent').innerHTML=html;
