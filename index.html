@@ -361,11 +361,10 @@ const LIFT_A={
     {label:'Primary compound lifts — 90s rest P1 · 2 min P2 · 2:30 P3 · 3 min P4 · 1:30 P5 · 1–2 RIR P3+ · 3 RIR P1–P2',rows:[
       {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
       {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
-      {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+      {n:'Pendlay row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
     ]},
-    {label:'Unilateral — lower — 60s rest P1–P2 · 75s P3 · 90s P4 · 2–3 RIR all phases (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
+    {label:'Unilateral — lower — 60s rest P1–P2 · 75s P3 · 90s P4 · 2–3 RIR all phases (P1–P2: cossack squat only · P3+: cossack squat)',rows:[
       {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper — 45s rest P1 · 60s P2–P3 · 75s P4 · 2–3 RIR',rows:[
       {n:'Seated cable row',badge:'Pull',bc:'b-orange',rep:'uni',uni:false},
@@ -375,8 +374,7 @@ const LIFT_A={
       {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
       {n:'Landmine wood chop (low to high)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
     ]},
-    {label:'Accessories',rows:[
-      {n:'Cable triceps pushdown (straight bar or rope)',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
+    {label:'Accessories — 30–45s rest · 1–2 RIR · P2–P3: swap cable pushdown for weighted dips',rows:[,badge:'Push',bc:'b-blue',rep:'acc',uni:false},
       {n:'Cable external rotation (90° elbow)',badge:'RC',bc:'b-purple',rep:'acc',uni:true},
     ]},
     {label:'Core — 45s rest · 2–3 RIR · never grind to failure',rows:[
@@ -394,8 +392,9 @@ const LIFT_B={
       {n:'Weighted pull-up',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
       {n:'Push press (overhead)',badge:'Push',bc:'b-blue',rep:'main',uni:false},
     ]},
-    {label:'Unilateral — lower — 60s rest P1–P2 · 75s P3 · 90s P4 · 2–3 RIR all phases (P1: pick 1 · P2: both · P3+: pick 1)',rows:[
+    {label:'Unilateral — lower — 60s rest P1–P2 · 75s P3 · 90s P4 · 2–3 RIR all phases (P1: pick 1 · P2: reverse lunge + Bulgarian split squat · P3+: reverse lunge or single-leg RDL)',rows:[
       {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Unilateral — upper — 45s rest P1 · 60s P2–P3 · 75s P4 · 2–3 RIR',rows:[
@@ -1766,6 +1765,8 @@ const EX_CUES = {
   'Front squat':                       'Elbows high, bar on front delts. Stay upright, knees track toes, drive up through the whole foot.',
   'Incline barbell press':             'Set at 30-45 degrees. Retract scapulae. Bar lowers to upper chest. Drive up and slightly back.',
   'Chest-supported barbell row':       'Chest on pad, row bar to lower ribcage. No body English, isolates the back.',
+  'Pendlay row':                        'Bar on the floor, hip-width stance, horizontal torso, overhand grip. Pull explosively from a dead stop to the lower chest — bar returns to the floor and comes to a complete stop each rep. The dead stop reset eliminates momentum and stretch reflex, requiring full lat engagement from zero velocity on every pull. Heavier than a standard bent-over row because the reset removes fatigue-driven cheating. Complements the hang clean complex earlier in Sunday — both movements share the same hip hinge setup position and explosive pulling intent. Load progressively each phase.',
+  'Dips (bodyweight or weighted)':      'Parallel bars, slight forward lean to emphasize the pec and triceps. Lower until upper arms are parallel to the floor, press to full lockout. Bodyweight in P1, add a plate or belt from P2 onward. More wrestling-specific than cable pushdowns — the pushing pattern directly mirrors posting and clearing mechanics. Rotate with cable triceps pushdown: P1 cable, P2–P3 weighted dips, P4 cable, P5+ alternate weekly.',
   'Romanian deadlift':                 'Soft knees, hinge back until hamstrings load. Bar stays close to legs throughout.',
   'Bulgarian split squat':             'Rear foot elevated, front foot out. Lower the knee toward the floor, drive through the front heel.',
   'Single-arm dumbbell row':           'Lawnmower row — brace one hand and knee on a bench, DB in the other hand hanging straight down. Drive the elbow back toward the hip, squeeze at the top, lower with control. Full stretch at the bottom each rep. Not a seated row — this is a bent-over unilateral pull.',
