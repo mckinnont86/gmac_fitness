@@ -218,7 +218,7 @@
   <button onclick="switchSection('lifting')">Lifting</button>
   <button onclick="switchSection('conditioning')">Conditioning</button>
   <button onclick="switchSection('explosive')">Explosive</button>
-  <button onclick="switchSection('cardio')">Cardio</button>
+  <button onclick="switchSection('cardio')">Recovery</button>
   <button onclick="switchSection('stretch')">Stretching</button>
   <button onclick="switchSection('foam')">Foam rolling</button>
   <button onclick="switchSection('ankle')">Ankle prehab</button>
@@ -551,6 +551,37 @@ const COND_WED=[
 const THU_WATER=[];
 const THU_REQUIRED=[];
 const WED_EVENING=[];
+
+// ── CARDIO SECTIONS ──
+const CARDIO_SECTIONS=[
+  {label:'Water recovery — outstanding joint recovery',rows:[
+    {ico:'🌊',n:'Lazy river walk',d:'10–15 min — walk against the current in either direction. Hydrostatic pressure reduces muscle soreness and joint inflammation with zero impact. One of the best recovery tools available for high-volume athletes.',dur:'10–15 min'},
+    {ico:'🏊',n:'Easy swim — low intensity laps',d:'20–30 min — breaststroke or backstroke preferred. Conversational pace only. The buoyancy removes compressive load from the joints while maintaining blood flow and gentle range of motion.',dur:'20–30 min'},
+    {ico:'🧘',n:'Pool mobility — hip circles and arm swings',d:'5–10 min — hip circles, leg swings forward and lateral, shoulder circles in the water. Buoyancy assists range of motion, allowing you to access positions that are difficult on land when fatigued.',dur:'5–10 min'},
+  ]},
+  {label:'Contrast therapy — hot and cold',rows:[
+    {ico:'🧊',n:'Cold water immersion',d:'5–10 min at 50–59°F — reduces acute inflammation and soreness after heavy training. Best used within 30 min of training. Not recommended before a session — blunts the training adaptation signal.',dur:'5–10 min'},
+    {ico:'♨️',n:'Hot tub or warm bath',d:'10–15 min — increases blood flow and promotes relaxation. Pair with cold immersion for contrast therapy: 3 min cold, 1 min hot, repeat 3–4 cycles.',dur:'10–15 min'},
+    {ico:'🧂',n:'Epsom salt bath',d:'20 min in warm water with 2 cups Epsom salt. Magnesium absorption through the skin reduces soreness and promotes muscle relaxation. Best used in the evening before sleep.',dur:'20 min'},
+  ]},
+  {label:'Active recovery — movement without load',rows:[
+    {ico:'🚶',n:'Walking — easy pace',d:'20–30 min easy walk. Keeps blood moving without adding training stress. Excellent on rest days and after practice.',dur:'20–30 min'},
+    {ico:'🚴',n:'Easy bike ride or stationary bike',d:'15–20 min at very low intensity — RPE 3/10. Legs are moving but heart rate stays below 120 bpm. Flushes metabolic waste without adding fatigue.',dur:'15–20 min'},
+    {ico:'🧘',n:'Yoga or mobility flow',d:'20–30 min of gentle yoga or hip and thoracic mobility flow. Targets tissue restriction without loading. Particularly valuable on Monday rest days.',dur:'20–30 min'},
+  ]},
+  {label:'Compression and soft tissue',rows:[
+    {ico:'🦵',n:'Leg sleeves — compression',d:'Wear compression leg sleeves for 1–2 hours post-practice or post-lifting. Reduces swelling and edema in the lower legs. Particularly effective after XC running days.',dur:'1–2 hrs'},
+    {ico:'🔫',n:'Massage gun — targeted work',d:'5–10 min on the areas trained that day. Calves and quads after XC. Hamstrings, glutes, and upper back after lifting. Moderate pressure — not aggressive.',dur:'5–10 min'},
+    {ico:'🪵',n:'Foam roller — evening session',d:'10–15 min full body. Start at the calves and work up. Slow rolling with 5–10 second pauses on tight spots. The best time to foam roll is in the evening when tissue is warm from the day.',dur:'10–15 min'},
+  ]},
+  {label:'Sleep and nutrition — non-negotiable recovery',rows:[
+    {ico:'😴',n:'Sleep — 8–9 hours minimum',d:'8 hours is the floor, 9 is the target for a high-volume adolescent athlete. Sleep is when growth hormone is released, muscle protein synthesis peaks, and the nervous system recovers. Nothing replaces it.',dur:'8–9 hrs'},
+    {ico:'🍽️',n:'Post-training nutrition — within 60 minutes',d:'High quality protein (30–40g) plus carbohydrates (50–75g) within 60 minutes of training. This is the anabolic window — muscle protein synthesis is elevated and glycogen replenishment is fastest. Do not skip this.',dur:'Within 60 min'},
+    {ico:'💧',n:'Hydration — ongoing throughout the day',d:'Minimum 100–120oz of water per day on training days. Sweat loss from XC, wrestling, and lifting combined is significant. Electrolytes (sodium, potassium, magnesium) are important on high-sweat days — not just plain water.',dur:'All day'},
+  ]},
+];
+
+
 
 // Phase-scaled HIIT circuits (wrestling-specific, 20 min max)
 const COND_HIIT={
@@ -1374,9 +1405,14 @@ function setExploDay(i){exploDay=i;renderExploDays();renderExploContent();}
 
 // ----- CARDIO -----
 function renderCardioContent() {
-  let html=`<div class="alert alert-gray" style="margin-bottom:10px">Choose 1–2 modalities per session based on recovery. Sprints carry the most wrestling-specific carryover.</div>`;
-  html+=buildCardioRows(CARDIO_DATA);
-  html+=`<div class="note-box">XC practice provides daily aerobic base. Thursday cardio supplements with sprint quality work and swim recovery. Swimming is outstanding for joint health during high-volume training.</div>`;
+  let html=`<div class="t-chips" style="margin-bottom:10px">
+    <span class="t-chip">Water recovery — best on rest and light days</span>
+    <span class="t-chip">Compression — post-training daily</span>
+    <span class="t-chip">Sleep — 8–9 hrs non-negotiable</span>
+  </div>`;
+  html+=`<div class="alert alert-gray" style="margin-bottom:10px">Recovery is where adaptation happens. The training stimulus is only as good as the recovery surrounding it. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any item for detail.</div>`;
+  html+=buildSections(CARDIO_SECTIONS, null);
+  html+=`<div class="note-box">Water recovery, compression, and sleep are the three highest-leverage recovery tools available. None of them cost training time. Use them consistently and the quality of every session improves.</div>`;
   document.getElementById('cardioContent').innerHTML=html;
 }
 
