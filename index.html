@@ -1325,7 +1325,6 @@ function renderScheduleContent() {
     const isTue = schedDay===2;
     if(isTue) {
       html+=buildDailyReqs(schedDay,'pre');
-      html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(224,96,48,0.1);color:#E06030;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Tuesday — sharp and focused.</strong> XC only day. Agility, jumps, sprint, bike HIIT, then battle ropes.</div>`;
       html+=`<div class="sec-head">Agility · reaction · jumps · sprint · bike HIIT<span class="sec-line"></span></div>`;
       html+=buildCardioRows(COND_MON);
       const ropeKeyTue='mon';
@@ -1334,7 +1333,6 @@ function renderScheduleContent() {
       html+=buildCardioRows(ropesTue);
     } else {
       html+=buildDailyReqs(schedDay,'pre');
-      html+=`<div class="alert alert-gray" style="margin-bottom:10px;background:rgba(59,139,219,0.1);color:#5BA8F0;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Thursday — recovery focus.</strong> XC and wrestling practice day. Light agility only.</div>`;
       html+=`<div class="sec-head">Light agility — technique focus<span class="sec-line"></span></div>`;
       html+=buildCardioRows(COND_WED);
 
@@ -1343,14 +1341,12 @@ function renderScheduleContent() {
   } else if(d.type==='explo') {
     html+=buildDailyReqs(schedDay,'pre');
     const ropes=(BATTLE_ROPES[p.id]||BATTLE_ROPES['base'])['sat'];
-    html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(216,90,48,0.08);color:#D85A30;border-radius:8px;padding:9px 12px;font-size:12px">No barbell complex today — lifting on Friday and Sunday brackets this day. Neural activation, med ball, wrestling drills, box jumps, battle ropes.</div>`;
     html+=buildCardioRows(EXPLO_TUE);
     html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${p.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
     html+=buildCardioRows(ropes);
 
   } else {
     // Monday = full rest
-    html+=`<div class="alert alert-gray" style="margin-bottom:10px;background:rgba(100,100,100,0.1);color:var(--text2);border-radius:8px;padding:9px 12px;font-size:12px"><strong>Full rest day.</strong> XC and wrestling practice complete. Recovery from Sunday wrestling and lifting. No additional training.</div>`;
     html+=buildCardioRows(REST_DATA);
   }
 
