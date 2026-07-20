@@ -1393,7 +1393,7 @@ function renderExploDays() {
   const el=document.getElementById('exploDays');
   const eDays=[
     {name:'Tue',tag:'Explosive/Plyo',dot:'#E06030'},
-    {name:'Sat',tag:'Power complex',dot:'#E06030'},
+    {name:'Sat',tag:'Athletic explosive',dot:'#E06030'},
   ];
   el.innerHTML=`<div style="grid-column:1/8;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px">`+eDays.map((d,i)=>`
     <div class="day-tab ${i===exploDay?'active':''}" style="${i===exploDay?'border-color:#E06030;background:rgba(224,96,48,0.12)':''}" onclick="setExploDay(${i})">
@@ -1405,14 +1405,24 @@ function renderExploDays() {
 }
 function renderExploContent() {
   const ph=PHASES[curPhase];
+  const isSat = exploDay===1;
   const ropes=(BATTLE_ROPES[ph.id]||BATTLE_ROPES['base'])['sat'];
-  const notes=['Rest fully 2–3 min between explosive sets. Speed and power output matter more than fatigue. TGU closes the session.'];
-  let html=buildCardioRows(EXPLO_TUE);
-  html+=buildCardioRows(EXPLO_SAT);
-  html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${ph.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
-  html+=buildCardioRows(ropes);
-  html+=`<div class="note-box">${notes[0]}</div>`;
+  const ropes_tue=(BATTLE_ROPES[ph.id]||BATTLE_ROPES['base'])['mon'];
+  let html='';
+  if(!isSat) {
+    html+=`<div class="alert alert-gray" style="margin-bottom:10px">Tuesday — neural activation, med ball, wrestling drills, box jumps. Rest 2–3 min between explosive sets. Speed and power output matter more than fatigue accumulation.</div>`;
+    html+=buildCardioRows(EXPLO_TUE);
+    html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${ph.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
+    html+=buildCardioRows(ropes_tue);
+  } else {
+    html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(216,90,48,0.08);color:#D85A30;border-radius:8px;padding:9px 12px;font-size:12px">Saturday — athletic explosive only. No barbell complex — lifting on Friday and Sunday brackets this day. Neural activation, med ball, wrestling drills, box jumps, battle ropes.</div>`;
+    html+=buildCardioRows(EXPLO_TUE);
+    html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${ph.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
+    html+=buildCardioRows(ropes);
+  }
+  html+=`<div class="note-box">Rest fully 2–3 min between explosive sets. Speed and power output matter more than accumulated fatigue. If bar speed or jump height drops, the set is done regardless of rep count.</div>`;
   document.getElementById('exploContent').innerHTML=html;
+}
 }
 function setExploDay(i){exploDay=i;renderExploDays();renderExploContent();}
 
