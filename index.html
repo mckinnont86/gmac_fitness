@@ -1312,9 +1312,6 @@ function renderScheduleContent() {
     const scheme = isLean ? schemeBank[leanData.schemeKey] : p.scheme;
     html+=buildDailyReqs(schedDay,'pre');
 
-    // Sunday heavy day banner
-    if(schedDay===0) html+=`<div class="alert alert-purple" style="margin-bottom:8px">💪 <strong>Heavy intention day</strong> — no XC today. Drive the front squat with full focus. This is your primary strength session of the week.</div>`;
-
     // P3 superset reminder
     if(p.id==='str' && !isLean) html+=`<div style="padding:8px 12px;background:rgba(186,117,23,0.12);color:#C9A84C;border-radius:8px;font-size:11px;margin-bottom:8px">⏱ <strong>P3 time saver:</strong> Superset press + row — rest one while working the other. Saves ~10 min without losing intensity.</div>`;
 
@@ -1390,7 +1387,6 @@ function renderLiftContent() {
   let html=`<div class="scheme-row">`;
   p.chips.forEach(c=>{html+=`<span class="chip ${c.c}">${c.t}</span>`;});
   html+=`</div>`;
-  if(liftDay===0) html+=`<div class="alert alert-purple" style="margin-bottom:8px">💪 <strong>Heavy intention day</strong> — no XC today. Drive the front squat with full focus. Primary strength session of the week.</div>`;
   if(p.id==='str'&&!isLean) html+=`<div style="padding:8px 12px;background:rgba(186,117,23,0.12);color:#C9A84C;border-radius:8px;font-size:11px;margin-bottom:8px">⏱ <strong>P3 time saver:</strong> Superset press + row — rest one while working the other. Saves ~10 min without losing intensity.</div>`;
   if(isLean){
     const schemeBank=liftPhase===6?P7_SCHEMES:LEAN_SCHEMES;
