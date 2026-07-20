@@ -1247,9 +1247,15 @@ function renderScheduleContent() {
   let html='';
   const isLean = curPhase>=5;
 
-  // Sun=0 Lift A, Tue=2 Lift B, Fri=5 Lift C
+  // Sun=0 Lift A, Wed=3 Lift B, Fri=5 Lift C
   const liftDayMap = {0:0, 3:1, 5:2}; // schedDay -> lift index (0=A,1=B,2=C)
   const liftIdx = liftDayMap[schedDay];
+
+  // ── DAY INTENTION HEADER — always first ──
+  html+=`<div style="margin-bottom:12px;padding:10px 14px;background:var(--bg2);border-radius:10px;border-left:3px solid var(--green)">
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">${d.title}</div>
+    <div style="font-size:11px;color:var(--text2);line-height:1.5">${isLean && d.type==='lift' ? (()=>{const la=[LEAN_A,LEAN_B,LEAN_C][liftIdx];return la.note;})() : d.note}</div>
+  </div>`;
 
   if(isLean && d.type==='lift') {
     const leanArr=[LEAN_A,LEAN_B,LEAN_C];
@@ -1280,11 +1286,9 @@ function renderScheduleContent() {
     html+=`</div>`;
     if(isLean && ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
     html+=buildSections(ldata.sections, scheme);
-    const note = isLean ? ldata.note : d.note;
-    html+=`<div class="note-box">${note}</div>`;
 
   } else if(d.type==='cond') {
-    const isTue = schedDay===2;  // Tuesday = HIIT/agility/battle ropes
+    const isTue = schedDay===2;
     if(isTue) {
       html+=buildDailyReqs(schedDay,'pre');
       html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(224,96,48,0.1);color:#E06030;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Tuesday — sharp and focused.</strong> XC only day. Agility, jumps, sprint, bike HIIT, then battle ropes.</div>`;
@@ -1295,33 +1299,26 @@ function renderScheduleContent() {
       html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${p.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
       html+=buildCardioRows(ropesTue);
     } else {
-      // Thursday = light agility + water recovery (schedDay===4)
       html+=buildDailyReqs(schedDay,'pre');
-      html+=`<div class="alert alert-gray" style="margin-bottom:10px;background:rgba(59,139,219,0.1);color:#5BA8F0;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Thursday — recovery focus.</strong> XC and wrestling practice day. Light agility only. Water recovery optional. Nutrition and sleep required tonight.</div>`;
+      html+=`<div class="alert alert-gray" style="margin-bottom:10px;background:rgba(59,139,219,0.1);color:#5BA8F0;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Thursday — recovery focus.</strong> XC and wrestling practice day. Light agility only.</div>`;
       html+=`<div class="sec-head">Light agility — technique focus<span class="sec-line"></span></div>`;
       html+=buildCardioRows(COND_WED);
       html+=`<div class="sec-head">Optional — water recovery<span class="sec-line"></span></div>`;
       html+=buildCardioRows(WED_EVENING.slice(0,2));
-      html+=`<div class="sec-head" style="color:#1DB87A">Required — nutrition and sleep<span class="sec-line"></span></div>`;
-      html+=buildCardioRows(WED_EVENING.slice(2));
     }
-    html+=`<div class="note-box">${d.note}</div>`;
 
   } else if(d.type==='explo') {
-    // Saturday — athletic explosive only, no barbell complex
     html+=buildDailyReqs(schedDay,'pre');
     const ropes=(BATTLE_ROPES[p.id]||BATTLE_ROPES['base'])['sat'];
     html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(216,90,48,0.08);color:#D85A30;border-radius:8px;padding:9px 12px;font-size:12px">No barbell complex today — lifting on Friday and Sunday brackets this day. Neural activation, med ball, wrestling drills, box jumps, battle ropes, TGU only.</div>`;
     html+=buildCardioRows(EXPLO_TUE);
     html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${p.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
     html+=buildCardioRows(ropes);
-    html+=`<div class="note-box">${d.note}</div>`;
 
   } else {
     // Monday = full rest
     html+=`<div class="alert alert-gray" style="margin-bottom:10px;background:rgba(100,100,100,0.1);color:var(--text2);border-radius:8px;padding:9px 12px;font-size:12px"><strong>Full rest day.</strong> XC and wrestling practice complete. Recovery from Sunday wrestling and lifting. No additional training.</div>`;
     html+=buildCardioRows(REST_DATA);
-    html+=`<div class="note-box">${d.note}</div>`;
   }
 
   html+=buildDailyReqs(schedDay,'rest');
