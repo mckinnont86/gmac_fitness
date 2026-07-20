@@ -219,13 +219,13 @@
   <button onclick="switchSection('conditioning')">Conditioning</button>
   <button onclick="switchSection('explosive')">Explosive</button>
   <button onclick="switchSection('cardio')">Recovery</button>
-  <button onclick="switchSection('running')">Running</button>
   <button onclick="switchSection('stretch')">Stretching</button>
   <button onclick="switchSection('foam')">Foam rolling</button>
   <button onclick="switchSection('ankle')">Ankle prehab</button>
   <button onclick="switchSection('shoulder')">Shoulder prehab</button>
   <button onclick="switchSection('hip')">Hip prehab</button>
   <button onclick="switchSection('landmine')">Landmine guide</button>
+  <button onclick="switchSection('running')">Running</button>
 </div>
 
 <!-- ===================== TRAVEL ===================== -->
@@ -2095,7 +2095,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','travel','lifting','conditioning','explosive','cardio','running','stretch','foam','ankle','shoulder','hip','landmine'];
+    const ids=['progress','schedule','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine','running'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
