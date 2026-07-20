@@ -139,21 +139,11 @@
   .u-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--amber); margin-right: 4px; vertical-align: middle; }
 
   /* RUN BLOCK */
-  .run-block { margin-top: 12px; border: 1px solid rgba(59,139,219,0.3); border-radius: 10px; overflow: hidden; }
-  .run-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(59,139,219,0.10); cursor: pointer; user-select: none; }
-  .run-header-left { display: flex; align-items: center; gap: 8px; }
-  .run-title { font-size: 12px; font-weight: 600; color: #5BA8F0; }
-  .run-optional { font-size: 10px; color: var(--text3); }
-  .run-toggle { font-size: 12px; color: var(--text3); transition: transform .2s; }
-  .run-toggle.open { transform: rotate(180deg); }
-  .run-body { display: none; padding: 10px 12px; border-top: 1px solid rgba(59,139,219,0.2); }
-  .run-body.open { display: block; }
   .run-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid var(--border); }
   .run-row:last-child { border-bottom: none; padding-bottom: 0; }
   .run-day-label { font-size: 11px; font-weight: 500; color: var(--text2); min-width: 70px; }
   .run-dist { font-size: 13px; font-weight: 600; color: #5BA8F0; white-space: nowrap; }
   .run-note { font-size: 11px; color: var(--text3); text-align: right; }
-  .run-xc-note { font-size: 11px; color: var(--text3); margin-top: 8px; padding: 7px 10px; background: var(--bg4); border-radius: 6px; line-height: 1.5; }
 
   .img-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999; align-items:center; justify-content:center; padding:20px; }
   .img-modal-bg.open { display:flex; }
@@ -1038,86 +1028,6 @@ function buildCardioRows(rows) {
 // Per phase, per day [Mon,Tue,Wed,Thu,Fri,Sat,Sun] — distances in miles, null = rest
 // Sunday = long run anchor, building 5mi → 13.1mi, tapering after P3
 // Pace guidance: easy = conversational, moderate = comfortably hard, long = 60-90s/mi slower than race pace
-// T-MAC HALF MARATHON PLAN — goal: 27-min 5K / sub-2:00 half
-// Lift days: Sun / Wed / Fri — Long run: Saturday
-// Quality runs: Mon = tempo · Thu = intervals
-// Easy runs: Sun / Tue / Wed — Rest: Fri
-// Target 5K pace: 8:42/mile — Interval pace: 8:00–8:20/mile — Tempo: 9:00–9:15/mile
-// Current base: 12–15 miles/week — Race: October (aligns with P4 taper)
-const RUN_PLAN = {
-  base: [
-    {day:'Sun', mi:3,   pace:'Easy 3 mi',     note:'1 mi easy warm-up → 1 mi easy → 1 mi easy cool-down. 10:30–11:00/mi. Short before lifting — legs should feel fresh for the hang clean complex and front squat at 10am.'},
-    {day:'Mon', mi:5,   pace:'Tempo',           note:'1 mi easy warm-up → 20 min tempo @ 9:15/mi (approx 2.2 mi) → 1 mi easy cool-down = 4–5 mi total. Best quality run day of the week — no lifting, no constraints. Build the threshold.'},
-    {day:'Tue', mi:3,   pace:'Easy 3 mi',       note:'3 mi easy — 10:30–11:00/mi. Recovery from Monday tempo. May be doing HIIT/agility with G-Mac — keep the run short and easy regardless.'},
-    {day:'Wed', mi:3,   pace:'Easy 3 mi',       note:'1 mi easy warm-up → 1 mi easy → 1 mi easy cool-down. 10:30/mi. Run AM before Lift B in the afternoon. Keep it genuinely easy — trap bar deadlift comes later.'},
-    {day:'Thu', mi:4,   pace:'Intervals',        note:'1 mi easy warm-up → 6×400m @ 9:00/mi with 90s rest (1.5 mi) → 1 mi easy cool-down = 4 mi total. P1 intervals — learn the faster pace, build comfort. Full day of recovery before Friday back squat.'},
-    {day:'Fri', mi:null,pace:null,               note:'Rest from running — Lift C day. Protect legs for back squat. The Thursday interval buffer means you arrive at Friday lifting with one full rest day from running.'},
-    {day:'Sat', mi:8,   pace:'Long run',         note:'Wk1: 8mi · Wk2: 9mi · Wk3: 10mi — 0.5 mi easy start → full distance at 10:30–11:00/mi → 0.5 mi easy finish. Replace explosive session on Saturdays over 9 miles.'},
-  ],
-  hyp: [
-    {day:'Sun', mi:3,   pace:'Easy 3 mi',        note:'1 mi easy warm-up → 1 mi easy → 1 mi easy cool-down. 10:30/mi. Before lifting — keep it comfortable.'},
-    {day:'Mon', mi:5,   pace:'Tempo',             note:'1 mi easy warm-up → 22–25 min tempo @ 9:00–9:15/mi (approx 2.4–2.7 mi) → 1 mi easy cool-down = 5 mi total. This is your most important run of the week for half marathon fitness. Push the threshold.'},
-    {day:'Tue', mi:3,   pace:'Easy 3 mi',         note:'3 mi easy — 10:30–11:00/mi. Recovery from Monday tempo. Easy regardless of whether doing HIIT/agility with G-Mac.'},
-    {day:'Wed', mi:3,   pace:'Easy 3 mi',         note:'1 mi easy warm-up → 1 mi easy → 1 mi cool-down. 10:30/mi. AM before Lift B. Genuinely easy.'},
-    {day:'Thu', mi:6,   pace:'Intervals',          note:'1.5 mi easy warm-up → 6×800m @ 8:15/mi with 2 min rest (3 mi) → 1.5 mi easy cool-down = 6 mi total. Longer intervals build race-specific fitness. Full day recovery before Friday back squat. Start the first rep conservatively — experienced runners often go out 15–20 seconds too fast on rep one.'},
-    {day:'Fri', mi:null,pace:null,                 note:'Rest from running — Lift C day. Back squat and bench press. One full rest day from Thursday intervals means legs are recovered.'},
-    {day:'Sat', mi:10,  pace:'Long run',           note:'Wk4: 9mi · Wk5–6: 10mi · Wk7–8: 11mi · Wk9: 12mi — 0.5 mi easy start → full distance at 10:30–11:00/mi → 0.5 mi easy finish. Skip explosive session when long run exceeds 10 miles.'},
-  ],
-  str: [
-    {day:'Sun', mi:3,   pace:'Easy 3 mi',          note:'1 mi easy warm-up → 1 mi easy → 1 mi easy cool-down. 10:30/mi. Protect Sunday heavy session — nothing demanding before the hang clean complex and front squat.'},
-    {day:'Mon', mi:5,   pace:'Tempo',               note:'1 mi easy warm-up → 25–30 min tempo @ 9:00/mi (approx 2.8–3.3 mi) → 1 mi easy cool-down = 5–6 mi total. Peak tempo work. Comfortably hard — can speak in short sentences only. This phase is where the half marathon fitness really builds.'},
-    {day:'Tue', mi:3,   pace:'Easy 3 mi',           note:'3 mi easy — 10:30–11:00/mi. Recovery from Monday tempo.'},
-    {day:'Wed', mi:3,   pace:'Easy 3 mi',           note:'1 mi easy warm-up → 1 mi easy → 1 mi cool-down. 10:30/mi. AM before Lift B. Easy only.'},
-    {day:'Thu', mi:7,   pace:'Intervals',            note:'1.5 mi easy warm-up → 4×1 mile @ 8:20/mi with 2:30 rest (4 mi) → 1.5 mi easy cool-down = 7 mi total. Mile repeats are the most direct 5K prep — this is where the pace drop happens. Full recovery day before Friday back squat.'},
-    {day:'Fri', mi:null,pace:null,                   note:'Rest from running — Lift C day. Freshest day of the week for lifting.'},
-    {day:'Sat', mi:12,  pace:'Long run',             note:'Wk10–11: 11–12mi · Wk12–13: 12–13mi · Wk14–15: 13mi · Wk16: 13.1mi — 0.5 mi easy start → full distance at 10:30–11:00/mi → 0.5 mi easy finish. Skip explosive session on 13+ mile Saturdays.'},
-  ],
-  peak: [
-    {day:'Sun', mi:3,   pace:'Easy 3 mi',            note:'1 mi easy warm-up → 1 mi easy → 1 mi easy cool-down. 10:30–11:00/mi. Taper begins — protect Sunday heavy lifting.'},
-    {day:'Mon', mi:4,   pace:'Tempo',                 note:'1 mi easy warm-up → 20 min tempo @ 9:00–9:15/mi → 1 mi easy cool-down = 4 mi total. Taper volume — shorter tempo, same effort. Maintain the fitness you built.'},
-    {day:'Tue', mi:3,   pace:'Easy 3 mi',             note:'3 mi easy — 11:00/mi. Taper. Keep it very easy.'},
-    {day:'Wed', mi:3,   pace:'Easy 3 mi',             note:'1 mi easy warm-up → 1 mi easy → 1 mi cool-down. AM before Lift B. Easy only.'},
-    {day:'Thu', mi:5,   pace:'Sharpening intervals',  note:'1 mi easy warm-up → 4×800m @ 8:00/mi with 90s rest (2 mi) → 1 mi easy cool-down = 4–5 mi total. Faster than before, shorter volume — sharpen the blade before race month. Full recovery day before Friday back squat.'},
-    {day:'Fri', mi:null,pace:null,                    note:'Rest from running — Lift C day.'},
-    {day:'Sat', mi:10,  pace:'Long run',              note:'Wk17: 10mi · Wk18: 8mi — 0.5 mi easy start → full distance at 10:30/mi easy → 0.5 mi easy finish. Volume drops, aerobic base maintained.'},
-  ],
-  pre: [
-    {day:'Sun', mi:3,   pace:'Easy 3 mi',              note:'1 mi easy warm-up → 1 mi easy → 1 mi cool-down. 10:30/mi. Race is close — nothing heroic before lifting.'},
-    {day:'Mon', mi:4,   pace:'Easy with strides',       note:'1 mi easy warm-up → 2 mi easy → 4×100m strides at 8:00/mi pace → 1 mi easy cool-down = 4 mi total. Keep the legs sharp without accumulating fatigue.'},
-    {day:'Tue', mi:3,   pace:'Easy 3 mi',               note:'3 mi easy — 11:00/mi. Easy only.'},
-    {day:'Wed', mi:2,   pace:'Easy 2 mi',               note:'0.5 mi easy → 1 mi easy → 0.5 mi cool-down. AM before Lift B. Very easy.'},
-    {day:'Thu', mi:4,   pace:'Easy with strides',       note:'1 mi easy warm-up → 2 mi easy → 4×100m strides → 1 mi easy cool-down = 4 mi total. No full intervals this close to race. Just keep the legs turning over. Full recovery before Friday back squat.'},
-    {day:'Fri', mi:null,pace:null,                      note:'Rest from running — Lift C day.'},
-    {day:'Sat', mi:6,   pace:'Pre-race long run',       note:'0.5 mi easy start → 5 mi at 10:30–11:00/mi → 0.5 mi easy finish = 6 mi total. Last longer run before race week. Confidence building only.'},
-  ],
-  early: [
-    {day:'Sun', mi:2,   pace:'Easy 2 mi',               note:'0.5 mi easy → 1 mi easy → 0.5 mi cool-down. 11:00/mi. Race mode — maintenance only.'},
-    {day:'Mon', mi:3,   pace:'Easy with strides',        note:'0.5 mi easy → 2 mi easy → 4×100m strides → 0.5 mi cool-down = 3 mi total. Keep legs sharp post-race.'},
-    {day:'Tue', mi:2,   pace:'Easy 2 mi',                note:'2 mi easy — 11:00/mi. Shake-out only.'},
-    {day:'Wed', mi:2,   pace:'Easy 2 mi',                note:'0.5 mi easy → 1 mi easy → 0.5 mi cool-down. AM before Lift B.'},
-    {day:'Thu', mi:3,   pace:'Easy 3 mi',                note:'0.5 mi easy → 2 mi easy → 0.5 mi cool-down. 11:00/mi. Post-race maintenance. No hard efforts.'},
-    {day:'Fri', mi:null,pace:null,                       note:'Rest from running — Lift C day.'},
-    {day:'Sat', mi:4,   pace:'Easy 4 mi',                note:'0.5 mi easy start → 3 mi easy → 0.5 mi easy finish. Maintenance only post-race.'},
-  ],
-  'in': [
-    {day:'Sun', mi:2,   pace:'Easy 2 mi',                note:'2 mi easy — 11:00/mi. Aerobic maintenance post-race.'},
-    {day:'Mon', mi:3,   pace:'Easy 3 mi',                 note:'0.5 mi easy → 2 mi easy → 0.5 mi cool-down. 11:00/mi. Maintenance.'},
-    {day:'Tue', mi:2,   pace:'Easy 2 mi',                 note:'2 mi easy — 11:00/mi.'},
-    {day:'Wed', mi:2,   pace:'Easy 2 mi',                 note:'0.5 mi easy → 1 mi easy → 0.5 mi cool-down. AM before Lift B.'},
-    {day:'Thu', mi:3,   pace:'Easy 3 mi',                 note:'0.5 mi easy → 2 mi easy → 0.5 mi cool-down. 11:00/mi. No intervals in-season.'},
-    {day:'Fri', mi:null,pace:null,                        note:'Rest from running — Lift C day.'},
-    {day:'Sat', mi:null,pace:null,                        note:'Rest — post-race season. No long run required.'},
-  ],
-};
-
-let runOpen = false;
-function toggleRun() {
-  runOpen = !runOpen;
-  const body = document.getElementById('runBody');
-  const toggle = document.getElementById('runToggle');
-  if(body) { body.classList.toggle('open', runOpen); }
-  if(toggle) { toggle.classList.toggle('open', runOpen); toggle.textContent = runOpen ? '▲' : '▼'; }
-}
 
 // ----- DAILY REQUIREMENTS -----
 // schedDay: 0=Sun(LiftA) 1=Mon(Cond) 2=Tue(LiftB) 3=Wed(Cond) 4=Thu(Rest) 5=Fri(LiftC) 6=Sat(Explo)
@@ -1137,29 +1047,12 @@ const DAILY_REQS = {
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 full squeezes per hand. Every day — anytime. Watching film, before bed, morning.'},
       {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — quads, hamstrings, glutes, upper back. Slow rolling with pauses on tight spots.'},
     ],
-    optional:[
-      {ico:'🌊',t:'Lazy river or easy swim',d:'If available — outstanding joint recovery with zero impact.'},
-    ]
-  },
-  1: { // Monday — Full rest (light movement, hip mobility already happening)
-    pre:[],
-    post:[],
-    prehab:[
-      {ico:'🦋',t:'Hip prehab — full protocol (anytime)',d:'Full 10–15 min — rest day means time to do this properly. Foam roller and massage gun tissue prep first, then 90/90 flow, banded clamshells, lateral walk, hip CARs, pigeon pose, couch stretch. Fold into the hip mobility session already happening.'},
-      {ico:'🦶',t:'Ankle prehab — full protocol (anytime)',d:'Full 8–10 min — rest day gives time to do both. Angle board stretches and dorsiflexion, ABCs, tibialis raise 3×20, single-leg balance, peroneal walk. Monday is the best day to do both prehab areas properly.'},
-    ],
+    optional:[],
     daily:[
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day — anytime.'},
       {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — quads, hamstrings, glutes. Recovery from Sunday wrestling and lifting.'},
     ],
-    optional:[
-      {ico:'🌊',t:'Lazy river or easy swim',d:'If available — outstanding joint recovery with zero impact.'},
-    ]
-  },
-  2: { // Tuesday — HIIT · Agility · Battle ropes (XC only)
-    pre:[
-      {ico:'🤸',t:'Dynamic warm-up — before conditioning',d:'8–10 min — leg swings, hip flow, lateral shuffles to warm ankles before agility work.'},
-    ],
+    optional:[],
     post:[
       {ico:'🧘',t:'Static cool-down — running and agility focus',d:'Calf stretch straight knee 45s/side · Soleus bent knee 45s/side · Hip flexor lunge 60s/side · Groin stretch 60s · Cross-body shoulder 30s/side.'},
     ],
@@ -1185,8 +1078,6 @@ const DAILY_REQS = {
     daily:[
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Important on deadlift day — grip is training.'},
       {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — hamstrings, glutes, upper back, lats. Focus on what was trained.'},
-      {ico:'🍽️',t:'Nutrition ★',d:'High protein meal within 60 min. Carbs to replenish glycogen. Hydrate fully — XC and lifting in the same day is significant fluid loss.'},
-      {ico:'😴',t:'Sleep 8–9 hrs ★',d:'Wednesday night sleep feeds Thursday\'s double practice. Go to bed early.'},
     ],
     optional:[]
   },
@@ -1203,19 +1094,8 @@ const DAILY_REQS = {
     daily:[
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day.'},
       {ico:'🪵',t:'Foam rolling — full body',d:'10 min — calves, quads, hamstrings, glutes, upper back, lats. Longest foam rolling session of the week.'},
-      {ico:'🍽️',t:'Nutrition ★',d:'High protein + carbs within 60 min of practice. Hydrate fully — XC and wrestling in the same day is significant fluid loss.'},
-      {ico:'😴',t:'Sleep 8–9 hrs ★',d:'Thursday night sleep determines Friday lifting quality. 8 hours minimum, 9 is the target.'},
     ],
-    optional:[
-      {ico:'🌊',t:'Lazy river walk',d:'10–15 min. Gentle recovery. Zero impact.'},
-      {ico:'🏊',t:'Easy swim',d:'Low-intensity laps. Outstanding joint recovery.'},
-      {ico:'🧘',t:'Pool mobility',d:'Hip circles and arm swings in the water.'},
-    ]
-  },
-  5: { // Friday — Lift C (XC only, freshest day)
-    pre:[
-      {ico:'🤸',t:'Dynamic warm-up — before lifting',d:'8–10 min — leg swings, hip 90/90, lateral lunge, thoracic rotation, arm circles.'},
-    ],
+    optional:[],
     post:[
       {ico:'🧘',t:'Static cool-down — lateral plane focus',d:'Cossack squat hold 45s/side · Lateral lunge stretch 45s/side · Pigeon pose 60s/side · Doorway chest stretch 45s/side · Cross-body shoulder 30s/side.'},
     ],
@@ -1311,55 +1191,6 @@ function buildDailyReqs(dayIdx, section) {
   return html;
 }
 
-function buildRunBlock(phaseId, dayIndex) {
-  const plan = RUN_PLAN[phaseId];
-  if(!plan) return '';
-  const day = plan[dayIndex];
-  if(!day) return '';
-
-  // Build full week summary when showing any day, highlight the selected day
-  const rows = plan.map((d,i) => {
-    const isToday = i === dayIndex;
-    const dist = d.mi !== null ? d.mi + ' mi' : '— rest';
-    const paceColor = d.mi === null ? 'color:var(--text3)' : isToday ? 'color:#5BA8F0' : 'color:var(--text2)';
-    return `<div class="run-row" style="${isToday?'background:rgba(59,139,219,0.07);margin:0 -4px;padding:7px 4px;border-radius:6px;':''}">
-      <div class="run-day-label" style="${isToday?'color:#5BA8F0;font-weight:600':''}">${d.day}</div>
-      <div style="flex:1;padding:0 8px">
-        <div class="run-dist" style="${paceColor}">${dist}</div>
-        ${d.pace?`<div class="run-note">${d.pace}</div>`:''}
-      </div>
-      <div style="max-width:160px;text-align:right"><div class="run-note">${d.note}</div></div>
-    </div>`;
-  }).join('');
-
-  const todayDist = day.mi !== null ? day.mi + ' mi' : 'Rest day';
-  const openState = runOpen ? 'open' : '';
-  const isInterval = day.pace && (day.pace.toLowerCase().includes('interval') || day.pace.toLowerCase().includes('tempo') || day.pace.toLowerCase().includes('sharp'));
-  const paceTarget = isInterval ? `<div style="font-size:10px;color:#E06030;margin-top:3px">⚡ Quality session — run AM before lifting</div>` : '';
-
-  return `<div class="run-block">
-    <div class="run-header" onclick="toggleRun()">
-      <div class="run-header-left">
-        <span style="font-size:16px">🏃</span>
-        <div>
-          <div class="run-title">T-Mac half marathon plan — ${todayDist}</div>
-          <div class="run-optional">Goal: 27-min 5K · Race: October · Tap to expand week</div>
-          ${paceTarget}
-        </div>
-      </div>
-      <span class="run-toggle ${openState}" id="runToggle">${runOpen?'▲':'▼'}</span>
-    </div>
-    <div class="run-body ${openState}" id="runBody">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 0;border-bottom:0.5px solid var(--border);margin-bottom:8px">
-        <div style="text-align:center"><div style="font-size:10px;color:var(--text3)">Easy pace</div><div style="font-size:12px;font-weight:500;color:var(--text2)">10:30–11:00</div></div>
-        <div style="text-align:center"><div style="font-size:10px;color:var(--text3)">Tempo pace</div><div style="font-size:12px;font-weight:500;color:#E06030">9:00–9:15</div></div>
-        <div style="text-align:center"><div style="font-size:10px;color:var(--text3)">Interval pace</div><div style="font-size:12px;font-weight:500;color:#D85A30">8:00–8:20</div></div>
-      </div>
-      ${rows}
-      <div class="run-xc-note" style="margin-top:8px">🎽 G-Mac: your XC practice covers this volume — treat as a guide only. T-Mac: Tuesday intervals run AM before lifting. Saturday long run replaces explosive session when distance exceeds 10 miles.</div>
-    </div>
-  </div>`;
-}
 
 // ----- DAY CHECKBOXES -----
 // Key format: "p{phaseIndex}_d{dayIndex}" e.g. "p0_d0" = Phase1, Monday
@@ -1503,7 +1334,6 @@ function renderScheduleContent() {
   }
 
   html+=buildDailyReqs(schedDay,'rest');
-  html+=buildRunBlock(p.id, schedDay);
   html+=buildDayCheckbox(curPhase, schedDay);
   document.getElementById('scheduleContent').innerHTML=html;
 }
