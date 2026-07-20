@@ -1066,10 +1066,12 @@ const DAILY_REQS = {
       {ico:'🦋',t:'Hip prehab — full protocol (anytime)',d:'Full 10–15 min — rest day means time to do this properly. Foam roller and massage gun on hip flexors, TFL, glutes. Then 90/90 flow, banded clamshells, lateral walk, hip CARs, pigeon pose, couch stretch.'},
       {ico:'🦶',t:'Ankle prehab — full protocol (anytime)',d:'Full 8–10 min — angle board stretches, ABCs, tibialis raise 3×20, single-leg balance, peroneal walk. Monday is the best day to do both prehab areas properly.'},
     ],
+    pool:[
+      {ico:'🌊',t:'Recommended — pool recovery (20–30 min)',d:'Lazy river walk 10–15 min against the current — hydrostatic pressure reduces soreness and joint inflammation with zero impact. Easy swim or water movement 10 min. Finish with 10–15 min hot tub. Monday is the best pool day — full rest, no practice competing for time.'},
+    ],
     daily:[
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day — anytime.'},
       {ico:'🪵',t:'Evening foam rolling',d:'5–10 min — quads, hamstrings, glutes. Recovery from Sunday wrestling and lifting.'},
-      {ico:'🌊',t:'Recommended — pool recovery (20–30 min)',d:'Lazy river walk 10–15 min against the current — hydrostatic pressure reduces soreness and joint inflammation with zero impact. Easy swim or water movement 10 min. Finish with 10–15 min hot tub. Monday is the best pool day — full rest, no practice competing for time.'},
     ],
     optional:[]
   },
@@ -1115,10 +1117,12 @@ const DAILY_REQS = {
     prehab:[
       {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board stretches, tibialis raise 3×20, peroneal walk, stability drills. Shin splint prevention priority — XC running day.'},
     ],
+    pool:[
+      {ico:'🌊',t:'Recommended — pool recovery (20–30 min)',d:'Lazy river walk 10–15 min — hydrostatic pressure reduces soreness from XC and wrestling double practice. Easy swim or pool stretching 10 min. Finish with 10–15 min hot tub. Thursday pool work directly improves Friday lifting quality.'},
+    ],
     daily:[
       {ico:'💊',t:'Grip squeezes — 50 / hand',d:'50 squeezes per hand. Every day.'},
       {ico:'🪵',t:'Foam rolling — full body',d:'10 min — calves, quads, hamstrings, glutes, upper back, lats. Longest foam rolling session of the week.'},
-      {ico:'🌊',t:'Recommended — pool recovery (20–30 min)',d:'Lazy river walk 10–15 min — hydrostatic pressure reduces soreness from XC and wrestling double practice. Easy swim or pool stretching 10 min. Finish with 10–15 min hot tub. Thursday pool work directly improves Friday lifting quality.'},
     ],
     optional:[]
   },
@@ -1184,6 +1188,16 @@ function buildDailyReqs(dayIdx, section) {
       html += `<div class="c-row" style="border-left:2px solid #378ADD">
         <div class="c-ico">${r.ico}</div>
         <div style="flex:1"><div class="c-name" style="color:#378ADD">${r.t}</div><div class="c-desc">${r.d}</div></div>
+      </div>`;
+    });
+  }
+
+  if (reqs.pool && reqs.pool.length > 0) {
+    html += `<div class="sec-head" style="color:#1a9fd4;margin-top:.75rem">Recommended — pool recovery<span class="sec-line"></span></div>`;
+    reqs.pool.forEach(r => {
+      html += `<div class="c-row" style="border-left:2px solid #1a9fd4">
+        <div class="c-ico">${r.ico}</div>
+        <div style="flex:1"><div class="c-name" style="color:#1a9fd4">${r.t}</div><div class="c-desc">${r.d}</div></div>
       </div>`;
     });
   }
