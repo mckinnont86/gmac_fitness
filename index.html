@@ -333,13 +333,13 @@ const WEEK_DAYS=[
 ];
 
 const DAY_DESCRIPTIONS={
-  0:{type:'lift',   title:'Sunday — Full body A (Lift)',         note:'Heavy intention day — no XC. Wrestling practice only. Push the front squat hard. Superset press and row in P3 to keep session under 75 min. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
+  0:{type:'lift',   title:'Sunday — Full body A (Lift)',         note:'Heavy intention day — no XC. Wrestling practice only. Push the front squat hard and the hang clean complex with intent. Superset press and row in P3 to keep session under 75 min. P1: cossack squat. P2: cossack squat only. P3+: cossack squat.'},
   1:{type:'rest',   title:'Monday — Full rest',                  note:'Full rest — no additional training. XC is light team movement only, not a training stimulus. Recovery from Sunday wrestling and lifting is the entire job today. This is where Sunday\'s adaptation happens.'},
   2:{type:'cond',   title:'Tuesday — HIIT · Agility · Battle ropes', note:'XC only day. Agility ladder, dot drills, reaction drills, tuck jumps, lateral bounds, 10m reactive sprint, bike HIIT, then battle ropes. No wrestling drills.'},
-  3:{type:'lift',   title:'Wednesday — Full body B (Lift)',       note:'XC is self-directed cross training today — run easy in the morning. Lift B in the afternoon. Trap bar deadlift is the anchor. Pull-up and push press build vertical pulling and overhead strength. TGU closes the session. P1: 1 lower unilateral. P2: reverse lunge + Bulgarian split squat. P3+: pick 1.'},
-  4:{type:'cond',   title:'Thursday — Light agility · Water recovery', note:'XC and wrestling practice day. Light agility and technique work only — no jumps, no battle ropes, no heavy work. Let the body absorb Wednesday\'s lifting before Friday\'s heavy session.'},
-  5:{type:'lift',   title:'Friday — Full body C (Lift)',          note:'Freshest day of the week — 2 rest days behind you. Back squat and bench press go here. Hit these hard. Superset bench and barbell row in P3 to stay under 75 min. P1: 1 lower unilateral. P2: both. P3+: pick 1.'},
-  6:{type:'explo',  title:'Saturday — Athletic explosive · Battle ropes', note:'XC only day. No barbell complex — lifting on Friday and Sunday brackets this day. Neural activation, med ball, wrestling drills, box jumps, battle ropes, TGU. 45–55 min session.'},
+  3:{type:'lift',   title:'Wednesday — Full body B (Lift)',       note:'XC is self-directed cross training — run easy in the morning, lift in the afternoon. Trap bar deadlift anchor. Weighted pull-up and push press build vertical pulling and overhead strength. TGU closes the session. P1: reverse lunge. P2: reverse lunge + Bulgarian split squat. P3+: reverse lunge or single-leg RDL.'},
+  4:{type:'cond',   title:'Thursday — Light agility · Technique work', note:'XC and wrestling practice day. Light agility and technique work only — no jumps, no battle ropes, no heavy work. Let the body absorb Wednesday\'s lifting before Friday\'s heavy session.'},
+  5:{type:'lift',   title:'Friday — Full body C (Lift)',          note:'Freshest day of the week — 2 rest days behind you. Back squat and bench press go here. Hit these hard. Superset bench and barbell row in P3 to stay under 75 min. P1: pistol squat. P2: pistol squat + step-up. P3+: pick 1.'},
+  6:{type:'explo',  title:'Saturday — Athletic explosive · Battle ropes', note:'XC only day. No barbell complex — lifting on Friday and Sunday brackets this day. Neural activation, med ball, wrestling drills, box jumps, battle ropes. 45–55 min session.'},
 };
 
 const LIFT_A={
@@ -628,21 +628,6 @@ const EXPLO_TUE=[
   {ico:'📦',n:'Depth drop to broad jump',d:'3×5 — step off box, absorb, immediately broad jump. Minimize ground contact time.',dur:'Box jumps'},
 ];
 
-const EXPLO_SAT=[
-  {ico:'🏋️',n:'Hang power clean',d:'5×3 — bar from hang above knee, explosive pull, catch in quarter squat. Full hip extension.',dur:'Barbell complex'},
-  {ico:'🏋️',n:'Hang snatch or high pull',d:'4×3 — from hang position, explosive shrug and pull or catch overhead.',dur:'Barbell complex'},
-  {ico:'🏋️',n:'Push jerk',d:'4×3 — dip, drive, drop under bar. Lock out overhead. 3 min rest between sets.',dur:'Barbell complex'},
-  {ico:'💥',n:'Landmine clean (single-arm)',d:'4×4 / side — hip hinge start, explosive pull, catch at shoulder.',dur:'Landmine power'},
-  {ico:'💥',n:'Landmine rotational press (full power)',d:'4×6 / side — rotate through hips, transfer force from ground into the press.',dur:'Landmine power'},
-  {ico:'💥',n:'Landmine full-contact twist',d:'3×8 / side — explosive rotation, bar from hip to hip. Drive from hips.',dur:'Landmine power'},
-  {ico:'⚡',n:'Depth drop to broad jump',d:'3×5 — step off box, minimal ground contact, immediately broad jump.',dur:'Plyo circuit'},
-  {ico:'⚡',n:'Single-leg box jump',d:'3×4 / side — single-leg takeoff, two-foot landing, stick it.',dur:'Plyo circuit'},
-  {ico:'⚡',n:'Reactive shuffle and 10m sprint',d:'3×6 — lateral shuffle on cue, explode into 10m sprint.',dur:'Plyo circuit'},
-  {ico:'🪨',n:'Yoke or barbell carry',d:'4×30m — heavy as possible with good posture. Builds clinch strength.',dur:'Loaded carries'},
-  {ico:'🪨',n:'Sandbag shouldering and walk',d:'3×20m — shoulder the bag, walk with it. Simulates wrestling body control.',dur:'Loaded carries'},
-  {ico:'🤼',n:'Match simulation drilling',d:'5 rounds × 2 min partner drilling + 30s rest — mirrors real match rest periods.',dur:'Match sim'},
-  {ico:'🕯️',n:'Turkish get-up (KB)',d:'2×2 / side — stop the set the moment any stage loses control. Technique is the entire stimulus here. Light to moderate KB only.',dur:'Turkish get-up'},
-];
 
 // Battle ropes — phase-specific rotations
 // Mon + Wed: alternating waves (★) + power slam (★) + rotating variation
@@ -1299,7 +1284,7 @@ function renderScheduleContent() {
   } else if(d.type==='explo') {
     html+=buildDailyReqs(schedDay,'pre');
     const ropes=(BATTLE_ROPES[p.id]||BATTLE_ROPES['base'])['sat'];
-    html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(216,90,48,0.08);color:#D85A30;border-radius:8px;padding:9px 12px;font-size:12px">No barbell complex today — lifting on Friday and Sunday brackets this day. Neural activation, med ball, wrestling drills, box jumps, battle ropes, TGU only.</div>`;
+    html+=`<div class="alert alert-orange" style="margin-bottom:10px;background:rgba(216,90,48,0.08);color:#D85A30;border-radius:8px;padding:9px 12px;font-size:12px">No barbell complex today — lifting on Friday and Sunday brackets this day. Neural activation, med ball, wrestling drills, box jumps, battle ropes.</div>`;
     html+=buildCardioRows(EXPLO_TUE);
     html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${p.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
     html+=buildCardioRows(ropes);
