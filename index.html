@@ -970,6 +970,19 @@ function makeDayTabs(containerId, curDayVar, setter) {
     </div>`).join('');
 }
 
+function buildPrehabSections(sections) {
+  return sections.map(s => `
+    <div class="sec-head">${s.label}<span class="sec-line"></span></div>
+    ${s.rows.map(r => `<div class="c-row">
+      <div style="flex:1">
+        <div class="c-name">${r.n}${imgBtn(r.n)}</div>
+        <div class="c-desc">${r.d}</div>
+        ${r.dur?`<div class="c-dur">${r.dur}</div>`:''}
+      </div>
+      <span class="badge ${r.bc||'b-gray'}">${r.badge||''}</span>
+    </div>`).join('')}`).join('');
+}
+
 function buildSections(sections, scheme) {
   return sections.map(s => {
     // detect if this is a lower unilateral block
@@ -1411,7 +1424,7 @@ function renderCardioContent() {
     <span class="t-chip">Sleep — 8–9 hrs non-negotiable</span>
   </div>`;
   html+=`<div class="alert alert-gray" style="margin-bottom:10px">Recovery is where adaptation happens. The training stimulus is only as good as the recovery surrounding it. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any item for detail.</div>`;
-  html+=buildSections(CARDIO_SECTIONS, null);
+  html+=buildPrehabSections(CARDIO_SECTIONS);
   html+=`<div class="note-box">Water recovery, compression, and sleep are the three highest-leverage recovery tools available. None of them cost training time. Use them consistently and the quality of every session improves.</div>`;
   document.getElementById('cardioContent').innerHTML=html;
 }
@@ -1423,7 +1436,7 @@ function renderStretchContent() {
   let html=`<div class="t-chips"><span class="t-chip">Pre: 8–10 min dynamic</span><span class="t-chip">Post: 10–12 min static</span><span class="t-chip">Evening: foam rolling (optional)</span></div>`;
   html+=`<div class="alert alert-gray">${DAY_STRETCH_NOTES[stretchDay]}</div>`;
   if(isThu) html+=`<div style="font-size:12px;padding:9px 13px;background:rgba(29,184,122,0.1);color:#5FE0A8;border-radius:8px;margin-bottom:.75rem">★ Thursday is the weekly deep mobility investment day — full 20-min flow. No session to rush to. Use the entire Thursday deep mobility section below.</div>`;
-  html+=buildSections(STRETCH_SECTIONS, null);
+  html+=buildPrehabSections(STRETCH_SECTIONS);
   html+=`<div class="note-box">Dynamic stretching before every session — always. Static holds only after training, never cold. Evening foam rolling (5–10 min) is more effective than static holds for tissue recovery and next-day readiness — focus on whatever was trained that day. Spend 60–90s per area, slow rolling, pause on tight spots.</div>`;
   document.getElementById('stretchContent').innerHTML=html;
 }
@@ -1487,7 +1500,7 @@ function renderFoamContent() {
     <span class="t-chip">60–90s per area</span>
   </div>`;
   html+=`<div class="alert alert-gray" style="margin-bottom:10px">Slow rolling with pauses on tight spots is far more effective than fast rolling. Find a tight area, stop, and breathe into it for 5–10 seconds before moving. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise for a YouTube demo.</div>`;
-  html+=buildSections(FOAM_SECTIONS, null);
+  html+=buildPrehabSections(FOAM_SECTIONS);
   html+=`<div class="note-box">Never roll directly on a joint (knee, elbow, ankle). Avoid rolling the lumbar spine directly — use erector work alongside the spine only. If an area is acutely sore or injured, skip it and use gentle movement instead. The forearm and arm rolling is especially valuable during heavy lifting phases when grip and pulling volume is high.</div>`;
   document.getElementById('foamContent').innerHTML=html;
 }
@@ -1495,7 +1508,7 @@ function renderFoamContent() {
 function renderAnkleContent() {
   let html=`<div class="t-chips"><span class="t-chip">Daily: 8–10 min</span><span class="t-chip">After warm-up or evening</span><span class="t-chip">Every day — non-negotiable</span></div>`;
   html+=`<div class="alert alert-gray">Ankles absorb constant stress from running, shooting, sprawling, and mat work. Builds dorsiflexion range, peroneal strength, tibialis strength, and proprioception. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> for images and cues.</div>`;
-  html+=buildSections(ANKLE_SECTIONS, null);
+  html+=buildPrehabSections(ANKLE_SECTIONS);
   html+=`<div class="note-box">If you've had a past ankle sprain, prioritize peroneal and proprioception work — the two most undertrained elements after injury. Progress to unstable surfaces only after 2–3 weeks of solid base work.<br><br><strong style="color:var(--text2)">Shin splint prevention:</strong> The tibialis raise is the single most effective exercise for preventing medial tibial stress syndrome (shin splints). Prioritize it every session, especially during high running volume weeks. Weak glutes also contribute — the banded clamshells in hip prehab protect the shin indirectly by reducing foot pronation on landing.</div>`;
   document.getElementById('ankleContent').innerHTML=html;
 }
@@ -1509,7 +1522,7 @@ function renderShoulderContent() {
   if(isPress) html+=`<div class="alert alert-purple">Pressing day — run full protocol before lifting. 10–12 min dramatically reduces impingement risk. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> for images and cues.</div>`;
   else if(isSat) html+=`<div class="alert alert-green">Saturday — non-pressing day. Full protocol at relaxed pace. Good shoulder investment before explosive work. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
   else html+=`<div class="alert alert-gray">Non-pressing day — abbreviated: band pull-aparts + face pulls + sleeper stretch (5 min). Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise for an image.</div>`;
-  html+=buildSections(SHOULDER_SECTIONS, null);
+  html+=buildPrehabSections(SHOULDER_SECTIONS);
   html+=`<div class="note-box">Shoulder prehab non-negotiable on pressing days. The bottoms-up KB press and Cuban press load the rotator cuff in positions that mirror real grappling demands.</div>`;
   document.getElementById('shoulderContent').innerHTML=html;
 }
@@ -1985,7 +1998,7 @@ function renderHipContent() {
     <span class="t-chip">Foam roller + massage gun first, then banded work</span>
   </div>`;
   html+=`<div class="alert alert-gray" style="margin-bottom:10px">Hip strength and mobility is the engine of wrestling — takedowns, scrambles, and defensive base all load the hip. Use foam roller and massage gun for tissue prep before banded activation and loaded movement. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
-  html+=buildSections(HIP_SECTIONS, null);
+  html+=buildPrehabSections(HIP_SECTIONS);
   html+=`<div class="note-box">Banded clamshells and lateral walks are the highest-priority exercises here — glute med weakness is one of the most common contributors to knee, hip, and low back issues in wrestlers. Run those every single day. The full protocol 3–4×/week is plenty.</div>`;
   document.getElementById('hipContent').innerHTML=html;
 }
