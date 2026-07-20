@@ -219,6 +219,7 @@
   <button onclick="switchSection('conditioning')">Conditioning</button>
   <button onclick="switchSection('explosive')">Explosive</button>
   <button onclick="switchSection('cardio')">Recovery</button>
+  <button onclick="switchSection('running')">Running</button>
   <button onclick="switchSection('stretch')">Stretching</button>
   <button onclick="switchSection('foam')">Foam rolling</button>
   <button onclick="switchSection('ankle')">Ankle prehab</button>
@@ -266,6 +267,11 @@
 <!-- ===================== CARDIO ===================== -->
 <div class="section" id="sec-cardio">
   <div class="content-card" id="cardioContent"></div>
+</div>
+
+<!-- ===================== RUNNING ===================== -->
+<div class="section" id="sec-running">
+  <div id="runningContent"></div>
 </div>
 
 <!-- ===================== STRETCHING ===================== -->
@@ -2089,7 +2095,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
+    const ids=['progress','schedule','travel','lifting','conditioning','explosive','cardio','running','stretch','foam','ankle','shoulder','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
@@ -2312,7 +2318,217 @@ function renderTravelContent() {
   renderTravelDetail();
 }
 
+// ── RUNNING PLAN ──
+// T-Mac personal running plan — 5K/10K fitness, 8-mile long run cap
+// HR zones based on max HR 187 bpm, resting HR 70 bpm, VO2 max 36
+// Zone 2: 112–131 bpm · Zone 3: 131–150 bpm · Zone 4: 150–168 bpm · Zone 5: 168–187 bpm
+// Garmin colors: Z1 grey · Z2 blue · Z3 green · Z4 orange · Z5 red
+
+const RUN_ZONES = [
+  {z:'Z1', label:'Zone 1', bpm:'< 112', color:'#9E9E9E', desc:'Recovery — very easy, walking pace'},
+  {z:'Z2', label:'Zone 2', bpm:'112–131', color:'#2196F3', desc:'Easy aerobic base — fully conversational, nose breathing'},
+  {z:'Z3', label:'Zone 3', bpm:'131–150', color:'#4CAF50', desc:'Tempo — comfortably hard, short sentences only'},
+  {z:'Z4', label:'Zone 4', bpm:'150–168', color:'#FF9800', desc:'Hard — intervals and hill repeats, unsustainable for long'},
+  {z:'Z5', label:'Zone 5', bpm:'168–187', color:'#F44336', desc:'Max effort — brief bursts only'},
+];
+
+const RUN_DAYS = [
+  {
+    day:'Sun', label:'Easy 3 mi', zone:2, color:'#2196F3',
+    priority:3,
+    phases:{
+      base:{mi:3, tempo_min:null},
+      hyp:{mi:3, tempo_min:null},
+      str:{mi:3, tempo_min:null},
+      peak:{mi:3, tempo_min:null},
+      pre:{mi:3, tempo_min:null},
+      early:{mi:3, tempo_min:null},
+      'in':{mi:3, tempo_min:null},
+    },
+    note:'1 mi easy warm-up → 1 mi easy → 1 mi easy cool-down. Target HR 112–131 bpm. Rolling hills will push you to Zone 3 on climbs — allow up to 150 bpm on uphills and recover back below 130 bpm on the descent before the next climb. Walk the flats if HR stays above 131 after a hill. First 10 min HR will run high — let the body settle before managing zones. Before lifting — keep it comfortable so the hang clean complex has full effort.',
+  },
+  {
+    day:'Mon', label:'Tempo', zone:3, color:'#4CAF50',
+    priority:2,
+    phases:{
+      base:{mi:4, tempo_min:20},
+      hyp:{mi:5, tempo_min:22},
+      str:{mi:5, tempo_min:25},
+      peak:{mi:4, tempo_min:20},
+      pre:{mi:4, tempo_min:18},
+      early:{mi:3, tempo_min:15},
+      'in':{mi:3, tempo_min:15},
+    },
+    note:'1 mi easy warm-up → tempo block → 1 mi easy cool-down. Target HR 131–150 bpm during the tempo portion. Comfortably hard — short sentences only. On rolling terrain let HR be the guide, not pace. Expect 10:30–11:30/mi on Blue Springs routes at this effort. Do not let HR exceed 155 bpm during the tempo block. Best quality run day — no lifting, no constraints. This is the single most effective run for building the aerobic engine.',
+  },
+  {
+    day:'Tue', label:'Easy 3 mi', zone:2, color:'#2196F3',
+    priority:5,
+    phases:{
+      base:{mi:3, tempo_min:null},
+      hyp:{mi:3, tempo_min:null},
+      str:{mi:3, tempo_min:null},
+      peak:{mi:3, tempo_min:null},
+      pre:{mi:3, tempo_min:null},
+      early:{mi:3, tempo_min:null},
+      'in':{mi:3, tempo_min:null},
+    },
+    note:'3 mi easy. Same HR discipline as Sunday — 112–131 bpm target, Zone 3 allowed on climbs only, recover on descents. Recovery from Monday tempo. If legs feel heavy from yesterday, walk more than usual — that is fine and correct. HIIT and agility session is separate — do not combine these into one extended session.',
+  },
+  {
+    day:'Wed', label:'Off — rest from running', zone:0, color:'#9E9E9E',
+    priority:6,
+    phases:{
+      base:{mi:null, tempo_min:null},
+      hyp:{mi:null, tempo_min:null},
+      str:{mi:null, tempo_min:null},
+      peak:{mi:null, tempo_min:null},
+      pre:{mi:null, tempo_min:null},
+      early:{mi:null, tempo_min:null},
+      'in':{mi:null, tempo_min:null},
+    },
+    note:'Rest from running. Lift B day. Customer meetings often fall here — no guilt. Wednesday off from running means Lift B gets full energy in the afternoon without morning run fatigue in the legs.',
+  },
+  {
+    day:'Thu', label:'Hills or Intervals', zone:4, color:'#FF9800',
+    priority:6,
+    phases:{
+      base:{mi:4, tempo_min:null},
+      hyp:{mi:5, tempo_min:null},
+      str:{mi:5, tempo_min:null},
+      peak:{mi:4, tempo_min:null},
+      pre:{mi:4, tempo_min:null},
+      early:{mi:3, tempo_min:null},
+      'in':{mi:3, tempo_min:null},
+    },
+    note:'Alternating weeks — Week A hill repeats, Week B flat intervals.\n\nWeek A — Hill repeats: 1 mi easy warm-up → 6×90s uphill at Zone 4 effort (150–168 bpm) with easy jog back down as full recovery → 1 mi easy cool-down. Push the uphill hard. The jog down is recovery — keep it genuinely easy. Do not cut the recovery short.\n\nWeek B — Intervals (flat surface preferred): P1: 6×400m · P2: 6×800m · P3: 4×1 mile · P4: 4×800m. 1 mi easy warm-up → intervals with 90s–2 min rest between → 1 mi easy cool-down. Target HR 155–168 bpm during working intervals. If no flat surface, do Week A instead.\n\nPool recovery strongly recommended after Thursday runs.',
+  },
+  {
+    day:'Fri', label:'Easy 2–3 mi', zone:2, color:'#2196F3',
+    priority:4,
+    phases:{
+      base:{mi:2, tempo_min:null},
+      hyp:{mi:3, tempo_min:null},
+      str:{mi:3, tempo_min:null},
+      peak:{mi:2, tempo_min:null},
+      pre:{mi:2, tempo_min:null},
+      early:{mi:2, tempo_min:null},
+      'in':{mi:2, tempo_min:null},
+    },
+    note:'2–3 mi easy before or after lifting. Target HR 112–131 bpm — Zone 2 only. Keep it short. Legs need to be ready for back squat. Walk freely to keep HR in Zone 2. Lowest priority easy run of the week — skip if time is tight before lifting. Never compromise the back squat for this run.',
+  },
+  {
+    day:'Sat', label:'Long run', zone:2, color:'#2196F3',
+    priority:1,
+    phases:{
+      base:{mi:6, tempo_min:null},
+      hyp:{mi:7, tempo_min:null},
+      str:{mi:8, tempo_min:null},
+      peak:{mi:7, tempo_min:null},
+      pre:{mi:6, tempo_min:null},
+      early:{mi:5, tempo_min:null},
+      'in':{mi:4, tempo_min:null},
+    },
+    note:'Full Zone 2 — 112–131 bpm target the entire run. Rolling hills will push HR on climbs — allow up to 145 bpm on uphills but recover aggressively on the descent. If HR stays above 135 on flat sections walk immediately. This should feel almost embarrassingly easy — pace is irrelevant. The long run is aerobic base building. Skip or shorten explosive session on long run days.',
+  },
+];
+
+const RUN_PRIORITY = [
+  {rank:1, day:'Saturday', run:'Long run', why:'Highest training value, hardest to make up'},
+  {rank:2, day:'Monday', run:'Tempo', why:'Second highest value for fitness'},
+  {rank:3, day:'Sunday', run:'Easy', why:'Before lifting — keeps legs active'},
+  {rank:4, day:'Friday', run:'Easy', why:'Short, fits around lifting'},
+  {rank:5, day:'Tuesday', run:'Easy', why:'Occasional — skip without consequence'},
+  {rank:6, day:'Thursday', run:'Hills/Intervals', why:'When available — high quality session'},
+];
+
+let runDay = 0;
+
+function renderRunningContent() {
+  const phaseId = PHASES[curPhase]?.id || 'base';
+  const phaseMap = {base:0,hyp:1,str:2,peak:3,pre:4,early:5,'in':6};
+
+  // Zone reference card
+  let html = `<div style="margin-bottom:12px">
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">T-Mac — 5K/10K running plan</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:10px">
+      ${RUN_ZONES.map(z=>`<div style="background:${z.color}22;border:1px solid ${z.color}55;border-radius:8px;padding:6px 4px;text-align:center">
+        <div style="font-size:11px;font-weight:600;color:${z.color}">${z.z}</div>
+        <div style="font-size:10px;color:var(--text3)">${z.bpm}</div>
+      </div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:12px;line-height:1.5">Max HR: 187 bpm · Resting HR: 70 bpm · VO2 max: 36 · Zone colors match Garmin Connect</div>
+  </div>`;
+
+  // Day tabs
+  html += `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:10px">
+    ${RUN_DAYS.map((d,i)=>{
+      const active = i===runDay;
+      const phaseData = d.phases[phaseId];
+      const mi = phaseData?.mi;
+      return `<div onclick="setRunDay(${i})" style="cursor:pointer;border-radius:8px;padding:6px 4px;text-align:center;background:${active?d.color+'22':'var(--bg2)'};border:1px solid ${active?d.color:'var(--border)'};transition:all 0.15s">
+        <div style="font-size:11px;font-weight:600;color:${active?d.color:'var(--text2)'}">${d.day}</div>
+        ${mi?`<div style="font-size:9px;color:${active?d.color:'var(--text3)'}">${mi} mi</div>`:'<div style="font-size:9px;color:var(--text3)">off</div>'}
+        <div style="width:6px;height:6px;border-radius:50%;background:${d.color};margin:3px auto 0"></div>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  // Selected day detail
+  const d = RUN_DAYS[runDay];
+  const phaseData = d.phases[phaseId];
+  const mi = phaseData?.mi;
+  const tempo = phaseData?.tempo_min;
+
+  html += `<div class="content-card" style="border-color:${d.color}40;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div>
+        <div style="font-size:15px;font-weight:600;color:${d.color}">${d.day} — ${d.label}</div>
+        ${mi?`<div style="font-size:11px;color:var(--text3);margin-top:2px">Priority ${d.priority} of 6 · ${mi} mi this phase${tempo?' · '+tempo+' min tempo':''}</div>`:'<div style="font-size:11px;color:var(--text3);margin-top:2px">Rest day — no running</div>'}
+      </div>
+      ${d.zone>0?`<div style="background:${d.color}22;border:1px solid ${d.color}55;border-radius:8px;padding:4px 10px;text-align:center">
+        <div style="font-size:11px;font-weight:600;color:${d.color}">Zone ${d.zone}</div>
+        <div style="font-size:10px;color:var(--text3)">${RUN_ZONES[d.zone].bpm} bpm</div>
+      </div>`:''}
+    </div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.6;white-space:pre-line">${d.note}</div>
+  </div>`;
+
+  // Phase mileage summary
+  html += `<div style="margin-bottom:10px">
+    <div class="sec-head">Mileage by phase<span class="sec-line"></span></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">
+      ${['base','hyp','str','peak','pre'].map((pid,i)=>{
+        const pnames=['P1 Base','P2 Hyp','P3 Str','P4 Peak','P5 Pre'];
+        const mi = d.phases[pid]?.mi;
+        const isActive = pid===phaseId;
+        return `<div style="background:${isActive?d.color+'22':'var(--bg2)'};border:1px solid ${isActive?d.color:'var(--border)'};border-radius:8px;padding:6px;text-align:center">
+          <div style="font-size:10px;color:${isActive?d.color:'var(--text3)'}">${pnames[i]}</div>
+          <div style="font-size:13px;font-weight:600;color:${isActive?d.color:'var(--text)'}">${mi?mi+' mi':'off'}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+
+  // Weekly priority stack
+  html += `<div class="sec-head">Weekly priority — if you miss days<span class="sec-line"></span></div>`;
+  html += RUN_PRIORITY.map(p=>`<div class="c-row">
+    <div style="width:22px;height:22px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text3);flex-shrink:0">${p.rank}</div>
+    <div style="flex:1;margin-left:8px">
+      <div class="c-name">${p.day} — ${p.run}</div>
+      <div class="c-desc">${p.why}</div>
+    </div>
+  </div>`).join('');
+
+  html += `<div class="note-box" style="margin-top:10px">Easy days are Zone 2 — allow Zone 3 on uphills only, recover aggressively on descents. Walk the flats if HR stays above 131 after a climb. The first 10 min of any run HR runs high — let the body settle before managing zones. Missing Wednesday never matters. Missing Saturday twice in a row is when you lose ground.</div>`;
+
+  document.getElementById('runningContent').innerHTML = html;
+}
+
+function setRunDay(i) { runDay=i; renderRunningContent(); }
+
 // ----- INIT -----
+renderRunningContent();
 renderTravelContent();
 renderProgressContent();
 renderPhaseNav(); renderPhaseInfo(); renderScheduleDays(); renderScheduleContent();
