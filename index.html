@@ -1373,6 +1373,7 @@ function renderScheduleContent() {
   }
 
   html+=buildDailyReqs(schedDay,'rest');
+  html+=buildScheduleRunBlock(schedDay);
   html+=buildDayCheckbox(curPhase, schedDay);
   document.getElementById('scheduleContent').innerHTML=html;
 }
@@ -2543,6 +2544,28 @@ function renderRunningContent() {
 }
 function setRunDay(i) { runDay=i; renderRunningContent(); }
 function setRunPhase(pid) { runPhase=pid; renderRunningContent(); }
+
+function buildScheduleRunBlock(dayIdx) {
+  const d = RUN_DAYS[dayIdx];
+  const phaseId = PHASES[curPhase]?.id || 'base';
+  const phaseData = d.phases[phaseId];
+  const mi = phaseData?.mi;
+  if(!d || d.zone===0) return `<div style="margin-top:12px;padding:10px 14px;background:var(--bg2);border-radius:10px;border:0.5px solid var(--border)">
+    <div style="font-size:11px;font-weight:500;color:var(--text3)">🏃 Running — Wednesday</div>
+    <div style="font-size:11px;color:var(--text3);margin-top:3px">Rest from running. Lift B day.</div>
+  </div>`;
+  return `<div style="margin-top:12px;padding:10px 14px;background:${d.color}11;border-radius:10px;border:0.5px solid ${d.color}44">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-size:11px;font-weight:600;color:${d.color}">🏃 Running — ${d.label}</div>
+      <div style="display:flex;gap:6px;align-items:center">
+        ${mi?`<span style="font-size:10px;color:${d.color};background:${d.color}22;padding:2px 7px;border-radius:10px">${mi} mi</span>`:''}
+        <span style="font-size:10px;color:${d.color};background:${d.color}22;padding:2px 7px;border-radius:10px">Z${d.zone} · ${RUN_ZONES[d.zone].bpm} bpm</span>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text2);line-height:1.5">${d.note.split('\n')[0]}</div>
+    <div style="margin-top:6px;font-size:10px;color:var(--text3)">Tap the Running tab for full detail →</div>
+  </div>`;
+}
 
 // ----- INIT -----
 renderRunningContent();
