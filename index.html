@@ -214,6 +214,7 @@
 <div class="main-nav" id="mainNav">
   <button onclick="switchSection('progress')">Progress</button>
   <button class="active" onclick="switchSection('schedule')">Schedule</button>
+  <button onclick="switchSection('running')">Running</button>
   <button onclick="switchSection('travel')">Travel workouts</button>
   <button onclick="switchSection('lifting')">Lifting</button>
   <button onclick="switchSection('conditioning')">Conditioning</button>
@@ -1373,7 +1374,6 @@ function renderScheduleContent() {
   }
 
   html+=buildDailyReqs(schedDay,'rest');
-  html+=buildScheduleRunBlock(schedDay);
   html+=buildDayCheckbox(curPhase, schedDay);
   document.getElementById('scheduleContent').innerHTML=html;
 }
@@ -2096,7 +2096,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine','running'];
+    const ids=['progress','schedule','running','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
