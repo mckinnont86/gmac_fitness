@@ -2538,6 +2538,53 @@ function renderRunningContent() {
     </div>
   </div>`).join('');
 
+  // Race week plans
+  html += `<div class="sec-head" style="margin-top:12px">Race week plans<span class="sec-line"></span></div>`;
+
+  const raceWeeks = [
+    {
+      label:'5K race week',
+      color:'#FF9800',
+      days:[
+        {day:'Sun', run:'Easy 2 mi', note:'Shorter than normal. Zone 2 only, no hills.'},
+        {day:'Mon', run:'Easy 3 mi + 4×100m strides', note:'Drop tempo. Easy base with strides to keep legs sharp.'},
+        {day:'Tue', run:'Easy 2 mi', note:'Short and easy. Zone 2 only.'},
+        {day:'Wed', run:'Off', note:'Rest as always.'},
+        {day:'Thu', run:'Easy 2 mi + 4×100m strides', note:'Easy with strides. No hill repeats or intervals.'},
+        {day:'Fri', run:'Off or 10–15 min shake-out', note:'Only if legs feel heavy. When in doubt, rest.'},
+        {day:'Sat', run:'5K race', note:'10–15 min easy warm-up → race → 10 min easy cool-down.'},
+      ]
+    },
+    {
+      label:'10K race week',
+      color:'#F44336',
+      days:[
+        {day:'Sun', run:'Easy 3 mi', note:'Normal Sunday easy. Zone 2.'},
+        {day:'Mon', run:'Easy 4 mi + 4×100m strides', note:'Drop tempo. Slightly longer base — 10K needs more aerobic readiness.'},
+        {day:'Tue', run:'Easy 2 mi', note:'Short and easy. Zone 2 only.'},
+        {day:'Wed', run:'Off', note:'Rest as always.'},
+        {day:'Thu', run:'Easy 2 mi + 4×100m strides', note:'Easy with strides. No intervals.'},
+        {day:'Fri', run:'Off or 10–15 min shake-out', note:'Rest preferred.'},
+        {day:'Sat', run:'10K race', note:'10–15 min easy warm-up → race → 10–15 min easy cool-down.'},
+      ]
+    }
+  ];
+
+  raceWeeks.forEach(rw => {
+    html += `<div style="margin-bottom:12px;border:1px solid ${rw.color}44;border-radius:10px;overflow:hidden">
+      <div style="background:${rw.color}22;padding:8px 12px;font-size:12px;font-weight:600;color:${rw.color}">${rw.label}</div>
+      ${rw.days.map(d => `<div class="c-row" style="border-left:0;border-bottom:0.5px solid var(--border)">
+        <div style="width:28px;font-size:11px;font-weight:600;color:${d.day==='Sat'?rw.color:'var(--text3)'};flex-shrink:0">${d.day}</div>
+        <div style="flex:1">
+          <div class="c-name" style="${d.day==='Sat'?`color:${rw.color}`:''}">${d.run}</div>
+          <div class="c-desc">${d.note}</div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  });
+
+  html += `<div class="note-box">Race week: tempo dropped entirely · no hill repeats or intervals · strides Mon and Thu keep legs sharp · lifting continues normally — never skip Lift A, B, or C for a race · total mileage drops 30–40% from a normal week.</div>`;
+
   html += `<div class="note-box" style="margin-top:10px">Easy days are Zone 2 — allow Zone 3 on uphills only, recover aggressively on descents. Walk the flats if HR stays above 131 after a climb. The first 10 min of any run HR runs high — let the body settle before managing zones. Missing Wednesday never matters. Missing Saturday twice in a row is when you lose ground.</div>`;
 
   document.getElementById('runningContent').innerHTML = html;
