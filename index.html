@@ -224,6 +224,7 @@
   <button onclick="switchSection('foam')">Foam rolling</button>
   <button onclick="switchSection('ankle')">Ankle prehab</button>
   <button onclick="switchSection('shoulder')">Shoulder prehab</button>
+  <button onclick="switchSection('neck')">Neck stretching</button>
   <button onclick="switchSection('hip')">Hip prehab</button>
   <button onclick="switchSection('landmine')">Landmine guide</button>
   <button onclick="switchSection('running')">Running</button>
@@ -295,6 +296,11 @@
 <div class="section" id="sec-shoulder">
   <div class="day-tabs" id="shoulderDays"></div>
   <div class="content-card" id="shoulderContent"></div>
+</div>
+
+<!-- ===================== NECK ===================== -->
+<div class="section" id="sec-neck">
+  <div class="content-card" id="neckContent"></div>
 </div>
 
 <!-- ===================== HIP ===================== -->
@@ -1090,6 +1096,7 @@ const DAILY_REQS = {
     ],
     post:[
       {ico:'🧘',t:'Static cool-down — lower body focus',d:'Pigeon pose 60s/side · Couch stretch 60s/side · Supine hamstring 45s/side · Lat stretch 45s/side · Child\'s pose 60s.'},
+      {ico:'🤸',t:'Neck stretching — 10 min sequence (after session)',d:'Upper trap 30s/side → Suboccipital chin tuck ×10 → Scalene 30s/side → Cervical rotation 20s/side → Doorway traction 30s. See Neck stretching tab for full detail.'},
     ],
     prehab:[
       {ico:'💪',t:'Shoulder prehab — full protocol (anytime)',d:'10–12 min — band pull-aparts, YTWL, wall slides, sleeper stretch, physio ball ABCs. Pressing and hang clean day — do not skip.'},
@@ -1138,6 +1145,7 @@ const DAILY_REQS = {
     ],
     post:[
       {ico:'🧘',t:'Static cool-down — posterior chain focus',d:'Pigeon pose 60s/side · Couch stretch 60s/side · Supine hamstring 45s/side · Child\'s pose with reach 60s · Doorway chest stretch 45s/side.'},
+      {ico:'🤸',t:'Neck stretching — 10 min sequence (after session)',d:'Upper trap 30s/side → Suboccipital chin tuck ×10 → Scalene 30s/side → Cervical rotation 20s/side → Doorway traction 30s. See Neck stretching tab for full detail.'},
     ],
     prehab:[
       {ico:'💪',t:'Shoulder prehab — full protocol (anytime)',d:'10–12 min — band pull-aparts, YTWL, wall slides, physio ball ABCs, sleeper stretch. Pressing day — push press and weighted pull-up demand shoulder prep.'},
@@ -1154,6 +1162,7 @@ const DAILY_REQS = {
     ],
     post:[
       {ico:'🧘',t:'Static cool-down — running muscles',d:'Calf stretch 45s/side · Soleus bent knee 45s/side · Hip flexor lunge 60s/side · Groin stretch 60s.'},
+      {ico:'🤸',t:'Neck stretching — 10 min sequence (after session)',d:'Upper trap 30s/side → Suboccipital chin tuck ×10 → Scalene 30s/side → Cervical rotation 20s/side → Doorway traction 30s. See Neck stretching tab for full detail.'},
     ],
     prehab:[
       {ico:'🦶',t:'Ankle prehab (anytime)',d:'8–10 min — angle board stretches, tibialis raise 3×20, peroneal walk, stability drills. Shin splint prevention priority — XC running day.'},
@@ -1189,6 +1198,7 @@ const DAILY_REQS = {
     ],
     post:[
       {ico:'🧘',t:'Static cool-down — explosive and calf focus',d:'Standing calf stretch straight knee 45s/side · Soleus bent knee 45s/side · Hip flexor lunge 60s/side · Pigeon pose 60s/side · Cross-body shoulder 30s/side.'},
+      {ico:'🤸',t:'Neck stretching — 10 min sequence (after session)',d:'Upper trap 30s/side → Suboccipital chin tuck ×10 → Scalene 30s/side → Cervical rotation 20s/side → Doorway traction 30s. See Neck stretching tab for full detail.'},
     ],
     prehab:[
       {ico:'💪',t:'Shoulder prehab — abbreviated (anytime)',d:'5 min — band pull-aparts × 20, face pulls × 15, sleeper stretch 45s/side. Third shoulder prehab day — wrestling shoulder maintenance.'},
@@ -2152,7 +2162,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','running','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','hip','landmine'];
+    const ids=['progress','schedule','running','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','neck','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
@@ -2670,6 +2680,49 @@ function buildScheduleRunBlock(dayIdx) {
   </div>`;
 }
 
+// ── NECK STRETCHING ──
+const NECK_SECTIONS=[
+  {label:'The five key stretches — after training only, never cold',rows:[
+    {n:'Upper trap and levator scapulae',d:'30–45 sec / side — drop ear toward shoulder, add gentle pressure with same-side hand. Most important for wrestlers — upper trap takes enormous stress from collar ties and over-under fighting.',badge:'Stretch',bc:'b-amber'},
+    {n:'Suboccipital release — chin tuck',d:'5 sec × 10 reps — draw chin straight back as if making a double chin. Hold 5 sec, repeat 10 times. Releases base-of-skull muscles that tighten from wrestling and forward head posture.',badge:'Stretch',bc:'b-amber'},
+    {n:'Cervical rotation stretch',d:'20–30 sec / side — turn chin toward shoulder as far as comfortable. Can add gentle overpressure with hand on chin. Restricted rotation shows up immediately in clinch positions.',badge:'Stretch',bc:'b-amber'},
+    {n:'Scalene stretch',d:'30 sec / side — tilt ear toward shoulder, then rotate chin slightly upward and away from that side. Targets front and side of neck. Scalenes tighten from heavy collar tie work.',badge:'Stretch',bc:'b-amber'},
+    {n:'Doorway neck traction',d:'30–45 sec — interlace fingers behind head, elbows forward, gently let weight of arms pull head forward into flexion. Decompresses the cervical spine. Always do this last.',badge:'Stretch',bc:'b-amber'},
+  ]},
+  {label:'Recommended sequence — 10 min after every practice and lift',rows:[
+    {n:'1. Suboccipital chin tuck × 10',d:'Gets the base of the skull loosened first.',badge:'Sequence',bc:'b-gray'},
+    {n:'2. Upper trap — right side',d:'30–45 sec full hold.',badge:'Sequence',bc:'b-gray'},
+    {n:'3. Upper trap — left side',d:'30–45 sec full hold.',badge:'Sequence',bc:'b-gray'},
+    {n:'4. Scalene — right side',d:'30 sec.',badge:'Sequence',bc:'b-gray'},
+    {n:'5. Scalene — left side',d:'30 sec.',badge:'Sequence',bc:'b-gray'},
+    {n:'6. Cervical rotation — right',d:'20–30 sec.',badge:'Sequence',bc:'b-gray'},
+    {n:'7. Cervical rotation — left',d:'20–30 sec.',badge:'Sequence',bc:'b-gray'},
+    {n:'8. Doorway neck traction',d:'30–45 sec — always last. Decompresses everything above.',badge:'Sequence',bc:'b-gray'},
+  ]},
+  {label:'When to stretch — timing matters',rows:[
+    {n:'After every wrestling practice',d:'The neck takes significant stress from collar ties, over-unders, and scrambles. 10 min of stretching after practice directly reduces the soreness and stiffness that accumulates over a season.',badge:'When',bc:'b-blue'},
+    {n:'After every lifting session',d:'Pressing, pulling, and the hang clean complex all load the trap and cervical extensors. Stretch after Sunday and Wednesday lifting especially.',badge:'When',bc:'b-blue'},
+    {n:'Before bed on rest days',d:'The upper trap and doorway traction before bed on Monday and Thursday helps tissue quality going into the next training day.',badge:'When',bc:'b-blue'},
+  ]},
+  {label:'What to avoid',rows:[
+    {n:'Full cervical circumduction',d:'The big slow head circles all the way back. Do not do these — the combined extension and rotation puts the cervical spine in a vulnerable position.',badge:'Avoid',bc:'b-orange'},
+    {n:'Full back-extension while rotating',d:'Forward tilts and lateral tilts are fine. Rolling the head fully back while rotating is not fine. If a coach cues "neck rolls" and they go through full extension, skip the back portion.',badge:'Avoid',bc:'b-orange'},
+    {n:'Pain, tingling, or numbness',d:'Stop immediately if any stretch causes pain, tingling, or numbness down the arm or into the fingers. That is nerve involvement — do not push through it.',badge:'Avoid',bc:'b-orange'},
+  ]},
+];
+
+function renderNeckContent() {
+  let html=`<div class="t-chips" style="margin-bottom:10px">
+    <span class="t-chip">After every practice</span>
+    <span class="t-chip">After every lift</span>
+    <span class="t-chip">10 min — 8 stretches in order</span>
+  </div>`;
+  html+=`<div class="alert alert-amber" style="margin-bottom:10px;background:rgba(186,117,23,0.1);color:#C9A84C;border-radius:8px;padding:9px 12px;font-size:12px">Do these <strong>after training only</strong> — never cold. Hold each stretch fully before moving on. The upper trap and doorway traction are the two highest-value stretches — if short on time, do those two.</div>`;
+  html+=buildPrehabSections(NECK_SECTIONS);
+  html+=`<div class="note-box">Neck stretching is one of the highest-compliance recovery habits a wrestler can build. 10 minutes after practice or lifting, same sequence every time, and the tissue quality going into the next session is noticeably better within 2–3 weeks.</div>`;
+  document.getElementById('neckContent').innerHTML=html;
+}
+
 // ----- INIT -----
 renderRunningContent();
 renderTravelContent();
@@ -2683,6 +2736,7 @@ renderStretchDays(); renderStretchContent();
 renderFoamContent();
 renderAnkleContent();
 renderShoulderDays(); renderShoulderContent();
+renderNeckContent();
 renderHipContent();
 renderLandmineContent();
 </script>
