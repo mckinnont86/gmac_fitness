@@ -2188,7 +2188,8 @@ function getCurrentWeek(){
   return Math.min(Math.max(diff,1),PROG_TOTAL);
 }
 
-function renderProgressContent(){
+function renderProgressContent(){ return; // Progress section removed
+  //
   const done=wkChecked.length;
   const pct=Math.round((done/PROG_TOTAL)*100);
   const curWk=getCurrentWeek();
@@ -2720,7 +2721,6 @@ function renderNeckContent() {
 // ----- INIT -----
 renderRunningContent();
 renderTravelContent();
-renderProgressContent();
 renderPhaseNav(); renderPhaseInfo(); renderScheduleDays(); renderScheduleContent();
 renderLiftPhaseNav(); renderLiftDayTabs(); renderLiftContent();
 renderCondContent();
