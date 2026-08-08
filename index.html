@@ -212,7 +212,6 @@
 </div>
 
 <div class="main-nav" id="mainNav">
-  <button onclick="switchSection('progress')">Progress</button>
   <button class="active" onclick="switchSection('schedule')">Schedule</button>
   <button onclick="switchSection('running')">Running</button>
   <button onclick="switchSection('travel')">Travel workouts</button>
@@ -233,11 +232,6 @@
 <!-- ===================== TRAVEL ===================== -->
 <div class="section" id="sec-travel">
   <div id="travelContent"></div>
-</div>
-
-<!-- ===================== PROGRESS ===================== -->
-<div class="section" id="sec-progress">
-  <div id="progressContent"></div>
 </div>
 
 <!-- ===================== SCHEDULE ===================== -->
@@ -2162,7 +2156,7 @@ function switchSection(id) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.main-nav button').forEach((b,i)=>{
-    const ids=['progress','schedule','running','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','neck','hip','landmine'];
+    const ids=['schedule','running','travel','lifting','conditioning','explosive','cardio','stretch','foam','ankle','shoulder','neck','hip','landmine'];
     b.classList.toggle('active', ids[i]===id);
   });
 }
