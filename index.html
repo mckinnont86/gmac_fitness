@@ -326,6 +326,7 @@ const PHASES=[
   {id:'pre',name:'Phase 5 — Preseason',dates:'Oct 5 – Oct 18',weeks:'Wks 19–20',load:'75–80% 1RM · Moderate',goal:'XC and wrestling practice in full swing. Lifting is pure maintenance — 2×/week max. Practice drives all conditioning.',chips:[{t:'2×5 main (maint.)',c:'chip-green'},{t:'2×8 unilateral',c:'chip-amber'},{t:'Post-practice only',c:'chip-red'}],scheme:{main:'2×5',uni:'2×8',acc:'2×8',core:'post-practice'}},
   {id:'early',name:'Phase 6 — Early season',dates:'Oct 19 – Nov 9',weeks:'Wks 21–23',load:'70–75% 1RM · Low–moderate',goal:'Competition begins. Lifting 1–2×/week. Recovery becomes the primary training variable.',chips:[{t:'2×5 main (maint.)',c:'chip-green'},{t:'1×8 unilateral',c:'chip-amber'},{t:'Recovery priority',c:'chip-red'}],scheme:{main:'2×5',uni:'2×8',acc:'2×8',core:'mobility'}},
   {id:'in',name:'Phase 7 — In-season',dates:'Nov 10 – ongoing',weeks:'Wks 24+',load:'75–80% 1RM · Low vol / high intent',goal:'Compete, recover, stay sharp. One brief lifting session max per week. Sleep and nutrition are training.',chips:[{t:'1×5 main (keep sharp)',c:'chip-green'},{t:'1×6 unilateral',c:'chip-amber'},{t:'Match schedule governs',c:'chip-red'}],scheme:{main:'1×5',uni:'1×6',acc:'1×8',core:'mobility'}},
+  {id:'xc',name:'XC In-Season',dates:'XC Season',weeks:'Race weeks',load:'80–85% on primary lifts · Maintain',goal:'XC races every other Saturday. Strength built on Sunday only. Wed and Fri split into AM gym + PM home sessions. Tuesday and Thursday are XC + wrestling only — no additional training. Battle ropes Monday and Saturday for wrestling arm conditioning.',chips:[{t:'Sun: 4×5–6 main',c:'chip-green'},{t:'Wed AM: 3×5 lower · 2×6 pull',c:'chip-amber'},{t:'Fri AM: 3×5 upper only',c:'chip-amber'},{t:'2 min rest · 1–2 RIR',c:'chip-gray'}],scheme:{main:'4×5',uni:'2×6',acc:'2×10',core:'2×10'}},
 ];
 
 const WEEK_DAYS=[
@@ -1320,7 +1321,7 @@ function buildDayCheckbox(phaseIdx, dayIdx) {
 // ----- SCHEDULE -----
 function renderPhaseNav() {
   document.getElementById('phaseNav').innerHTML = PHASES.map((p,i)=>`
-    <button class="phase-btn ${i===curPhase?'active':''}" onclick="setCurPhase(${i})">${'P'+(i+1)+': '+p.name.split('—')[1].trim()}</button>`).join('');
+    <button class="phase-btn ${i===curPhase?'active':''}" onclick="setCurPhase(${i})">${p.id==='xc'?'XC Season':'P'+(i+1)+': '+p.name.split('\u2014')[1]?.trim()}</button>`).join('');
 }
 function renderPhaseInfo() {
   const p=PHASES[curPhase];
@@ -1342,7 +1343,8 @@ function renderScheduleContent() {
   const d=DAY_DESCRIPTIONS[schedDay];
   const wk=WEEK_DAYS[schedDay];
   let html='';
-  const isLean = curPhase>=5;
+  const isXC = p?.id==='xc';
+  const isLean = !isXC && curPhase>=5;
 
   // Sun=0 Lift A, Wed=3 Lift B, Fri=5 Lift C
   const liftDayMap = {0:0, 3:1, 5:2}; // schedDay -> lift index (0=A,1=B,2=C)
@@ -1365,11 +1367,13 @@ function renderScheduleContent() {
   if(d.type==='lift') {
     const fullArr=[LIFT_A,LIFT_B,LIFT_C];
     const leanArr=[LEAN_A,LEAN_B,LEAN_C];
+    const xcArr=[LIFT_A_XC,LIFT_B_XC,LIFT_C_XC];
+    const xcSchemeMap={0:{main:'4×5',uni:'2×8',acc:'2×10',core:'2×10',uni_lower:'2×6'},1:{main:'3×5',uni:'2×6',acc:'2×8',core:'2×5',uni_lower:'2×6'},2:{main:'3×5',uni:'2×8',acc:'2×10',core:'2×10',uni_lower:'2×8'}};
     const fullData = fullArr[liftIdx];
     const leanData = leanArr[liftIdx];
-    const ldata = isLean ? leanData : fullData;
+    const ldata = isXC ? xcArr[liftIdx] : isLean ? leanData : fullData;
     const schemeBank = curPhase===6 ? P7_SCHEMES : LEAN_SCHEMES;
-    const scheme = isLean ? schemeBank[leanData.schemeKey] : p.scheme;
+    const scheme = isXC ? xcSchemeMap[liftIdx] : isLean ? schemeBank[leanData.schemeKey] : p.scheme;
     html+=buildDailyReqs(schedDay,'pre');
 
     // P3 superset reminder
@@ -1420,7 +1424,7 @@ function setSchedDay(i){schedDay=i;renderScheduleDays();renderScheduleContent();
 // ----- LIFTING -----
 function renderLiftPhaseNav() {
   document.getElementById('liftPhaseNav').innerHTML = PHASES.map((p,i)=>`
-    <button class="phase-btn ${i===liftPhase?'active':''}" onclick="setLiftPhase(${i})">${'P'+(i+1)}</button>`).join('');
+    <button class="phase-btn ${i===liftPhase?'active':''}" onclick="setLiftPhase(${i})">${p.id==='xc'?'XC':'P'+(i+1)}</button>`).join('');
 }
 function renderLiftDayTabs() {
   const el=document.getElementById('liftDayTabs');
@@ -1435,24 +1439,51 @@ function renderLiftDayTabs() {
 }
 function renderLiftContent() {
   const p=PHASES[liftPhase];
-  const isLean=liftPhase>=5;
-  const fullData=[LIFT_A,LIFT_B,LIFT_C][liftDay];
-  const leanData=[LEAN_A,LEAN_B,LEAN_C][liftDay];
-  const ldata=isLean?leanData:fullData;
-  const scheme=isLean?(liftPhase===6?P7_SCHEMES:LEAN_SCHEMES)[leanData.schemeKey]:p.scheme;
+  const isXC=PHASES[liftPhase]?.id==='xc';
+  const isLean=!isXC&&liftPhase>=5;
+
   let html=`<div class="scheme-row">`;
   p.chips.forEach(c=>{html+=`<span class="chip ${c.c}">${c.t}</span>`;});
   html+=`</div>`;
-  if(p.id==='str'&&!isLean) html+=`<div style="padding:8px 12px;background:rgba(186,117,23,0.12);color:#C9A84C;border-radius:8px;font-size:11px;margin-bottom:8px">⏱ <strong>P3 time saver:</strong> Superset press + row — rest one while working the other. Saves ~10 min without losing intensity.</div>`;
-  if(isLean){
-    const schemeBank=liftPhase===6?P7_SCHEMES:LEAN_SCHEMES;
-    const ls=schemeBank[leanData.schemeKey];
-    html+=`<div class="in-season-alert" style="margin-bottom:10px">${ls.label} · 6 exercises · under 60 min</div>`;
+
+  if(isXC) {
+    const xcArr=[LIFT_A_XC,LIFT_B_XC,LIFT_C_XC];
+    const xcData=xcArr[liftDay];
+    const xcDayKey=['sun','wed_am','fri_am'][liftDay];
+    const xcScheme=XC_SCHEMES[xcDayKey];
+    const xcSchemeMap={
+      0:{main:'4×5',uni:'2×8',acc:'2×10',core:'2×10',uni_lower:'2×6'},
+      1:{main:'3×5',uni:'2×6',acc:'2×8',core:'2×5',uni_lower:'2×6'},
+      2:{main:'3×5',uni:'2×8',acc:'2×10',core:'2×10',uni_lower:'2×8'},
+    };
+    const scheme=xcSchemeMap[liftDay];
+    if(liftDay===0) html+=`<div class="alert alert-purple" style="margin-bottom:8px;background:rgba(139,127,221,0.12);color:#8B7FDD;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Sunday — Strength focus.</strong> This is where strength is built during XC season. No time constraints — morning before evening wrestling. Push the bench, leg press, and inverted row hard.</div>`;
+    if(liftDay===1) html+=`<div class="alert alert-green" style="margin-bottom:8px;background:rgba(29,184,122,0.1);color:#1DB87A;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Wednesday — Split session.</strong> AM gym before school (42 min) · PM home after XC practice (35 min). Heavy lower in the AM when fresh. Accessories at home when it doesn't matter what equipment you have.</div>`;
+    if(liftDay===2) html+=`<div class="alert alert-amber" style="margin-bottom:8px;background:rgba(186,117,23,0.1);color:#C9A84C;border-radius:8px;padding:9px 12px;font-size:12px"><strong>Friday — Split session.</strong> AM gym before school (42 min) · PM home after XC practice (25 min). Heavy upper only — legs are protected for Saturday race or explosive session. Cossack squats for mobility only.</div>`;
+    html+=buildSections(xcData.sections,scheme);
+    const xcNotes=[
+      'Sunday is where strength is built during XC season. Everything else is maintenance. Protect this session above all others.',
+      'Wednesday AM is the heavy lower day — trap bar deadlift, Bulgarian split squat, lat pulldown before school when legs are fresh. PM home session covers explosive work, pressing accessories, and core after XC practice.',
+      'Friday AM is upper body only — incline press and barbell row heavy before school. Cossack squats for hip mobility. PM home session covers pressing accessories and core. Legs stay fresh for Saturday race or explosive session.'
+    ];
+    html+=`<div class="note-box">${xcNotes[liftDay]}</div>`;
+
+  } else {
+    const fullData=[LIFT_A,LIFT_B,LIFT_C][liftDay];
+    const leanData=[LEAN_A,LEAN_B,LEAN_C][liftDay];
+    const ldata=isLean?leanData:fullData;
+    const scheme=isLean?(liftPhase===6?P7_SCHEMES:LEAN_SCHEMES)[leanData.schemeKey]:p.scheme;
+    if(p.id==='str'&&!isLean) html+=`<div style="padding:8px 12px;background:rgba(186,117,23,0.12);color:#C9A84C;border-radius:8px;font-size:11px;margin-bottom:8px">⏱ <strong>P3 time saver:</strong> Superset press + row — rest one while working the other. Saves ~10 min without losing intensity.</div>`;
+    if(isLean){
+      const schemeBank=liftPhase===6?P7_SCHEMES:LEAN_SCHEMES;
+      const ls=schemeBank[leanData.schemeKey];
+      html+=`<div class="in-season-alert" style="margin-bottom:10px">${ls.label} · 6 exercises · under 60 min</div>`;
+    }
+    if(isLean&&ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
+    html+=buildSections(ldata.sections,scheme);
+    const notes=['Sunday — heavy intention day. Front squat and incline press. No XC — push hard. 90–120s rest on main lifts.','Wednesday — XC self-directed, run easy in AM, lift in afternoon. Trap bar deadlift anchor. TGU finisher. Full rest periods.','Friday — freshest day of the week. Back squat and bench press. 2 full rest days behind you — hit these hard.'];
+    html+=`<div class="note-box">${isLean?ldata.note:notes[liftDay]}</div>`;
   }
-  if(isLean&&ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
-  html+=buildSections(ldata.sections,scheme);
-  const notes=['Sunday — heavy intention day. Front squat and incline press. No XC — push hard. 90–120s rest on main lifts.','Wednesday — XC self-directed, run easy in AM, lift in afternoon. Trap bar deadlift anchor. TGU finisher. Full rest periods.','Friday — freshest day of the week. Back squat and bench press. 2 full rest days behind you — hit these hard.'];
-  html+=`<div class="note-box">${isLean?ldata.note:notes[liftDay]}</div>`;
   document.getElementById('liftContent').innerHTML=html;
 }
 function setLiftPhase(i){liftPhase=i;renderLiftPhaseNav();renderLiftContent();}
@@ -2719,8 +2750,85 @@ function renderNeckContent() {
   document.getElementById('neckContent').innerHTML=html;
 }
 
-// ----- INIT -----
-renderRunningContent();
+// ── XC IN-SEASON LIFT STRUCTURES ──
+const LIFT_A_XC={
+  sections:[
+    {label:'Explosive primer — hang clean complex (2 min rest · stop when speed drops)',rows:[
+      {n:'Hang power clean (barbell) — 2×3+1',badge:'Explosive',bc:'b-orange',rep:'fix',uni:false},
+      {n:'Hang clean (barbell) — 2×3+1',badge:'Technical',bc:'b-purple',rep:'fix',uni:false},
+    ]},
+    {label:'Primary compound lifts — 2 min rest · 1–2 RIR',rows:[
+      {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Leg press',badge:'Lower',bc:'b-green',rep:'main',uni:false},
+      {n:'Inverted row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+    ]},
+    {label:'Unilateral — upper — 60s rest · 2–3 RIR',rows:[
+      {n:'Half-kneeling cable pulldown',badge:'Pull',bc:'b-orange',rep:'uni',uni:true},
+      {n:'Half-kneeling single-arm DB press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Landmine block — 45s rest · movement quality focus',rows:[
+      {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+      {n:'Landmine wood chop (low to high)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+    ]},
+    {label:'Accessories — 30–45s rest · 1–2 RIR',rows:[
+      {n:'Cable triceps pushdown (straight bar or rope)',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
+      {n:'Cable external rotation (90° elbow)',badge:'RC',bc:'b-purple',rep:'acc',uni:true},
+      {n:'Seated incline DB curl',badge:'Biceps',bc:'b-blue',rep:'acc',uni:false},
+    ]},
+    {label:'Core — 45s rest · 2–3 RIR',rows:[
+      {n:'Ab wheel rollout',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+      {n:'Dead bug',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+      {n:'Copenhagen plank hold',badge:'Core',bc:'b-gray',rep:'core',uni:true},
+    ]},
+  ]
+};
+
+const LIFT_B_XC={
+  sections:[
+    {label:'AM GYM — before school (42 min)',rows:[
+      {n:'Trap bar deadlift',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Lat pulldown (heavy)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+    ]},
+    {label:'PM HOME — after XC practice (35 min) · DBs and bands only',rows:[
+      {n:'DB hang power clean',badge:'Explosive',bc:'b-orange',rep:'acc',uni:true},
+      {n:'Single-arm half-kneeling DB press',badge:'Push',bc:'b-amber',rep:'acc',uni:true},
+      {n:'Rear delt fly (chest-supported DB)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+      {n:'Banded ER at side (90° elbow)',badge:'RC',bc:'b-purple',rep:'acc',uni:true},
+      {n:'Pallof press',badge:'Core',bc:'b-gray',rep:'core',uni:true},
+      {n:'Nordic hamstring curl',badge:'Hamstring',bc:'b-orange',rep:'core',uni:false},
+      {n:'Neck stretching sequence',badge:'Recovery',bc:'b-blue',rep:'core',uni:false},
+    ]},
+  ]
+};
+
+const LIFT_C_XC={
+  sections:[
+    {label:'AM GYM — before school (42 min)',rows:[
+      {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+      {n:'Cossack squat',badge:'Mobility',bc:'b-amber',rep:'acc',uni:true},
+    ]},
+    {label:'PM HOME — after XC practice (25 min) · DBs and bands only',rows:[
+      {n:'Single-arm Z press (floor seated)',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
+      {n:'Banded pull-apart (pronated)',badge:'Scapula',bc:'b-purple',rep:'acc',uni:false},
+      {n:'Banded bird dog',badge:'Stability',bc:'b-purple',rep:'acc',uni:true},
+      {n:'Plank to push-up',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+      {n:'Suitcase carry',badge:'Core',bc:'b-gray',rep:'core',uni:true},
+      {n:'Neck stretching sequence',badge:'Recovery',bc:'b-blue',rep:'core',uni:false},
+    ]},
+  ]
+};
+
+const XC_SCHEMES={
+  sun:{main:'4×5',uni:'2×8',acc:'2×10',core:'2×10',label:'Sunday — Strength focus · 80–85% · 2–3 min rest on compounds'},
+  wed_am:{main:'3×5',uni:'2×6',acc:null,core:null,label:'Wednesday AM — Heavy lower · 2 min rest'},
+  wed_pm:{main:null,uni:null,acc:'2×8',core:'2×5',label:'Wednesday PM — Home · accessories and core'},
+  fri_am:{main:'3×5',uni:'2×8',acc:null,core:null,label:'Friday AM — Heavy upper · 2 min rest'},
+  fri_pm:{main:null,uni:null,acc:'2×10',core:'2×10',label:'Friday PM — Home · accessories and core'},
+};
+
+
 renderTravelContent();
 renderPhaseNav(); renderPhaseInfo(); renderScheduleDays(); renderScheduleContent();
 renderLiftPhaseNav(); renderLiftDayTabs(); renderLiftContent();
